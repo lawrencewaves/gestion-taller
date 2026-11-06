@@ -1,0 +1,24 @@
+# Dependencias y compilaciones
+node_modules/
+dist/
+target/
+.vercel/
+*.tsbuildinfo
+
+# Entorno y secretos
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+
+# Datos locales
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+backups/
+
+# Sistema
+.DS_Store

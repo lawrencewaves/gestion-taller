@@ -1,0 +1,116 @@
+# DECISIONS
+
+Registro de decisiones. Una decisión solo cambia con una nueva entrada que la sustituya.
+Estado: **Vigente**, **Sustituida** (indica por cuál) o **A verificar** (vigente, pendiente de confirmación externa).
+
+---
+
+### D-001 · Software propio; Stall solo como referencia
+2026-11-06 · Vigente
+Diseño, pantallas y flujos propios. De Stall solo se toma el mapa funcional. No se copia código, recursos ni elementos visuales.
+
+### D-002 · Aplicación instalada, licencia perpetua y coste cero
+2026-11-06 · Vigente · Sustituye al modelo "web con datos reales en la nube" (descartado el mismo día)
+El taller usa una aplicación instalada con datos locales. Sin servidor, sin suscripción.
+**Motivo:** coste cero para todos y funcionamiento sin Internet.
+**Consecuencia:** las copias externas son la única protección ante la pérdida del ordenador (ver D-013).
+
+### D-003 · Mac primero; Windows opcional
+2026-11-06 · Vigente
+Instalador universal para Intel y Apple Silicon. El código no tendrá nada específico de macOS, de modo que Windows solo requeriría compilar otro instalador.
+
+### D-004 · Stack
+2026-11-04 · Vigente
+Tauri 2 y Rust para escritorio, React + TypeScript + Vite para la interfaz, SQLite para los datos locales, GitHub para el código.
+
+### D-005 · libSQL en lugar de PostgreSQL para la demo
+2026-11-06 · Vigente
+**Motivo:** libSQL usa el mismo dialecto que SQLite. Hay un único esquema, unas únicas migraciones y unos únicos repositorios, y la demo prueba el mismo SQL que se ejecuta en el taller.
+**Coste:** proveedor menos maduro que PostgreSQL. Si algún día hace falta un servidor central, se añade otro adaptador sin tocar la lógica.
+
+### D-006 · La web es solo DEMO y PREVIEW
+2026-11-06 · Vigente
+Nunca contiene datos reales. Las facturas llevan la marca DEMO y no existe ningún adaptador que comunique con la AEAT en estos entornos.
+
+### D-007 · Una única base de código con la lógica en `core`
+2026-11-06 · Vigente
+Las reglas de negocio viven solo en `packages/core`. La interfaz depende de una interfaz de servicios con dos implementaciones: local (escritorio) y remota (web), esta última mediante un RPC genérico hacia una API que ejecuta el mismo `core`. Detalle en `ARCHITECTURE.md`.
+
+### D-008 · Acceso a SQLite mediante comandos Rust propios (rusqlite)
+2026-11-06 · Vigente
+Se descarta `tauri-plugin-sql`.
+**Motivo:**
+- Transacciones fiables con una única conexión de escritura.
+- Acceso directo a la SQLite Backup API.
+- Control de la verificación de integridad.
+
+### D-009 · Entornos
+2026-11-06 · Vigente
+LOCAL, PREVIEW, DEMO y TALLER, aislados entre sí (tabla en `ARCHITECTURE.md`).
+PREVIEW usa **una** base de datos compartida que se reinicia con datos ficticios en cada despliegue, en lugar de una por rama.
+**Motivo:** sencillez y límites de los planes gratuitos.
+
+### D-010 · Flujo de ramas y publicación
+2026-11-06 · Vigente
+- `feature/*` genera un enlace PREVIEW.
+- `main` (solo mediante pull request aprobada) actualiza DEMO.
+- Una etiqueta `vX.Y.Z` compila el instalador y publica la versión para el TALLER.
+
+Nada llega al taller sin aprobación previa en DEMO.
+
+### D-011 · Repositorio público, sin licencia abierta
+2026-11-06 · Vigente
+**Motivo:**
+- Permite descargar actualizaciones sin credenciales.
+- Las compilaciones de macOS en GitHub Actions son gratuitas en repositorios públicos.
+
+**Consecuencias:**
+- El código es visible para cualquiera. Sin fichero de licencia, sigue reservado a su autor.
+- Ningún secreto se guarda en el repositorio: todos van a los secretos de GitHub y del alojamiento.
+
+### D-012 · Actualizaciones
+2026-11-06 · Vigente
+Actualizador de Tauri desde GitHub Releases. Las actualizaciones van firmadas con la clave del actualizador, que es gratuita.
+No se usa la firma ni notarización de Apple (de pago anual). macOS mostrará un aviso la primera vez que se abra la aplicación y habrá que autorizarla manualmente una sola vez.
+
+### D-013 · Copias de seguridad
+2026-11-06 · Vigente
+1. La copia se genera con la SQLite Backup API.
+2. Se verifica su integridad.
+3. Se cifra.
+4. Se mueve, ya completa, a la carpeta que Google Drive para escritorio sincroniza en el Mac (sin API ni credenciales de Google).
+
+Además: copia manual a USB y política de retención. Detalle en `ARCHITECTURE.md`.
+
+### D-014 · Arquitectura fiscal desde la versión 1, desactivada
+2026-11-06 · Vigente
+- La arquitectura de registros, encadenamiento, cola y adaptadores existe desde la primera versión.
+- La modalidad (VERI\*FACTU o NO VERI\*FACTU) se decide cuando sea necesario.
+- En TALLER, la emisión de facturas reales queda bloqueada hasta la validación fiscal; mientras tanto se factura con Stall.
+
+### D-015 · El taller es autónomo
+2026-11-06 · A verificar
+Fecha de obligatoriedad VeriFactu vigente: 1 de julio de 2027 (RDL 15/2025). Se revisará si se publica el aplazamiento anunciado a octubre de 2028.
+
+### D-016 · Productor del software
+2026-11-06 · A verificar
+Robert Lawrence Arasa Ribas figura como productor del sistema informático de facturación. Antes de activar el módulo fiscal hay que confirmar con un asesor sus obligaciones, como la declaración responsable.
+
+### D-017 · Alcance del MVP
+2026-11-06 · Vigente
+Módulos de `REQUIREMENTS.md`, más recepción del vehículo, adjuntos, envío de PDF por email y exportación CSV.
+Las "valoraciones" se resuelven como un presupuesto a un cliente ocasional, sin módulo propio.
+
+### D-018 · Encargado del tratamiento (RGPD)
+2026-11-06 · Vigente
+Se firmará un contrato de encargado del tratamiento entre el taller y quien acceda a las copias compartidas.
+
+### D-019 · Convenciones de datos
+2026-11-06 · Vigente
+Identificadores UUIDv7, importes en céntimos enteros y fechas ISO 8601 en UTC. Detalle en `DATABASE.md`.
+
+### D-020 · Reorganización de fases
+2026-11-06 · Vigente
+- La web existe desde la Fase 4: la antigua Fase 6 "Demo online" se reparte entre las fases 4 y 5.
+- La Fase 6 pasa a ser la validación con el taller.
+- La validación fiscal se separa en una Fase 8 propia, con fecha límite el 1 de julio de 2027.
