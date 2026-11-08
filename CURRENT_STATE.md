@@ -3,7 +3,7 @@
 Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 
 **Fecha:** 2026-11-08
-**Fase:** 3 · Diseño UX/UI (pendiente de arrancar)
+**Fase:** 3 · Diseño UX/UI (en curso)
 
 ## Hecho
 
@@ -12,18 +12,19 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
   - Documentación aprobada.
   - Repositorio publicado en github.com/lawrencewaves/gestion-taller.
   - Demo en GitHub Pages, ejecutada en el navegador (D-024).
-- Decisiones de esta sesión: sin firma en pantalla (D-021), sin facturas simplificadas (D-022), emails por Gmail (D-023).
+- Decisiones de esta sesión: sin firma en pantalla (D-021), sin facturas simplificadas (D-022), emails por Gmail (D-023), nombre Gonzalvo (D-025).
+- Rama `main` protegida: todo cambio entra por pull request.
+- Fase 3: propuesta de navegación, roles y flujos en `UX.md`. Todo lo hace una sola persona (D-026).
 
 ## Siguiente paso
 
-1. **Robert:** proteger la rama `main` en GitHub (Settings → Branches → solo mediante pull request).
-2. Fase 3: navegación, sistema visual y prototipos de las pantallas clave.
+1. Aprobación de la navegación y los flujos (`UX.md`).
+2. Sistema visual y prototipos de las pantallas clave (UX §7).
 
 ## Preguntas abiertas
 
 | Tema | Dónde está | Bloquea |
 |---|---|---|
-| Nombre comercial del software | REQUIREMENTS §19 | Fase 3 (identidad visual) y primer instalador |
 | Funcionamiento de OPFS sin cabeceras especiales en Safari | D-024 | Fase 4 |
 | Método de conexión con Gmail | D-023 | Fase 5 |
 | Obligaciones como productor del software | D-016 | Fase 8 |
