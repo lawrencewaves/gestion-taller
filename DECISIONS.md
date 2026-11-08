@@ -151,3 +151,7 @@ La demo se publica en GitHub Pages: DEMO desde `main` y PREVIEW en una subcarpet
 ### D-025 · Nombre del software: Gonzalvo
 2026-11-08 · Vigente
 Se usa en la interfaz, en los PDF, en el instalador y como nombre de la aplicación en macOS. El repositorio conserva el nombre `gestion-taller`.
+
+### D-026 · Una sola persona hace todo; todos los roles ven importes
+2026-11-08 · Vigente
+El titular es a la vez mecánico, recepción y administración, y trabaja con una cuenta de Administrador. La interfaz se diseña para una persona que hace todo el ciclo. Los roles Recepción y Mecánico se mantienen por si hay empleados, y por defecto ven importes y precios (incluido el coste).

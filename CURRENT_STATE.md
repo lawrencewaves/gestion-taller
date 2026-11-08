@@ -14,7 +14,7 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
   - Demo en GitHub Pages, ejecutada en el navegador (D-024).
 - Decisiones de esta sesión: sin firma en pantalla (D-021), sin facturas simplificadas (D-022), emails por Gmail (D-023), nombre Gonzalvo (D-025).
 - Rama `main` protegida: todo cambio entra por pull request.
-- Fase 3: propuesta de navegación, permisos por rol y flujos en `UX.md`.
+- Fase 3: propuesta de navegación, roles y flujos en `UX.md`. Todo lo hace una sola persona (D-026).
 
 ## Siguiente paso
 
