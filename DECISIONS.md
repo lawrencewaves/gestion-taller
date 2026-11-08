@@ -24,7 +24,7 @@ Instalador universal para Intel y Apple Silicon. El código no tendrá nada espe
 Tauri 2 y Rust para escritorio, React + TypeScript + Vite para la interfaz, SQLite para los datos locales, GitHub para el código.
 
 ### D-005 · libSQL en lugar de PostgreSQL para la demo
-2026-11-06 · Vigente
+2026-11-06 · Sustituida por D-024
 **Motivo:** libSQL usa el mismo dialecto que SQLite. Hay un único esquema, unas únicas migraciones y unos únicos repositorios, y la demo prueba el mismo SQL que se ejecuta en el taller.
 **Coste:** proveedor menos maduro que PostgreSQL. Si algún día hace falta un servidor central, se añade otro adaptador sin tocar la lógica.
 
@@ -33,7 +33,7 @@ Tauri 2 y Rust para escritorio, React + TypeScript + Vite para la interfaz, SQLi
 Nunca contiene datos reales. Las facturas llevan la marca DEMO y no existe ningún adaptador que comunique con la AEAT en estos entornos.
 
 ### D-007 · Una única base de código con la lógica en `core`
-2026-11-06 · Vigente
+2026-11-06 · Vigente; la parte web está sustituida por D-024
 Las reglas de negocio viven solo en `packages/core`. La interfaz depende de una interfaz de servicios con dos implementaciones: local (escritorio) y remota (web), esta última mediante un RPC genérico hacia una API que ejecuta el mismo `core`. Detalle en `ARCHITECTURE.md`.
 
 ### D-008 · Acceso a SQLite mediante comandos Rust propios (rusqlite)
@@ -45,7 +45,7 @@ Se descarta `tauri-plugin-sql`.
 - Control de la verificación de integridad.
 
 ### D-009 · Entornos
-2026-11-06 · Vigente
+2026-11-06 · Vigente; la base compartida de PREVIEW está sustituida por D-024
 LOCAL, PREVIEW, DEMO y TALLER, aislados entre sí (tabla en `ARCHITECTURE.md`).
 PREVIEW usa **una** base de datos compartida que se reinicia con datos ficticios en cada despliegue, en lugar de una por rama.
 **Motivo:** sencillez y límites de los planes gratuitos.
@@ -131,3 +131,19 @@ El administrador conecta la cuenta de Gmail del taller en Configuración. Los en
 - Inicio de sesión con Google (OAuth): es más cómodo para el usuario, pero exige un proyecto en Google Cloud y Google puede mostrar el aviso de "aplicación no verificada".
 
 Ambos son gratuitos. En DEMO, PREVIEW y LOCAL los envíos se simulan.
+
+### D-024 · Demo en GitHub Pages, ejecutada en el navegador
+2026-11-08 · Vigente · Sustituye a D-005 y a la parte web de D-007 y D-009
+La demo se publica en GitHub Pages: DEMO desde `main` y PREVIEW en una subcarpeta por rama. `core` y `data` se ejecutan en un Web Worker con SQLite compilado a WebAssembly, y los datos ficticios se guardan en el navegador de quien prueba.
+**Excepción a una regla del proyecto:** se permite SQLite en el navegador **solo** en DEMO, PREVIEW y LOCAL, siempre con datos ficticios. La compilación TALLER no incluye este adaptador.
+**Motivo:**
+- Coste cero sin cuentas externas ni límites de uso.
+- La demo ejecuta exactamente el mismo código y SQL que el Mac.
+- Desaparecen la API, Turso y el adaptador remoto.
+
+**Se descartan** Vercel Hobby (no admite uso comercial), Cloudflare Workers con Turso (más piezas y límite de CPU) y Netlify (créditos limitados).
+**Consecuencias aceptadas:**
+- Cada navegador tiene sus propios datos. El cliente envía lo que ha probado mediante la exportación de la demo (RF-DEM-06).
+- La web es pública. El inicio de sesión de la demo solo sirve para probar los roles y no protege nada.
+- GitHub Pages no crea enlaces por rama por sí mismo; los genera GitHub Actions.
+**A verificar en la Fase 4:** almacenamiento OPFS sin cabeceras especiales en Safari y Chrome.

@@ -22,7 +22,8 @@ Instrucciones de trabajo para Claude en este repositorio.
 
 - La lógica de negocio va solo en `packages/core`. Nada de reglas en componentes React.
 - `apps/ui` no importa Tauri, `core`, `data` ni adaptadores.
-- Un solo dialecto SQL para SQLite y libSQL.
+- Un solo esquema y unas solas migraciones SQLite para escritorio y demo.
+- SQLite en el navegador solo en DEMO, PREVIEW y LOCAL, y siempre con datos ficticios (D-024).
 - Nunca se usan datos reales fuera de TALLER, ni en pruebas.
 - Nunca se comunican DEMO, PREVIEW o LOCAL con la AEAT.
 - Ningún requisito fiscal se implementa sin fuente oficial vigente de la AEAT. No se afirma cumplimiento de VeriFactu sin verificarlo.
@@ -33,7 +34,7 @@ Instrucciones de trabajo para Claude en este repositorio.
 
 ## Ramas
 
-`feature/<nombre>` → pull request → aprobación → `main` (DEMO) → etiqueta `vX.Y.Z` (TALLER). Ver ARCHITECTURE §10.
+`feature/<nombre>` → pull request → aprobación → `main` (DEMO) → etiqueta `vX.Y.Z` (TALLER). Ver ARCHITECTURE §11.
 
 ## Comandos
 

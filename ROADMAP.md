@@ -6,7 +6,7 @@ La web existe desde el primer commit de la Fase 4: cada avance se prueba en un e
 | Fase | Contenido | Criterio de salida |
 |---|---|---|
 | 1. Requisitos y análisis | Decisiones, riesgos y alcance | **Cerrada** (2026-11-06) |
-| 2. Arquitectura y documentación | Documentos del repositorio, repositorio GitHub, alojamiento de la demo | Documentos aprobados y repositorio publicado |
+| 2. Arquitectura y documentación | Documentos del repositorio, repositorio GitHub, alojamiento de la demo | **Cerrada** (2026-11-08) |
 | 3. Diseño UX/UI | Navegación, sistema visual y prototipos de pantallas clave | Prototipos aprobados por Robert y por el taller |
 | 4. Núcleo | Ver detalle | Aplicación vacía funcionando en PREVIEW, DEMO y como instalador de prueba en el Mac |
 | 5. MVP | Módulos uno a uno (orden abajo) | Cada módulo aprobado en DEMO antes del siguiente |
@@ -19,14 +19,15 @@ La web existe desde el primer commit de la Fase 4: cada avance se prueba en un e
 Orden de trabajo, un paso cada vez:
 
 1. Monorepo, lint de dependencias y pruebas.
-2. Alojamiento de la demo, PREVIEW y protección de `main`.
-3. `core`, `contracts` y `data` con la primera migración.
-4. API de la demo, RPC y base libSQL con datos ficticios.
-5. Contenedor Tauri y Rust (SQLite), y compilación de macOS en GitHub Actions.
-6. Usuarios, permisos, inicio de sesión y registro de actividad.
-7. Copias de seguridad y restauración.
-8. Esqueleto fiscal desactivado (tablas, triggers, puertos, `fiscal-null`).
-9. Actualizador.
+2. Prueba técnica de SQLite WASM con OPFS en Safari y Chrome (D-024). Si falla, se revisa la decisión antes de seguir.
+3. GitHub Pages: DEMO desde `main` y PREVIEW por rama con GitHub Actions.
+4. `core`, `contracts` y `data` con la primera migración.
+5. Contenedor web: Web Worker, proxy de servicios y datos ficticios.
+6. Contenedor Tauri y Rust (SQLite), y compilación de macOS en GitHub Actions.
+7. Usuarios, permisos, inicio de sesión y registro de actividad.
+8. Copias de seguridad y restauración.
+9. Esqueleto fiscal desactivado (tablas, triggers, puertos, `fiscal-null`).
+10. Actualizador.
 
 ## Fase 5 · Orden de los módulos
 

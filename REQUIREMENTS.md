@@ -166,11 +166,13 @@ Lo técnico (formatos, algoritmo de huella, QR, servicios de la AEAT) se toma **
 
 | ID | Requisito |
 |---|---|
-| RF-DEM-01 | Acceso con autenticación. |
+| RF-DEM-01 | Inicio de sesión con usuarios de prueba de cada rol para probar los permisos. No es una protección real: la demo es pública y solo contiene datos ficticios (D-024). |
 | RF-DEM-02 | Datos ficticios: clientes, vehículos, órdenes, presupuestos y facturas DEMO. |
 | RF-DEM-03 | Crear, editar y eliminar datos de prueba. |
-| RF-DEM-04 | Botón para restaurar los datos iniciales y reinicio automático diario. |
+| RF-DEM-04 | Botón para restaurar los datos iniciales. Los datos se guardan solo en el navegador de quien prueba. |
 | RF-DEM-05 | Las funciones exclusivas de escritorio (copias, USB, impresión directa) aparecen desactivadas con una explicación. |
+| RF-DEM-06 | Exportar el estado de la demo a un archivo e importarlo, para que el cliente pueda enviar lo que ha probado. |
+| RF-DEM-07 | Marca visible del entorno (DEMO o PREVIEW con el nombre de la rama) en todas las pantallas. |
 
 ## 17. No funcionales
 

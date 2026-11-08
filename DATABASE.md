@@ -4,8 +4,8 @@ Modelo de datos, convenciones y migraciones. El DDL definitivo vive en `packages
 
 ## 1. Motor y dialecto
 
-- **SQLite** en escritorio y **libSQL** en la web, con un solo dialecto (D-005).
-- **Prohibido** usar funciones exclusivas de libSQL o de una versión de SQLite que no esté en ambos.
+- **SQLite** en los dos contenedores: rusqlite en escritorio y SQLite WASM en la demo (D-024). Mismo motor, mismo esquema y mismas migraciones.
+- **Prohibido** usar funciones de una versión de SQLite más nueva que la menor de las dos compilaciones. Esa versión mínima queda fijada en la Fase 4.
 - Pragmas de escritorio: `journal_mode=WAL`, `foreign_keys=ON`, `busy_timeout`.
 
 ## 2. Convenciones
@@ -76,7 +76,7 @@ Modelo de datos, convenciones y migraciones. El DDL definitivo vive en `packages
 | `fiscal_events` | Registro de eventos, si la modalidad lo exige. **Solo inserción** |
 | `fiscal_submissions` | Registro, estado, intentos, siguiente intento, último error, respuesta de la AEAT |
 
-Los campos exactos de `fiscal_records` y `fiscal_events` se fijan solo con la especificación oficial vigente (ARCHITECTURE §8).
+Los campos exactos de `fiscal_records` y `fiscal_events` se fijan solo con la especificación oficial vigente (ARCHITECTURE §9).
 
 ### Operación
 | Tabla | Contenido clave |
@@ -99,7 +99,7 @@ No depende solo del código:
 - **Solo hacia delante:** una migración publicada no se edita; se corrige con otra nueva.
 - **Control:** cada migración se registra en `schema_migrations` con su suma de verificación. Si una migración aplicada no coincide, la aplicación se detiene.
 - **Escritorio:** se aplican al arrancar, después de una copia automática.
-- **Web:** se aplican en el despliegue.
+- **Demo:** se aplican en el navegador al abrir una versión nueva. Si fallan, se ofrece restaurar los datos iniciales.
 - **Pruebas:** cada migración se prueba sobre una copia de la base anterior con datos ficticios.
 
 ## 6. Datos ficticios (`packages/seed`)
