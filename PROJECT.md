@@ -4,7 +4,7 @@ Visión, alcance y mapa de la documentación. Las decisiones concretas están en
 
 ## Propósito
 
-Software de gestión propio para **un único taller mecánico en España**, cuyo titular es **autónomo**. Sustituye a Stall, que se usa solo como referencia funcional, nunca visual ni de código.
+**Gonzalvo** es el software de gestión propio para **un único taller mecánico en España**, cuyo titular es **autónomo**. Sustituye a Stall, que se usa solo como referencia funcional, nunca visual ni de código.
 
 ## Principios
 
@@ -48,6 +48,7 @@ Software de gestión propio para **un único taller mecánico en España**, cuyo
 | `REQUIREMENTS.md` | Qué debe hacer el software (requisitos con identificador) | Al aprobar o cambiar un requisito |
 | `ARCHITECTURE.md` | Cómo está construido y desplegado | Al cambiar la estructura técnica |
 | `DATABASE.md` | Modelo de datos, convenciones y migraciones | Con cada migración |
+| `UX.md` | Navegación, flujos y patrones de pantalla | Al aprobar o cambiar el diseño |
 | `ROADMAP.md` | Fases, orden de módulos y criterios de salida | Al cerrar una fase |
 | `DECISIONS.md` | Registro de decisiones y su justificación | Con cada decisión |
 | `CHANGELOG.md` | Cambios por versión | Con cada versión |

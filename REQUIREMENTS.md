@@ -194,6 +194,4 @@ Firma en pantalla, facturas simplificadas, stock y almacén, proveedores y compr
 
 ## 19. Requisitos pendientes de definir
 
-| Tema | Cuándo se decide |
-|---|---|
-| Nombre comercial del software | Antes del primer instalador |
+Ninguno por ahora.
