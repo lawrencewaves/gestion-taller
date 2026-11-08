@@ -114,3 +114,20 @@ Identificadores UUIDv7, importes en céntimos enteros y fechas ISO 8601 en UTC. 
 - La web existe desde la Fase 4: la antigua Fase 6 "Demo online" se reparte entre las fases 4 y 5.
 - La Fase 6 pasa a ser la validación con el taller.
 - La validación fiscal se separa en una Fase 8 propia, con fecha límite el 1 de julio de 2027.
+
+### D-021 · Sin firma en pantalla en el MVP
+2026-11-08 · Vigente
+El Mac del taller no es táctil. La autorización del presupuesto se registra con un documento impreso firmado (escaneado y adjunto) o con la conformidad del cliente anotada por el trabajador. La firma en pantalla queda para cuando haya tablet.
+
+### D-022 · Sin facturas simplificadas
+2026-11-08 · Vigente
+Solo facturas completas (ordinarias y rectificativas). Simplifica las series y los registros fiscales.
+
+### D-023 · Envío de emails por la cuenta de Gmail del taller
+2026-11-08 · Vigente
+El administrador conecta la cuenta de Gmail del taller en Configuración. Los envíos salen desde Rust; la credencial se guarda en el Llavero de macOS y nunca pasa por la interfaz ni por la base de datos.
+**Método de conexión, a decidir en la Fase 5 con la documentación vigente de Google:**
+- Contraseña de aplicación de Google y SMTP: es lo más sencillo, pero exige verificación en dos pasos en la cuenta.
+- Inicio de sesión con Google (OAuth): es más cómodo para el usuario, pero exige un proyecto en Google Cloud y Google puede mostrar el aviso de "aplicación no verificada".
+
+Ambos son gratuitos. En DEMO, PREVIEW y LOCAL los envíos se simulan.

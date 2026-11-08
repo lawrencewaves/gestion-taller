@@ -11,7 +11,7 @@ Prefijos: `RF` funcional, `RNF` no funcional. Un requisito solo cambia si una de
 | RF-GEN-02 | Búsqueda rápida global por matrícula, cliente, teléfono, NIF y número de documento. |
 | RF-GEN-03 | Los datos maestros (clientes, vehículos, catálogo) se archivan en lugar de borrarse si tienen documentos asociados. |
 | RF-GEN-04 | Exportación CSV de listados: clientes, vehículos, facturas y cobros. |
-| RF-GEN-05 | Envío de cualquier PDF por email al cliente. El mecanismo de envío está pendiente (§19). |
+| RF-GEN-05 | Envío de cualquier PDF por email al cliente desde la cuenta de Gmail del taller, conectada en Configuración (D-023). Si no está conectada, la opción se muestra desactivada con un enlace a Configuración. |
 
 ## 2. Usuarios y permisos
 
@@ -67,7 +67,7 @@ Prefijos: `RF` funcional, `RNF` no funcional. Un requisito solo cambia si una de
 |---|---|
 | RF-PRE-01 | Líneas de mano de obra y recambios con cantidad, precio, descuento e impuesto. Totales calculados. |
 | RF-PRE-02 | Estados: Pendiente, Aceptado, Rechazado, Caducado y Sustituido. |
-| RF-PRE-03 | La aceptación o el rechazo registran fecha, hora, trabajador y método (firma en pantalla o documento firmado adjunto). |
+| RF-PRE-03 | La aceptación o el rechazo registran fecha, hora, trabajador y método: documento impreso firmado (escaneado y adjunto) o conformidad por teléfono, email o en persona, con una nota obligatoria. Sin firma en pantalla en el MVP (D-021). |
 | RF-PRE-04 | Modificar un presupuesto aceptado crea una nueva versión que requiere nueva autorización. La anterior queda como Sustituido. |
 | RF-PRE-05 | Caducidad automática según la fecha de validez. |
 | RF-PRE-06 | Un presupuesto aceptado puede convertirse en orden de trabajo o enlazarse con una existente. |
@@ -83,6 +83,7 @@ Prefijos: `RF` funcional, `RNF` no funcional. Un requisito solo cambia si una de
 | RF-FAC-05 | Creación desde orden de trabajo o presupuesto, o factura libre. |
 | RF-FAC-06 | En TALLER, la emisión real queda bloqueada hasta la validación fiscal (D-014). |
 | RF-FAC-07 | En DEMO, todas las facturas llevan la marca DEMO visible en pantalla y en el PDF. |
+| RF-FAC-08 | Solo facturas completas (ordinarias y rectificativas). No se emiten facturas simplificadas ni tickets (D-022). |
 
 ## 9. Cobros
 
@@ -121,6 +122,7 @@ Prefijos: `RF` funcional, `RNF` no funcional. Un requisito solo cambia si una de
 | RF-CFG-03 | Tipos de impuesto y métodos de pago. |
 | RF-CFG-04 | Configuración fiscal: modalidad y estado del módulo VeriFactu (solo administrador). |
 | RF-CFG-05 | Configuración de copias: carpeta de destino, frecuencia y retención. |
+| RF-CFG-06 | Conectar y desconectar la cuenta de Gmail del taller, con envío de prueba (solo administrador). |
 
 ## 13. Documentos PDF
 
@@ -186,13 +188,10 @@ Lo técnico (formatos, algoritmo de huella, QR, servicios de la AEAT) se toma **
 
 ## 18. Fuera del MVP
 
-Stock y almacén, proveedores y compras, inventarios, tiempos y fichajes de operarios, albaranes, anticipos, vehículos de sustitución, WhatsApp, portal de clientes, multiempresa, multitaller y sincronización multidispositivo. La arquitectura debe permitir añadirlos.
+Firma en pantalla, facturas simplificadas, stock y almacén, proveedores y compras, inventarios, tiempos y fichajes de operarios, albaranes, anticipos, vehículos de sustitución, WhatsApp, portal de clientes, multiempresa, multitaller y sincronización multidispositivo. La arquitectura debe permitir añadirlos.
 
 ## 19. Requisitos pendientes de definir
 
 | Tema | Cuándo se decide |
 |---|---|
-| ¿Hace falta emitir facturas simplificadas (tickets)? | Fase 3 |
-| Mecanismo de envío por email: cuenta SMTP configurada o cliente de correo del Mac | Fase 5, módulo de envío |
-| Firma en pantalla: el Mac no tiene pantalla táctil; firmar con trackpad, con tablet o en papel escaneado | Fase 3 |
 | Nombre comercial del software | Antes del primer instalador |

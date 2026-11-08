@@ -77,7 +77,7 @@ Gestor de paquetes: pnpm con workspaces.
 | `FileStore` (adjuntos, PDF) | Carpeta de datos de la aplicación | Almacenamiento de la demo (límite de tamaño) |
 | `BackupService` | Rust | No disponible |
 | `FiscalGateway` | `fiscal-null` hasta la validación; después `fiscal-aeat` | Siempre `fiscal-null` |
-| `Mailer` | Pendiente (REQUIREMENTS §19) | Simulado: no envía |
+| `Mailer` | Gmail del taller desde Rust, con la credencial en el Llavero (D-023) | Simulado: no envía, muestra el email que se habría enviado |
 | `Capabilities` | Indica qué funciones existen en este entorno | Ídem |
 
 La interfaz pregunta a `Capabilities` si una función está disponible. No comprueba el entorno por su cuenta.
