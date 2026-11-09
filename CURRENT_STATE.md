@@ -17,11 +17,13 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 - Fase 3: navegación, roles y flujos aprobados (`UX.md`, D-026).
 - Fase 3: sistema visual y logotipo aprobados (D-027, `design/marca/`).
 - Fase 3: componentes base e iconos en el sistema visual (D-028); tokens en `design/tokens.json`.
+- Fase 3: prototipos navegables de Inicio, Órdenes, ficha de orden, Presupuesto, Factura con cobro y Agenda (lienzo «Gonzalvo · Pantallas», privado de Robert).
 
 ## Siguiente paso
 
-1. Revisión de los componentes por Robert.
-2. Prototipos de las pantallas clave (UX §7) y validación con el taller.
+1. Revisión de los prototipos por Robert.
+2. Validación de los prototipos con el titular del taller.
+3. Cierre de la Fase 3.
 
 ## Preguntas abiertas
 
