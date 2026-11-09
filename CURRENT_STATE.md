@@ -16,10 +16,11 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 - Rama `main` protegida: todo cambio entra por pull request.
 - Fase 3: navegación, roles y flujos aprobados (`UX.md`, D-026).
 - Fase 3: sistema visual y logotipo aprobados (D-027, `design/marca/`).
+- Fase 3: componentes base e iconos en el sistema visual (D-028); tokens en `design/tokens.json`.
 
 ## Siguiente paso
 
-1. Componentes base e iconos en el sistema visual.
+1. Revisión de los componentes por Robert.
 2. Prototipos de las pantallas clave (UX §7) y validación con el taller.
 
 ## Preguntas abiertas
