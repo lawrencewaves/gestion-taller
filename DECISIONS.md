@@ -168,3 +168,17 @@ El titular es a la vez mecánico, recepción y administración, y trabaja con un
 - **Componentes de referencia en el sistema visual:** Button, TextField, Select, StatusBadge, Plate, DataTable, Tabs, SidePanel, NavMenu, EnvBanner, Logo e Icon, con funciones de formato (`formatEUR`, `formatKm`, `formatDate`, `formatPlate`). En la Fase 4 se reimplementan en `apps/ui` con TypeScript a partir de estos y de `design/tokens.json`.
 - **Iconos: Lucide (licencia ISC).** Juego abierto, de línea, completo para un taller y sin coste. Se incluye solo el subconjunto usado, con su aviso de licencia.
 - **Estados:** cada estado de orden, presupuesto, factura, cobro y cita tiene una clave fija y una familia de color (UX §6).
+
+### D-029 · Cierre de la Fase 3
+2026-11-09 · Vigente
+Robert aprueba la navegación, el sistema visual, el logotipo, los componentes y los prototipos. La validación con el titular del taller no bloquea la Fase 4: se hará sobre la DEMO, módulo a módulo, en la Fase 5.
+
+### D-030 · Base técnica de la Fase 4
+2026-11-09 · Vigente
+- **Herramientas:** pnpm (workspaces), TypeScript estricto, Vite 6, React 18, Vitest, ESLint con reglas que impiden saltarse las capas (ARCHITECTURE §2). Versiones fijadas y publicadas hace al menos dos semanas.
+- **Formatos compartidos** (`formatEUR`, `formatKm`, `formatDate`, `formatPlate`) en `contracts`: la interfaz no puede importar `core` y los PDF necesitan los mismos formatos.
+- **Fuentes incluidas en la aplicación** (Fontsource) en lugar de Google Fonts: funcionan sin Internet en el Mac y no envían peticiones a terceros.
+- **Iconos:** `lucide-react`, mismo juego que el sistema visual (D-028).
+- **Rutas con almohadilla** (`#/clientes`): funcionan en GitHub Pages y en Tauri sin servidor.
+- **Publicación propia en `gh-pages`** con un guion en el workflow, sin acciones de terceros: la DEMO sustituye la raíz y cada PREVIEW su carpeta.
+- **Prueba técnica de D-024:** correcta en Chromium (persistencia, transacciones, claves foráneas). Falta confirmarla en Safari en el Mac.

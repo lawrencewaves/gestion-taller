@@ -1,0 +1,103 @@
+# Comprueba cada cambio y lo publica en GitHub Pages (ARCHITECTURE §11).
+#   main       → DEMO     https://<usuario>.github.io/<repo>/
+#   feature/*  → PREVIEW  https://<usuario>.github.io/<repo>/preview/<rama>/
+name: Comprobar y publicar
+
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  comprobar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+
+  publicar:
+    if: github.event_name == 'push'
+    needs: comprobar
+    runs-on: ubuntu-latest
+    # Una publicación cada vez: todas escriben en la rama gh-pages.
+    concurrency:
+      group: gh-pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Calcular entorno y ruta
+        id: target
+        env:
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          if [ "$GITHUB_REF_NAME" = "main" ]; then
+            echo "env=DEMO" >> "$GITHUB_OUTPUT"
+            echo "dir=." >> "$GITHUB_OUTPUT"
+            echo "base=/$REPO/" >> "$GITHUB_OUTPUT"
+          else
+            slug=$(printf '%s' "${GITHUB_REF_NAME#feature/}" | tr 'A-Z' 'a-z' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g')
+            echo "env=PREVIEW" >> "$GITHUB_OUTPUT"
+            echo "dir=preview/$slug" >> "$GITHUB_OUTPUT"
+            echo "base=/$REPO/preview/$slug/" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Compilar
+        run: pnpm build
+        env:
+          BASE_PATH: ${{ steps.target.outputs.base }}
+          VITE_ENV: ${{ steps.target.outputs.env }}
+          VITE_BRANCH: ${{ github.ref_name }}
+          VITE_VERSION: ${{ github.sha }}
+
+      - name: Publicar en gh-pages
+        env:
+          DIR: ${{ steps.target.outputs.dir }}
+          ENV_NAME: ${{ steps.target.outputs.env }}
+        run: |
+          set -euo pipefail
+          dist="$PWD/apps/web/dist"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin gh-pages > /dev/null; then
+            git fetch --depth 1 origin gh-pages
+            git worktree add -B gh-pages site FETCH_HEAD
+          else
+            git worktree add --detach site
+            git -C site checkout --orphan gh-pages
+            git -C site rm -rf --quiet .
+          fi
+          cd site
+          if [ "$DIR" = "." ]; then
+            # DEMO ocupa la raíz: se sustituye entera, sin tocar las PREVIEW.
+            find . -mindepth 1 -maxdepth 1 ! -name .git ! -name preview -exec rm -rf {} +
+          else
+            rm -rf "$DIR"
+            mkdir -p "$DIR"
+          fi
+          cp -r "$dist"/. "$DIR"/
+          touch .nojekyll
+          git add -A
+          if git diff --cached --quiet; then echo "Sin cambios que publicar"; exit 0; fi
+          git commit -m "Publicar $ENV_NAME: $GITHUB_REF_NAME @ ${GITHUB_SHA::7}"
+          git push origin gh-pages
+          url="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/"
+          [ "$DIR" = "." ] || url="${url}${DIR}/"
+          echo "### $ENV_NAME publicada: $url" >> "$GITHUB_STEP_SUMMARY"

@@ -7,7 +7,7 @@ La web existe desde el primer commit de la Fase 4: cada avance se prueba en un e
 |---|---|---|
 | 1. Requisitos y análisis | Decisiones, riesgos y alcance | **Cerrada** (2026-11-06) |
 | 2. Arquitectura y documentación | Documentos del repositorio, repositorio GitHub, alojamiento de la demo | **Cerrada** (2026-11-08) |
-| 3. Diseño UX/UI | Navegación, sistema visual y prototipos de pantallas clave | Prototipos aprobados por Robert y por el taller |
+| 3. Diseño UX/UI | Navegación, sistema visual y prototipos de pantallas clave | **Cerrada** (2026-11-09) |
 | 4. Núcleo | Ver detalle | Aplicación vacía funcionando en PREVIEW, DEMO y como instalador de prueba en el Mac |
 | 5. MVP | Módulos uno a uno (orden abajo) | Cada módulo aprobado en DEMO antes del siguiente |
 | 6. Validación con el taller | Uso de prueba en paralelo a Stall, sin facturar | El taller valida los flujos diarios |

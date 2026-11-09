@@ -1,0 +1,26 @@
+{
+  "name": "@gonzalvo/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.worker.json && tsc -p tsconfig.node.json"
+  },
+  "dependencies": {
+    "@gonzalvo/adapter-worker-rpc": "workspace:*",
+    "@gonzalvo/contracts": "workspace:*",
+    "@gonzalvo/ui": "workspace:*",
+    "@sqlite.org/sqlite-wasm": "3.54.1-build1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
+    "@vitejs/plugin-react": "4.7.0",
+    "vite": "6.4.5"
+  }
+}

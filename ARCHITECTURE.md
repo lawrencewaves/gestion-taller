@@ -54,7 +54,7 @@ apps/
   desktop/     Tauri 2: src-tauri (Rust) + composición local
   web/         Composición del navegador: Web Worker + adaptadores web
 packages/
-  contracts/   Interfaz Services, DTO y esquemas de validación (zod)
+  contracts/   Interfaz Services, DTO, esquemas de validación (zod) y formatos de pantalla y PDF
   core/        domain + services + puertos
   data/        Repositorios + migraciones SQL (un único esquema)
   adapters/
@@ -191,7 +191,12 @@ El entorno lo fija la compilación, no el usuario. La compilación TALLER no inc
 - Nunca se usa el prefijo `VITE_` para nada sensible: todo lo que lo lleva acaba visible en el navegador.
 - Plantilla de variables: `.env.example`, sin valores.
 
-**Configuración paso a paso:** se documentará aquí al montarla en la Fase 4.
+**Configuración (hecha una vez):**
+1. GitHub → Settings → Pages → *Build and deployment*: «Deploy from a branch», rama `gh-pages`, carpeta `/ (root)`.
+2. GitHub → Settings → Branches: `main` protegida, solo mediante pull request (D-010).
+3. No hay secretos para la web. El workflow usa el `GITHUB_TOKEN` del propio repositorio con permiso `contents: write`.
+
+**Cómo funciona:** `.github/workflows/publicar.yml` comprueba (lint, tipos, pruebas) y, si todo pasa, compila y escribe en la rama `gh-pages`: la raíz para DEMO y `preview/<rama>/` para PREVIEW. Las publicaciones van de una en una. `.github/workflows/limpiar-preview.yml` borra la carpeta cuando se elimina la rama. El enlace de cada publicación aparece en el resumen de la ejecución en la pestaña Actions.
 
 ## 12. Autenticación
 

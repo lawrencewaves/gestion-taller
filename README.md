@@ -5,7 +5,7 @@ Software de gestión para un taller mecánico: clientes, vehículos, órdenes de
 - **Aplicación de escritorio** para macOS, con datos locales y funcionamiento sin Internet.
 - **Demo web** con datos ficticios para probar cada novedad antes de publicarla.
 
-> Estado: en diseño (Fase 3). Todavía no hay código de aplicación. Ver `CURRENT_STATE.md`.
+> Estado: Fase 4, base técnica. Todavía no hay código de aplicación. Ver `CURRENT_STATE.md`.
 
 ## Documentación
 
@@ -23,7 +23,15 @@ Software de gestión para un taller mecánico: clientes, vehículos, órdenes de
 
 ## Puesta en marcha
 
-Se documentará en la Fase 4.
+Requisitos: Node 22 y pnpm (`corepack enable pnpm`).
+
+```sh
+pnpm install
+pnpm dev      # versión web en local
+pnpm check    # lint, tipos y pruebas
+```
+
+Demo: `https://lawrencewaves.github.io/gestion-taller/` · Cada rama `feature/*`: `…/gestion-taller/preview/<rama>/`.
 
 ## Licencia
 
