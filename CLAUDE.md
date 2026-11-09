@@ -38,4 +38,10 @@ Instrucciones de trabajo para Claude en este repositorio.
 
 ## Comandos
 
-Se completarán en la Fase 4.
+| Comando | Qué hace |
+|---|---|
+| `pnpm install` | Instala dependencias |
+| `pnpm dev` | Abre la versión web en local (entorno LOCAL) |
+| `pnpm check` | Lint, tipos y pruebas: obligatorio antes de cada commit |
+| `pnpm build` | Compila la web (`BASE_PATH`, `VITE_ENV`, `VITE_BRANCH` los pone la publicación) |
+| `pnpm tokens` | Regenera `apps/ui/src/styles/tokens.css` desde `design/tokens.json` |

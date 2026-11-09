@@ -1,0 +1,48 @@
+/* Gonzalvo — generado desde design/tokens.json con `pnpm tokens`. No editar a mano. */
+:root {
+  --surface: #ffffff;
+  --surface-sunken: #f3f4f6;
+  --line: #e2e5e9;
+  --line-strong: #858d96;
+  --ink: #1b1f24;
+  --ink-muted: #59616b;
+  --action: var(--ink);
+  --on-action: #ffffff;
+  --signal: #f5c400;
+  --on-signal: var(--ink);
+  --focus: #1d5bd8;
+  --danger: #b0261d;
+  --state-pending-bg: #eceef1;
+  --state-pending-fg: #4a525b;
+  --state-progress-bg: #e7eefc;
+  --state-progress-fg: #1c4fb5;
+  --state-waiting-bg: #fdf0e0;
+  --state-waiting-fg: #954700;
+  --state-done-bg: #e4f3e9;
+  --state-done-fg: #1b6a36;
+  --state-closed-bg: #f1f2f4;
+  --state-closed-fg: #5f6770;
+  --state-negative-bg: #fbe8e6;
+  --state-negative-fg: #b0261d;
+  --plate-band: #003399;
+  --on-plate-band: #ffffff;
+  --plate-ink: #111111;
+  --shadow-panel: -8px 0 24px rgba(27, 31, 36, 0.12);
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --font-sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", Menlo, Consolas, monospace;
+}
+.page-title { font-family: var(--font-sans); font-size: 22px; line-height: 28px; font-weight: 650; }
+.section-title { font-family: var(--font-sans); font-size: 16px; line-height: 22px; font-weight: 600; }
+.body { font-family: var(--font-sans); font-size: 14px; line-height: 20px; font-weight: 400; }
+.body-strong { font-family: var(--font-sans); font-size: 14px; line-height: 20px; font-weight: 600; }
+.caption { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 400; }
+.label { font-family: var(--font-sans); font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: 0.06em; }
+.code { font-family: var(--font-mono); font-size: 13px; line-height: 18px; font-weight: 400; }
