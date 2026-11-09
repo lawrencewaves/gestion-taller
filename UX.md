@@ -148,7 +148,7 @@ Un color por significado, igual en todos los módulos (la paleta definitiva se f
 
 ## 7. Pendiente en la Fase 3
 
-1. Aprobación de esta navegación y de estos flujos.
-2. Sistema visual: tipografía, paleta, componentes y logotipo de Gonzalvo.
+1. ~~Aprobación de esta navegación y de estos flujos.~~ Hecho.
+2. ~~Sistema visual: tipografía, paleta, logotipo, componentes e iconos~~ (D-027, D-028).
 3. Prototipos de las pantallas clave: Inicio, Órdenes (listado y ficha), Presupuesto, Factura con cobro y Agenda.
 4. Validación de los prototipos con el taller.
