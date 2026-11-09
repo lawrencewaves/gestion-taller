@@ -155,3 +155,10 @@ Se usa en la interfaz, en los PDF, en el instalador y como nombre de la aplicaci
 ### D-026 · Una sola persona hace todo; todos los roles ven importes
 2026-11-08 · Vigente
 El titular es a la vez mecánico, recepción y administración, y trabaja con una cuenta de Administrador. La interfaz se diseña para una persona que hace todo el ciclo. Los roles Recepción y Mecánico se mantienen por si hay empleados, y por defecto ven importes y precios (incluido el coste).
+
+### D-027 · Sistema visual y logotipo
+2026-11-09 · Vigente
+- **Dirección:** fondo claro y grises neutros, grafito como único color de acción, amarillo de taller (`signal`) como marca, Archivo para la interfaz e IBM Plex Mono para bastidores y referencias.
+- **Logotipo:** cuadrado amarillo con la G y el nombre GONZALVO en mayúsculas espaciadas. Archivos en `design/marca/`.
+- **Referencia viva:** el sistema visual «Gonzalvo» (artifact privado de Robert) contiene los colores, tipos, espacios, radios, reglas de uso y logotipos. Es la fuente de los tokens de la Fase 4.
+- **Los documentos emitidos** (presupuestos, facturas, justificantes) llevan el logotipo y los datos del taller, nunca el de Gonzalvo.
