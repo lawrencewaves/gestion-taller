@@ -150,5 +150,5 @@ Un color por significado, igual en todos los módulos (la paleta definitiva se f
 
 1. ~~Aprobación de esta navegación y de estos flujos.~~ Hecho.
 2. ~~Sistema visual: tipografía, paleta, logotipo, componentes e iconos~~ (D-027, D-028).
-3. Prototipos de las pantallas clave: Inicio, Órdenes (listado y ficha), Presupuesto, Factura con cobro y Agenda.
+3. ~~Prototipos de las pantallas clave: Inicio, Órdenes (listado y ficha), Presupuesto, Factura con cobro y Agenda.~~ Hechos.
 4. Validación de los prototipos con el taller.
