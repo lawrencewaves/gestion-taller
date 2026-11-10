@@ -5,6 +5,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). V
 ## [Sin publicar]
 
 ### Añadido
+- Actualizaciones firmadas: aviso al administrador e instalación con un clic. Canal de prueba y canal del taller (versiones `vX.Y.Z` publicadas como borrador hasta su aprobación). Versión instalada en el Diagnóstico.
 - Esqueleto fiscal desactivado: reglas de emisión por entorno, pasarela de envío nula con barrera y estado fiscal en el Diagnóstico.
 - Copias de seguridad cifradas a la carpeta de Google Drive: diaria automática, manual y a USB; retención de 30 días y 12 meses; aviso si no hay copia en 48 horas; clave en el Administrador de credenciales con hoja de recuperación; restauración con copia previa del estado actual; copia local antes de cada migración.
 - Usuarios con roles, inicio de sesión, primer administrador, bloqueo por intentos, cierre por inactividad, permisos por rol y registro de actividad inalterable.

@@ -8,3 +8,4 @@ export * from './services/activity';
 export * from './services/auth';
 export * from './services/backup';
 export * from './services/fiscal';
+export * from './services/update';

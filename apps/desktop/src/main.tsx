@@ -6,11 +6,12 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { invoke } from '@tauri-apps/api/core';
 import {
-  createTauriBackupPort, createTauriExecutor, createTauriPasswordHasher, openTauriDatabase, takeLocalSnapshot,
+  createTauriBackupPort, createTauriExecutor, createTauriPasswordHasher, createTauriUpdatePort, openTauriDatabase, takeLocalSnapshot,
 } from '@gonzalvo/adapter-tauri';
 import type { AppInfo, Capabilities, Environment, Services } from '@gonzalvo/contracts';
 import {
-  createAuthService, createBackupService, createSystemService, createUuidV7Generator, fileStamp, recordOpen, systemClock,
+  createAuthService, createBackupService, createSystemService, createUpdateService, createUuidV7Generator, fileStamp, recordOpen,
+  systemClock,
 } from '@gonzalvo/core';
 import { migrations, openDatabase } from '@gonzalvo/data';
 import { App } from '@gonzalvo/ui';
@@ -64,7 +65,8 @@ async function start(): Promise<Services> {
   // Copia diaria (RF-BAK-01): al arrancar y cada hora mientras el programa está abierto.
   void backups.runIfDue();
   window.setInterval(() => void backups.runIfDue(), BACKUP_CHECK_MS);
-  return { system, auth, backups };
+  const updates = createUpdateService({ port: createTauriUpdatePort(invoke), session: auth.current });
+  return { system, auth, backups, updates };
 }
 
 start().then(

@@ -15,13 +15,14 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 - Fase 4, paso 7 publicado (D-037): usuarios, inicio de sesión, permisos por rol y registro de actividad, verificado por Robert en la demo y en Windows.
 - Fase 4, paso 8 publicado (D-038): copias cifradas a la carpeta de Google Drive, diaria, manual y a USB, retención, aviso de 48 horas, hoja de recuperación y restauración.
 - Calendario VeriFactu verificado (D-039): vigente el 1 de julio de 2027; aplazamiento a octubre de 2028 anunciado, sin publicar.
-- Fase 4, paso 9 en la rama `feature/fase-4-fiscal` (D-040): esqueleto fiscal desactivado.
+- Fase 4, paso 9 publicado (D-040): esqueleto fiscal desactivado.
+- Fase 4, paso 10 en la rama `feature/fase-4-actualizador` (D-041): actualizador con canal de prueba y canal del taller.
 
 ## Siguiente paso
 
-1. **Robert:** revisar y fusionar `feature/fase-4-fiscal`.
-2. **Robert:** conseguir de Stall una exportación de muestra para estudiar su formato (D-035).
-3. Paso 10 de la Fase 4: actualizador y primera versión TALLER con etiqueta.
+1. **Robert:** guardar los dos secretos de firma en GitHub, instalar a mano una vez la compilación de prueba y comprobar que la siguiente le llega como actualización. Fusionar `feature/fase-4-actualizador`.
+2. Cerrar la Fase 4 (criterio de salida en ROADMAP) y aprobar el paso a la Fase 5.
+3. **Robert:** conseguir de Stall una exportación de muestra para estudiar su formato (D-035).
 
 ## Preguntas abiertas
 

@@ -71,4 +71,10 @@ export interface BackupPort {
   applyRestore(label: string): Promise<string>;
 }
 
+/** Actualizaciones firmadas del programa instalado (Rust, `tauri-plugin-updater`). */
+export interface UpdatePort {
+  check(): Promise<{ version: string; notes: string | null; date: string | null } | null>;
+  install(): Promise<void>;
+}
+
 export const systemClock: Clock = { now: () => new Date().toISOString() };

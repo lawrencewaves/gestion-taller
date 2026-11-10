@@ -4,7 +4,7 @@
  * El adaptador recibe `invoke` desde fuera para no atarse a una versión de la API de Tauri.
  */
 import {
-  type BackupPort, createSerialExecutor, type PasswordHasher, type SqlExecutor, type SqlParams, type SqlValue,
+  type BackupPort, createSerialExecutor, type PasswordHasher, type SqlExecutor, type SqlParams, type SqlValue, type UpdatePort,
 } from '@gonzalvo/core';
 
 export type Invoke = (command: string, args?: Record<string, unknown>) => Promise<unknown>;
@@ -84,5 +84,15 @@ export function createTauriBackupPort(invoke: Invoke): BackupPort {
       await invoke('backup_restore_cancel');
     },
     applyRestore: async (label) => (await invoke('backup_restore_apply', { label })) as string,
+  };
+}
+
+/** Actualizaciones firmadas en Rust: la ventana no tiene acceso a la red (D-041). */
+export function createTauriUpdatePort(invoke: Invoke): UpdatePort {
+  return {
+    check: async () => (await invoke('update_check')) as { version: string; notes: string | null; date: string | null } | null,
+    install: async () => {
+      await invoke('update_install');
+    },
   };
 }

@@ -189,11 +189,17 @@ El entorno lo fija la compilación, no el usuario. La compilación TALLER no inc
 - **Merge a `main`:** compila y publica la raíz (DEMO) sin tocar `preview/`.
 - **Rama borrada o pull request cerrada:** se elimina su subcarpeta.
 
-**Escritorio:**
-- Una etiqueta `vX.Y.Z` en `main` lanza GitHub Actions, que compila el instalador universal de macOS y publica un GitHub Release con el manifiesto del actualizador.
-- La aplicación del taller busca actualizaciones al arrancar y pide confirmación antes de instalarlas.
+**Escritorio (`.github/workflows/escritorio.yml`, D-041):**
+- **Push a una rama:** compilación de prueba `<base>-prueba.<n>` (LOCAL), publicada en `prueba-windows` con su `latest.json`. Los instaladores de prueba se actualizan solos.
+- **Etiqueta `vX.Y.Z` en `main`:** versión TALLER firmada, como **borrador** de publicación con el instalador y su `latest.json`. Llega al taller solo cuando se publica el borrador.
+- El programa avisa al administrador al entrar si hay versión nueva e instala con su confirmación.
 
-**Secretos:** solo la clave privada del actualizador, guardada en los secretos de GitHub Actions. La demo no tiene secretos.
+**Cómo se publica una versión para el taller:**
+1. En una rama: subir `version` en `apps/desktop/src-tauri/tauri.conf.json` y pasar las novedades de «Sin publicar» a `## [X.Y.Z] - fecha` en `CHANGELOG.md`. Pull request y fusión.
+2. Crear la etiqueta `vX.Y.Z` sobre `main` y subirla. GitHub Actions comprueba, compila, firma y crea el borrador.
+3. Robert revisa el borrador en Releases y pulsa «Publish release».
+
+**Secretos:** solo la clave privada del actualizador y su contraseña (`TAURI_SIGNING_PRIVATE_KEY`, `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`), en los secretos de GitHub Actions. La demo no tiene secretos.
 - Nunca se usa el prefijo `VITE_` para nada sensible: todo lo que lo lleva acaba visible en el navegador.
 - Plantilla de variables: `.env.example`, sin valores.
 

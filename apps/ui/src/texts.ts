@@ -93,6 +93,12 @@ export const texts = {
     warning: 'No hay copia de seguridad en las últimas 48 horas.',
     warningLink: 'Revisar copias',
   },
+  updates: {
+    available: (version: string) => `Hay una versión nueva de Gonzalvo: ${version}.`,
+    install: 'Instalar y reiniciar',
+    installing: 'Descargando…',
+    restartHint: 'Gonzalvo se cerrará y volverá a abrirse solo. Tus datos no se tocan, y antes de cambiar nada se guarda una copia.',
+  },
   pending: {
     title: (name: string) => `${name} llegará en la Fase 5`,
     body: 'Los módulos se construyen de uno en uno y se aprueban en la DEMO antes de pasar al siguiente. El primero será Configuración, seguido de Clientes y Vehículos.',
