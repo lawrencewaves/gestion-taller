@@ -11,11 +11,9 @@ export interface WasmConnection {
   storageError?: string;
 }
 
-const quiet = { print: () => undefined, printErr: () => undefined };
-
 /** El motor se inicializa una sola vez por Worker o proceso: una segunda inicialización deja conexiones sin sistema de archivos. */
 let engine: ReturnType<typeof sqlite3InitModule> | undefined;
-const loadEngine = () => (engine ??= sqlite3InitModule(quiet));
+const loadEngine = () => (engine ??= sqlite3InitModule());
 
 function configure(db: Database): Database {
   db.exec('PRAGMA foreign_keys = ON');
