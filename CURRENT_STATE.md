@@ -11,11 +11,11 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 - Diseño de referencia: `UX.md`, `design/tokens.json`, `design/marca/`, sistema visual «Gonzalvo» y lienzo «Gonzalvo · Pantallas» (artifacts privados de Robert).
 - Fase 4, pasos 1 a 3 publicados en DEMO (D-030): monorepo, SQLite en el navegador y GitHub Pages.
 - Fase 4, pasos 4 y 5 publicados en DEMO (D-031): migrador, primera migración y base real en el navegador.
-- Fase 4, paso 6 en la rama `feature/fase-4-escritorio` (D-032): app de Mac con Tauri y SQLite en Rust; instalador de prueba compilado en GitHub.
+- Fase 4, paso 6 en la rama `feature/fase-4-escritorio` (D-032): app de escritorio con Tauri y SQLite en Rust; instalador de prueba de Windows compilado en GitHub (D-033, D-034). Mac en pausa.
 
 ## Siguiente paso
 
-1. **Robert:** instalar la app de prueba (Mac o Windows) y abrir Diagnóstico.
+1. **Robert:** instalar la app de prueba de Windows (descarga en Releases → «prueba-windows») y abrir Diagnóstico.
 2. Paso 7 de la Fase 4: usuarios, permisos, inicio de sesión y registro de actividad.
 
 ## Preguntas abiertas

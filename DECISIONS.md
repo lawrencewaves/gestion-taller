@@ -209,3 +209,9 @@ Robert pide la versión de Windows. Se compila junto a la de Mac, con el mismo c
 - **Datos:** `%APPDATA%\com.lawrencewaves.gonzalvo\` (`local.db` en pruebas, `taller.db` en el taller).
 - **Saltos de línea LF en todo el repositorio** (`.gitattributes`): las migraciones son idénticas en ambos sistemas.
 - **Pendiente según el ordenador del taller:** la contraseña de las copias usará el Llavero en Mac y el Administrador de credenciales en Windows (paso 8).
+
+### D-034 · Windows primero; Mac en pausa
+2026-11-10 · Vigente · Sustituye a D-003 en el orden de plataformas
+Robert pide seguir solo con Windows por ahora. Se compila y prueba únicamente el instalador de Windows. El código sigue sin nada específico de un sistema y la configuración de macOS se conserva (comentario en `escritorio.yml`), así que reactivarla es añadir una entrada.
+- **Descarga directa de pruebas:** cada compilación publica `Gonzalvo-prueba-windows.zip` en la publicación fija `prueba-windows` (prerelease) del repositorio, descargable sin iniciar sesión. Las versiones del taller tendrán sus propias publicaciones `vX.Y.Z` (paso 10).
+- **Pendiente:** la contraseña de las copias irá en el Administrador de credenciales de Windows (paso 8).

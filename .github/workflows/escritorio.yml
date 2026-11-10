@@ -1,9 +1,9 @@
-# Compila los instaladores de escritorio en ordenadores de GitHub:
-#   macOS   → .dmg universal (Intel y Apple Silicon)
-#   Windows → instalador .exe (Windows 10 y 11, 64 bits)
-# Compilación de prueba: entorno LOCAL, datos en local.db. Se descarga desde la pestaña
-# Actions → la ejecución → «Artifacts». Las versiones para el taller (TALLER, etiqueta
-# vX.Y.Z) llegan con el actualizador, en el paso 10 de la Fase 4.
+# Compila los instaladores de escritorio en ordenadores de GitHub.
+#   Windows → instalador .exe (Windows 10 y 11, 64 bits). Activo (D-034).
+#   macOS   → .dmg universal. En pausa: se reactiva añadiendo su entrada a la matriz.
+# Compilación de prueba: entorno LOCAL, datos en local.db. Cada push publica el zip en
+# la descarga fija «prueba-windows» (pestaña Releases). Las versiones para el taller
+# (TALLER, etiqueta vX.Y.Z) llegan con el actualizador, en el paso 10 de la Fase 4.
 name: Instaladores de escritorio
 
 on:
@@ -18,7 +18,7 @@ on:
       - ".github/workflows/escritorio.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: escritorio-${{ github.ref }}
@@ -30,11 +30,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: macos-latest
-            sistema: macos
-            rust_targets: aarch64-apple-darwin x86_64-apple-darwin
-            build_args: --target universal-apple-darwin --bundles app,dmg
-            bundle_dir: apps/desktop/src-tauri/target/universal-apple-darwin/release/bundle
           - os: windows-latest
             sistema: windows
             rust_targets: x86_64-pc-windows-msvc
@@ -91,6 +86,7 @@ jobs:
             ditto -c -k --keepParent "$BUNDLE/macos/Gonzalvo.app" "$out/Gonzalvo.app.zip"
           else
             cp "$BUNDLE"/nsis/*.exe "$out/"
+            (cd "$out" && 7z a -tzip -bso0 Gonzalvo-prueba-windows.zip ./*.exe)
           fi
           ls -la "$out"
           echo "### Instalador de prueba para ${{ matrix.sistema }}: descárgalo en «Artifacts», al final de esta página." >> "$GITHUB_STEP_SUMMARY"
@@ -100,3 +96,22 @@ jobs:
           name: Gonzalvo-prueba-${{ matrix.sistema }}-${{ github.sha }}
           path: ${{ runner.temp }}/gonzalvo/
           retention-days: 30
+
+      - name: Publicar la descarga directa
+        if: matrix.sistema == 'windows' && github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag=prueba-windows
+          notes="Instalador de PRUEBA para Windows 10 y 11 (64 bits). Datos ficticios (entorno LOCAL).
+          Compilado desde \`$GITHUB_REF_NAME\` @ ${GITHUB_SHA::7} el $(date -u +%d/%m/%Y\ %H:%M) UTC.
+          No es la versión del taller."
+          if ! gh release view "$tag" > /dev/null 2>&1; then
+            gh release create "$tag" --prerelease --target "$GITHUB_SHA" --title "Gonzalvo · prueba para Windows" --notes "$notes"
+          else
+            gh release edit "$tag" --notes "$notes"
+          fi
+          gh release upload "$tag" "$RUNNER_TEMP/gonzalvo/Gonzalvo-prueba-windows.zip" --clobber
+          url="https://github.com/${GITHUB_REPOSITORY}/releases/download/$tag/Gonzalvo-prueba-windows.zip"
+          echo "### Descarga directa: $url" >> "$GITHUB_STEP_SUMMARY"
