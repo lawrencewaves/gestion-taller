@@ -10,6 +10,7 @@ use std::path::{Path, PathBuf};
 use std::sync::RwLock;
 use tauri::{AppHandle, Manager, State};
 use tauri_plugin_dialog::DialogExt;
+use tauri_plugin_updater::UpdaterExt;
 
 struct OpenDb {
     db: Database,
@@ -289,9 +290,55 @@ async fn backup_restore_apply(app: AppHandle, state: State<'_, AppDb>, label: St
     apply_restore(&state, &staging(&app)?, &data_dir(&app, "copias-previas")?, &label)
 }
 
+// ---------------------------------------------------------------------------
+// Actualizaciones (D-012, D-041)
+// ---------------------------------------------------------------------------
+
+const REPO_RELEASES: &str = "https://github.com/lawrencewaves/gestion-taller/releases";
+
+/// Canal fijado al compilar: el taller solo recibe versiones publicadas `vX.Y.Z`;
+/// las compilaciones de prueba, la última compilación de prueba.
+fn update_feed() -> String {
+    if option_env!("VITE_ENV") == Some("TALLER") {
+        format!("{REPO_RELEASES}/latest/download/latest.json")
+    } else {
+        format!("{REPO_RELEASES}/download/prueba-windows/latest.json")
+    }
+}
+
+async fn find_update(app: &AppHandle) -> Result<Option<tauri_plugin_updater::Update>, String> {
+    let feed = update_feed().parse().map_err(|e| format!("Dirección de actualizaciones no válida: {e}"))?;
+    let updater = app
+        .updater_builder()
+        .endpoints(vec![feed])
+        .map_err(|e| e.to_string())?
+        .build()
+        .map_err(|e| e.to_string())?;
+    updater.check().await.map_err(|e| format!("No se ha podido comprobar si hay versión nueva: {e}"))
+}
+
+#[tauri::command]
+async fn update_check(app: AppHandle) -> Result<Option<Json>, String> {
+    Ok(find_update(&app).await?.map(|u| {
+        json!({ "version": u.version, "notes": u.body, "date": u.date.map(|d| d.to_string()) })
+    }))
+}
+
+/// Descarga, comprueba la firma e instala. En Windows el instalador cierra Gonzalvo y lo vuelve a abrir.
+#[tauri::command]
+async fn update_install(app: AppHandle) -> Result<(), String> {
+    let update = find_update(&app).await?.ok_or("Ya tienes la última versión.")?;
+    update
+        .download_and_install(|_, _| {}, || {})
+        .await
+        .map_err(|e| format!("No se ha podido instalar la actualización: {e}"))?;
+    app.restart();
+}
+
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(AppDb::default())
         .invoke_handler(tauri::generate_handler![
             db_open,
@@ -313,6 +360,8 @@ pub fn run() {
             backup_restore_prepare,
             backup_restore_cancel,
             backup_restore_apply,
+            update_check,
+            update_install,
         ])
         .run(tauri::generate_context!())
         .expect("No se ha podido arrancar Gonzalvo");
@@ -331,6 +380,16 @@ mod tests {
         assert!(!valid_file_name(".oculto.db"));
         assert!(!valid_file_name("taller.sqlite"));
         assert!(!valid_file_name("Taller.db"));
+    }
+
+    #[test]
+    fn canal_de_actualizaciones_segun_el_entorno() {
+        let feed = update_feed();
+        assert!(feed.starts_with("https://github.com/lawrencewaves/gestion-taller/releases/"));
+        assert!(feed.ends_with("/latest.json"));
+        if option_env!("VITE_ENV") != Some("TALLER") {
+            assert!(feed.contains("/prueba-windows/"), "una compilación de prueba nunca toma versiones del taller");
+        }
     }
 
     #[test]

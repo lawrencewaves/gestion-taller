@@ -118,6 +118,8 @@ a:hover { color: var(--ink); }
 .gz-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .gz-path { margin: 0; font-family: var(--font-mono); overflow-wrap: anywhere; }
 .gz-warning { max-width: 760px; margin: 0 0 var(--space-4); }
+.gz-update { display: flex; flex-direction: column; gap: var(--space-2); }
+.gz-update p { margin: 0; }
 .gz-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 .gz-list__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); padding: var(--space-2) 0; border-top: 1px solid var(--line); }
 .gz-list__grow { flex: 1; }

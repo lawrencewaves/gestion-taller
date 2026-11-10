@@ -27,7 +27,7 @@ Orden de trabajo, un paso cada vez:
 7. Usuarios, permisos, inicio de sesión y registro de actividad.
 8. Copias de seguridad y restauración.
 9. Esqueleto fiscal desactivado: reglas de emisión por entorno, puerto de envío, pasarela nula y barrera (D-040). Las tablas fiscales llegan con Facturación.
-10. Actualizador.
+10. Actualizador y versiones TALLER con etiqueta (D-041).
 
 ## Fase 5 · Orden de los módulos
 

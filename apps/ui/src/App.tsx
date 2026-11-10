@@ -7,6 +7,7 @@ import './styles/tokens.css';
 import './styles/app.css';
 import { EnvBanner } from './components/EnvBanner';
 import { canSee, NavMenu, type RouteId } from './components/NavMenu';
+import { UpdateNotice } from './components/UpdateNotice';
 import { Login, Setup } from './screens/Acceso';
 import { BackupWarning, Copias } from './screens/Copias';
 import { Diagnostico } from './screens/Diagnostico';
@@ -59,10 +60,10 @@ function useIdle(active: boolean, minutes: number, onIdle: () => void) {
   }, [active, minutes, onIdle]);
 }
 
-function Screen({ route, session }: { route: RouteId; session: Session }) {
+function Screen({ route, session, version }: { route: RouteId; session: Session; version: string }) {
   if (!canSee(session, route)) return <Pendiente name={texts.access.forbiddenTitle} body={texts.access.forbiddenBody} />;
   if (route === 'inicio') return <Inicio />;
-  if (route === 'diagnostico') return <Diagnostico />;
+  if (route === 'diagnostico') return <Diagnostico version={version} />;
   if (route === 'copias') return <Copias />;
   return <Pendiente name={texts.nav[route]} />;
 }
@@ -124,8 +125,13 @@ export function App({ services, info }: AppProps) {
         <div className="gz-shell">
           <NavMenu active={route} session={auth.session} onLogout={() => void logout()} />
           <main className="gz-main">
-            {auth.session.permissions.includes('config.manage') && <BackupWarning route={route} />}
-            <Screen route={route} session={auth.session} />
+            {auth.session.permissions.includes('config.manage') && (
+              <>
+                <UpdateNotice />
+                <BackupWarning route={route} />
+              </>
+            )}
+            <Screen route={route} session={auth.session} version={info.version} />
           </main>
         </div>
       );

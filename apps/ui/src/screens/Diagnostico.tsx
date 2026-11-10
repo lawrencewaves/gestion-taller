@@ -17,7 +17,7 @@ function Row({ label, value, ok }: { label: string; value: string; ok?: boolean 
 }
 
 /** Estado de la base de datos en este entorno: almacenamiento, versión del esquema e integridad. */
-export function Diagnostico() {
+export function Diagnostico({ version }: { version: string }) {
   const services = useServices();
   const [state, setState] = useState<State>({ status: 'loading' });
 
@@ -57,6 +57,7 @@ export function Diagnostico() {
               <Row label="Veces abierta" value={`${r.opens}. Recarga la página: si el número sube, los datos se guardan.`} />
               <Row label="Transacciones" ok={r.transactionsOk} value="Una operación a medias se deshace entera" />
               <Row label="Relaciones entre datos" ok={r.foreignKeysOk} value="No se pueden guardar datos huérfanos" />
+              <Row label="Versión de Gonzalvo" value={version} />
               <Row label="Facturación fiscal" value={`${FISCAL_MODE_LABELS[r.fiscal.mode]}. ${r.fiscal.reason}`} />
               <Row label="Base de datos" value={`Versión ${r.schemaVersion} · ${r.dbName}`} />
               <Row label="Motor" value={`SQLite ${r.sqliteVersion}`} />

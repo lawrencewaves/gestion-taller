@@ -1,20 +1,25 @@
-# Compila los instaladores de escritorio en ordenadores de GitHub.
-#   Windows → instalador .exe (Windows 10 y 11, 64 bits). Activo (D-034).
-#   macOS   → .dmg universal. En pausa: se reactiva añadiendo su entrada a la matriz.
-# Compilación de prueba: entorno LOCAL, datos en local.db. Cada push publica el zip en
-# la descarga fija «prueba-windows» (pestaña Releases). Las versiones para el taller
-# (TALLER, etiqueta vX.Y.Z) llegan con el actualizador, en el paso 10 de la Fase 4.
+# Compila el instalador de Windows en ordenadores de GitHub (D-034) y publica sus actualizaciones (D-041).
+#
+#   Push a una rama  → compilación de PRUEBA (entorno LOCAL, local.db), versión <base>-prueba.<n>.
+#                      Se publica en la descarga fija «prueba-windows» con su latest.json:
+#                      los instaladores de prueba se actualizan solos con la última compilación.
+#   Etiqueta vX.Y.Z  → versión del TALLER (taller.db). Crea un BORRADOR de publicación con el
+#                      instalador y su latest.json. Solo llega al taller cuando Robert lo publica.
+#
+# macOS en pausa: se reactiva añadiendo su entrada a la matriz y su plataforma al latest.json.
 name: Instaladores de escritorio
 
 on:
   workflow_dispatch:
   push:
     branches: [main, "feature/**"]
+    tags: ["v*.*.*"]
     paths:
       - "apps/desktop/**"
       - "apps/ui/**"
       - "packages/**"
       - "pnpm-lock.yaml"
+      - "CHANGELOG.md"
       - ".github/workflows/escritorio.yml"
 
 permissions:
@@ -33,7 +38,6 @@ jobs:
           - os: windows-latest
             sistema: windows
             rust_targets: x86_64-pc-windows-msvc
-            build_args: --bundles nsis
             bundle_dir: apps/desktop/src-tauri/target/release/bundle
     name: ${{ matrix.sistema }}
     runs-on: ${{ matrix.os }}
@@ -41,6 +45,10 @@ jobs:
     defaults:
       run:
         shell: bash
+    env:
+      # Clave de firma de las actualizaciones (secretos del repositorio). Sin ella se compila igual, sin actualizaciones.
+      TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+      TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v5
@@ -63,55 +71,116 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Versión y entorno
+        run: |
+          set -euo pipefail
+          base=$(jq -r .version apps/desktop/src-tauri/tauri.conf.json)
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            version="${GITHUB_REF_NAME#v}"
+            if [ "$version" != "$base" ]; then
+              echo "::error::La etiqueta $GITHUB_REF_NAME no coincide con la versión de tauri.conf.json ($base)."
+              exit 1
+            fi
+            # Las novedades de la versión salen del CHANGELOG: sin ellas no se publica.
+            awk -v v="$version" '$0 ~ "^## \\[" v "\\]" {on=1; next} /^## \[/ {on=0} on' CHANGELOG.md | sed '/^$/d' > "$RUNNER_TEMP/notas.md"
+            if [ ! -s "$RUNNER_TEMP/notas.md" ]; then
+              echo "::error::Falta la sección «## [$version]» en CHANGELOG.md."
+              exit 1
+            fi
+            env_name=TALLER
+          else
+            version="${base}-prueba.${GITHUB_RUN_NUMBER}"
+            echo "Compilación de prueba desde $GITHUB_REF_NAME." > "$RUNNER_TEMP/notas.md"
+            env_name=LOCAL
+          fi
+          {
+            echo "APP_VERSION=$version"
+            echo "VITE_ENV=$env_name"
+            echo "VITE_VERSION=$version (${GITHUB_SHA::7})"
+          } >> "$GITHUB_ENV"
+          if [ -n "$TAURI_SIGNING_PRIVATE_KEY" ]; then echo "SIGNED=1" >> "$GITHUB_ENV"; else echo "SIGNED=0" >> "$GITHUB_ENV"; fi
+          echo "Versión $version · entorno $env_name"
+
+      - name: Sin clave de firma no hay versión del taller
+        if: github.ref_type == 'tag' && env.SIGNED != '1'
+        run: |
+          echo "::error::Faltan los secretos TAURI_SIGNING_PRIVATE_KEY y TAURI_SIGNING_PRIVATE_KEY_PASSWORD."
+          exit 1
+
       - name: Pruebas de Rust
         working-directory: apps/desktop/src-tauri
         run: cargo test --workspace --locked
 
       - name: Compilar el instalador
         working-directory: apps/desktop
-        env:
-          VITE_ENV: LOCAL
-          VITE_VERSION: ${{ github.sha }}
-        run: pnpm tauri build ${{ matrix.build_args }}
+        run: |
+          set -euo pipefail
+          # La caché conserva instaladores de compilaciones anteriores: se empieza sin ninguno.
+          rm -rf src-tauri/target/release/bundle/nsis
+          config=$(jq -nc --arg v "$APP_VERSION" --argjson signed "$SIGNED" '{version: $v} + (if $signed == 1 then {bundle: {createUpdaterArtifacts: true}} else {} end)')
+          pnpm tauri build --bundles nsis --config "$config"
 
-      - name: Preparar la descarga
+      - name: Preparar los archivos
         env:
           BUNDLE: ${{ matrix.bundle_dir }}
         run: |
           set -euo pipefail
           out="$RUNNER_TEMP/gonzalvo"
           mkdir -p "$out"
-          if [ "${{ matrix.sistema }}" = "macos" ]; then
-            cp "$BUNDLE"/dmg/*.dmg "$out/"
-            ditto -c -k --keepParent "$BUNDLE/macos/Gonzalvo.app" "$out/Gonzalvo.app.zip"
+          exe="$BUNDLE/nsis/Gonzalvo_${APP_VERSION}_x64-setup.exe"
+          test -f "$exe"
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            name="Gonzalvo-$APP_VERSION-windows-setup.exe"
+            base_url="https://github.com/${GITHUB_REPOSITORY}/releases/download/$GITHUB_REF_NAME"
           else
-            cp "$BUNDLE"/nsis/*.exe "$out/"
-            (cd "$out" && 7z a -tzip -bso0 Gonzalvo-prueba-windows.zip ./*.exe)
+            name="Gonzalvo-prueba-windows-setup.exe"
+            base_url="https://github.com/${GITHUB_REPOSITORY}/releases/download/prueba-windows"
+          fi
+          cp "$exe" "$out/$name"
+          (cd "$out" && 7z a -tzip -bso0 "${name%-setup.exe}.zip" "$name")
+          if [ "$SIGNED" = "1" ]; then
+            # La firma es del contenido, no del nombre: el archivo se puede renombrar.
+            jq -n --arg v "$APP_VERSION" --rawfile notes "$RUNNER_TEMP/notas.md" \
+              --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --rawfile sig "$exe.sig" --arg url "$base_url/$name" \
+              '{version: $v, notes: ($notes | rtrimstr("\n")), pub_date: $date,
+                platforms: {"windows-x86_64": {signature: ($sig | rtrimstr("\n")), url: $url}}}' > "$out/latest.json"
           fi
           ls -la "$out"
-          echo "### Instalador de prueba para ${{ matrix.sistema }}: descárgalo en «Artifacts», al final de esta página." >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v6
         with:
-          name: Gonzalvo-prueba-${{ matrix.sistema }}-${{ github.sha }}
+          name: Gonzalvo-${{ matrix.sistema }}-${{ env.APP_VERSION }}
           path: ${{ runner.temp }}/gonzalvo/
           retention-days: 30
 
-      - name: Publicar la descarga directa
-        if: matrix.sistema == 'windows' && github.event_name != 'pull_request'
+      - name: Publicar la compilación de prueba
+        if: github.ref_type == 'branch'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           tag=prueba-windows
+          out="$RUNNER_TEMP/gonzalvo"
           notes="Instalador de PRUEBA para Windows 10 y 11 (64 bits). Datos ficticios (entorno LOCAL).
-          Compilado desde \`$GITHUB_REF_NAME\` @ ${GITHUB_SHA::7} el $(date -u +%d/%m/%Y\ %H:%M) UTC.
+          Versión $APP_VERSION, compilada desde \`$GITHUB_REF_NAME\` @ ${GITHUB_SHA::7} el $(date -u +%d/%m/%Y\ %H:%M) UTC.
           No es la versión del taller."
           if ! gh release view "$tag" > /dev/null 2>&1; then
             gh release create "$tag" --prerelease --target "$GITHUB_SHA" --title "Gonzalvo · prueba para Windows" --notes "$notes"
           else
             gh release edit "$tag" --notes "$notes"
           fi
-          gh release upload "$tag" "$RUNNER_TEMP/gonzalvo/Gonzalvo-prueba-windows.zip" --clobber
-          url="https://github.com/${GITHUB_REPOSITORY}/releases/download/$tag/Gonzalvo-prueba-windows.zip"
-          echo "### Descarga directa: $url" >> "$GITHUB_STEP_SUMMARY"
+          files=("$out/Gonzalvo-prueba-windows.zip" "$out/Gonzalvo-prueba-windows-setup.exe")
+          [ -f "$out/latest.json" ] && files+=("$out/latest.json")
+          gh release upload "$tag" "${files[@]}" --clobber
+          echo "### Descarga directa: https://github.com/${GITHUB_REPOSITORY}/releases/download/$tag/Gonzalvo-prueba-windows.zip" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Crear el borrador de la versión del taller
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/gonzalvo"
+          gh release create "$GITHUB_REF_NAME" --draft --verify-tag --title "Gonzalvo $APP_VERSION" --notes-file "$RUNNER_TEMP/notas.md" \
+            "$out/Gonzalvo-$APP_VERSION-windows-setup.exe" "$out/Gonzalvo-$APP_VERSION-windows.zip" "$out/latest.json"
+          echo "### Borrador creado: revísalo y pulsa «Publish release» para que llegue al taller." >> "$GITHUB_STEP_SUMMARY"

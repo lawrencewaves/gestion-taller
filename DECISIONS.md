@@ -272,3 +272,15 @@ Robert instala la versión de prueba en Windows: arranca, el Diagnóstico da tod
   - El Diagnóstico muestra la modalidad y lo que permite.
 - **Tablas fiscales** (`fiscal_records`, `fiscal_events`, `fiscal_submissions`) con sus triggers de solo inserción: se crean en la misma migración que `invoices` (Fase 5, Facturación). Crearlas ahora obligaría a reconstruirlas para añadir la clave foránea a `invoices`, que SQLite no permite añadir después.
 - **Sin CSP en la web:** en GitHub Pages solo puede ponerse como `<meta>`, que no se aplica al Web Worker donde corre la lógica. La protección real es estructural: la pasarela de la AEAT necesitará el certificado del taller y vivirá solo en Rust; la web no la incluye. El escritorio ya limita la red de la ventana a IPC (`connect-src ipc:`).
+
+### D-041 · Actualizador y versiones del taller (paso 10 de la Fase 4)
+2026-11-10 · Vigente · Concreta D-012 y D-034
+- **`tauri-plugin-updater` 2.14.1** (oficial), usado solo desde Rust con dos comandos (`update_check`, `update_install`). La ventana sigue sin acceso a la red. Cada actualización se descarga, se comprueba su firma con la clave pública incluida en el programa y se instala con el instalador de Windows en modo pasivo; Gonzalvo se cierra y vuelve a abrirse.
+- **Dos canales, fijados al compilar:**
+  - **Prueba** (`VITE_ENV=LOCAL`): cada push a una rama compila la versión `<base>-prueba.<n>` y la publica en `prueba-windows` con su `latest.json`. Los instaladores de prueba se actualizan solos con la última compilación.
+  - **Taller** (`VITE_ENV=TALLER`): solo desde una etiqueta `vX.Y.Z` que coincida con `tauri.conf.json` y con una sección `## [X.Y.Z]` en `CHANGELOG.md` (sus novedades son las notas de la actualización). Se crea como **borrador**; llega al taller cuando Robert pulsa «Publish release». El programa del taller consulta `releases/latest`, que ignora borradores y prepublicaciones.
+- **Quién la ve:** al entrar, quien tiene `config.manage` ve el aviso «Hay una versión nueva» con «Instalar y reiniciar». Sin conexión no se muestra nada. La versión instalada aparece en el Diagnóstico.
+- **Datos:** la actualización no toca la base; al abrir la versión nueva, si cambia el esquema, se hace antes la copia local (D-038).
+- **Clave de firma:** par minisign generado para el proyecto. La pública va en `tauri.conf.json`; la privada y su contraseña solo existen como secretos del repositorio (`TAURI_SIGNING_PRIVATE_KEY`, `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`) y en la copia que guarda Robert fuera del repositorio. Si se perdiera, los programas instalados no aceptarían versiones firmadas con otra clave: habría que reinstalar a mano una vez.
+- **Sin secretos** se compila igual, pero sin actualizaciones; una etiqueta `vX.Y.Z` sin secretos falla a propósito.
+- Las instalaciones anteriores a este paso no tienen actualizador: hay que instalar a mano una vez la versión nueva.
