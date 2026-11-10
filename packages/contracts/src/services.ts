@@ -1,3 +1,5 @@
+import type { AuthService } from './auth';
+
 /**
  * Lo único que la interfaz conoce del resto del sistema (ARCHITECTURE §5).
  * Cada entorno aporta su implementación: local en escritorio, Web Worker en la demo.
@@ -39,4 +41,5 @@ export interface SystemService {
 
 export interface Services {
   system: SystemService;
+  auth: AuthService;
 }

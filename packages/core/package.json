@@ -10,5 +10,9 @@
   },
   "dependencies": {
     "@gonzalvo/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@gonzalvo/adapter-browser": "workspace:*",
+    "@gonzalvo/data": "workspace:*"
   }
 }

@@ -58,8 +58,8 @@ packages/
   core/        domain + services + puertos
   data/        Repositorios + migraciones SQL (un único esquema)
   adapters/
-    sql-tauri/       SqlExecutor por IPC hacia Rust
-    sql-wasm/        SqlExecutor con SQLite WASM en el Worker (solo demo)
+    tauri/           Escritorio: SqlExecutor por IPC hacia Rust y cifrado Argon2id
+    browser/         Navegador: SqlExecutor con SQLite WASM y cifrado PBKDF2 (solo demo)
     worker-rpc/      Proxy genérico de Services sobre postMessage
     fiscal-null/     No comunica con nadie (LOCAL, PREVIEW, DEMO)
     fiscal-aeat/     Comunicación real (se construye en la fase fiscal)

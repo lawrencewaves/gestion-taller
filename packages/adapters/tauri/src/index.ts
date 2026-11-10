@@ -3,7 +3,7 @@
  * La cola y las transacciones son las mismas que en el navegador (`createSerialExecutor`).
  * El adaptador recibe `invoke` desde fuera para no atarse a una versión de la API de Tauri.
  */
-import { createSerialExecutor, type SqlExecutor, type SqlParams, type SqlValue } from '@gonzalvo/core';
+import { createSerialExecutor, type PasswordHasher, type SqlExecutor, type SqlParams, type SqlValue } from '@gonzalvo/core';
 
 export type Invoke = (command: string, args?: Record<string, unknown>) => Promise<unknown>;
 
@@ -42,4 +42,12 @@ export function createTauriExecutor(invoke: Invoke): SqlExecutor {
 /** Abre la base en la carpeta de datos de la aplicación. Devuelve la ruta del archivo. */
 export async function openTauriDatabase(invoke: Invoke, fileName: string): Promise<string> {
   return (await invoke('db_open', { fileName })) as string;
+}
+
+/** Argon2id en Rust (RNF-03): la contraseña no se cifra en JavaScript. */
+export function createTauriPasswordHasher(invoke: Invoke): PasswordHasher {
+  return {
+    hash: async (password) => (await invoke('password_hash', { password })) as string,
+    verify: async (password, hash) => (await invoke('password_verify', { password, hash })) as boolean,
+  };
 }

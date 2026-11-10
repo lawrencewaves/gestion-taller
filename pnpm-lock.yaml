@@ -190,9 +190,9 @@ importers:
 
   apps/desktop:
     dependencies:
-      '@gonzalvo/adapter-sql-tauri':
+      '@gonzalvo/adapter-tauri':
         specifier: workspace:*
-        version: link:../../packages/adapters/sql-tauri
+        version: link:../../packages/adapters/tauri
       '@gonzalvo/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
@@ -258,9 +258,9 @@ importers:
 
   apps/web:
     dependencies:
-      '@gonzalvo/adapter-sql-wasm':
+      '@gonzalvo/adapter-browser':
         specifier: workspace:*
-        version: link:../../packages/adapters/sql-wasm
+        version: link:../../packages/adapters/browser
       '@gonzalvo/adapter-worker-rpc':
         specifier: workspace:*
         version: link:../../packages/adapters/worker-rpc
@@ -273,6 +273,9 @@ importers:
       '@gonzalvo/data':
         specifier: workspace:*
         version: link:../../packages/data
+      '@gonzalvo/seed':
+        specifier: workspace:*
+        version: link:../../packages/seed
       '@gonzalvo/ui':
         specifier: workspace:*
         version: link:../ui
@@ -299,13 +302,7 @@ importers:
         specifier: 6.4.5
         version: 6.4.5(@types/node@22.20.5)
 
-  packages/adapters/sql-tauri:
-    dependencies:
-      '@gonzalvo/core':
-        specifier: workspace:*
-        version: link:../../core
-
-  packages/adapters/sql-wasm:
+  packages/adapters/browser:
     dependencies:
       '@gonzalvo/core':
         specifier: workspace:*
@@ -313,6 +310,12 @@ importers:
       '@sqlite.org/sqlite-wasm':
         specifier: 3.54.1-build1
         version: 3.54.1-build1
+
+  packages/adapters/tauri:
+    dependencies:
+      '@gonzalvo/core':
+        specifier: workspace:*
+        version: link:../../core
 
   packages/adapters/worker-rpc: {}
 
@@ -323,6 +326,13 @@ importers:
       '@gonzalvo/contracts':
         specifier: workspace:*
         version: link:../contracts
+    devDependencies:
+      '@gonzalvo/adapter-browser':
+        specifier: workspace:*
+        version: link:../adapters/browser
+      '@gonzalvo/data':
+        specifier: workspace:*
+        version: link:../data
 
   packages/data:
     dependencies:
@@ -330,9 +340,18 @@ importers:
         specifier: workspace:*
         version: link:../core
     devDependencies:
-      '@gonzalvo/adapter-sql-wasm':
+      '@gonzalvo/adapter-browser':
         specifier: workspace:*
-        version: link:../adapters/sql-wasm
+        version: link:../adapters/browser
+      '@gonzalvo/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+
+  packages/seed:
+    dependencies:
+      '@gonzalvo/core':
+        specifier: workspace:*
+        version: link:../core
 
 packages:
 

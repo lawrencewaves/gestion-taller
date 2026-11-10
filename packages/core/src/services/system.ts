@@ -1,5 +1,6 @@
-import type { DiagnosticsReport, SystemService } from '@gonzalvo/contracts';
+import type { DiagnosticsReport, Session, SystemService } from '@gonzalvo/contracts';
 import type { SqlExecutor } from '../ports';
+import { requirePermission } from './auth';
 
 export interface SystemServiceDeps {
   db: SqlExecutor;
@@ -9,6 +10,8 @@ export interface SystemServiceDeps {
   schemaVersion: number;
   /** Motivo por el que no se pudo usar el almacenamiento persistente, si lo hubo. */
   storageError?: string;
+  /** Sesión actual: el diagnóstico exige el permiso `system.diagnostics`. */
+  session: () => Session | null;
 }
 
 const openCount = async (db: SqlExecutor) =>
@@ -27,6 +30,7 @@ export function createSystemService(deps: SystemServiceDeps): SystemService {
   const { db } = deps;
   return {
     async diagnostics() {
+      requirePermission(deps.session(), 'system.diagnostics');
       const opens = await openCount(db);
 
       // Una transacción que falla no deja rastro.

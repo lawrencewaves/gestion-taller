@@ -9,11 +9,12 @@
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.worker.json && tsc -p tsconfig.node.json"
   },
   "dependencies": {
-    "@gonzalvo/adapter-sql-wasm": "workspace:*",
+    "@gonzalvo/adapter-browser": "workspace:*",
     "@gonzalvo/adapter-worker-rpc": "workspace:*",
     "@gonzalvo/contracts": "workspace:*",
     "@gonzalvo/core": "workspace:*",
     "@gonzalvo/data": "workspace:*",
+    "@gonzalvo/seed": "workspace:*",
     "@gonzalvo/ui": "workspace:*",
     "react": "18.3.1",
     "react-dom": "18.3.1"

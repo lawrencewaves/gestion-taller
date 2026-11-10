@@ -5,6 +5,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). V
 ## [Sin publicar]
 
 ### Añadido
+- Usuarios con roles, inicio de sesión, primer administrador, bloqueo por intentos, cierre por inactividad, permisos por rol y registro de actividad inalterable.
 - Instalador de prueba para Windows (`.exe`), compilado junto al de macOS.
 - App de escritorio para macOS (Tauri) con SQLite en Rust e instalador de prueba universal compilado en GitHub Actions.
 - Base de datos real: migrador con verificación, primera migración (configuración, series, IVA, métodos de pago) y protección de entorno.

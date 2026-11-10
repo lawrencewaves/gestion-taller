@@ -1,0 +1,9 @@
+[package]
+name = "gonzalvo-password"
+version = "0.1.0"
+edition = "2021"
+description = "Cifrado de contraseñas del escritorio de Gonzalvo con Argon2id (RNF-03)"
+publish = false
+
+[dependencies]
+argon2 = { version = "=0.5.3", features = ["std"] }

@@ -34,6 +34,7 @@ export default tseslint.config(
   },
   {
     files: ['packages/core/**/*.ts'],
+    ignores: ['**/*.test.ts'],
     rules: forbid(
       [...platform, 'react', 'react-dom', '@gonzalvo/ui', '@gonzalvo/web', '@gonzalvo/adapter-*'],
       'core no depende de ninguna plataforma ni de la interfaz (ARCHITECTURE §2).',

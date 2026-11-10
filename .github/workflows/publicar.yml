@@ -26,7 +26,7 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - name: Pruebas de la base de datos del escritorio (Rust)
-        run: cargo test --manifest-path apps/desktop/src-tauri/db/Cargo.toml --locked
+        run: cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml -p gonzalvo-db -p gonzalvo-password --locked
 
   publicar:
     if: github.event_name == 'push'

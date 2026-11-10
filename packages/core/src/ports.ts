@@ -36,4 +36,13 @@ export interface IdGenerator {
   next(): string;
 }
 
+/**
+ * Cifrado de contraseñas (RNF-03). Escritorio: Argon2id en Rust. Demo: PBKDF2 del navegador.
+ * El resultado incluye algoritmo, parámetros y sal, para poder verificar y mejorar sin migraciones.
+ */
+export interface PasswordHasher {
+  hash(password: string): Promise<string>;
+  verify(password: string, hash: string): Promise<boolean>;
+}
+
 export const systemClock: Clock = { now: () => new Date().toISOString() };

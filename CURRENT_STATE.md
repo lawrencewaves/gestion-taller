@@ -11,13 +11,14 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 - Diseño de referencia: `UX.md`, `design/tokens.json`, `design/marca/`, sistema visual «Gonzalvo» y lienzo «Gonzalvo · Pantallas» (artifacts privados de Robert).
 - Fase 4, pasos 1 a 3 publicados en DEMO (D-030): monorepo, SQLite en el navegador y GitHub Pages.
 - Fase 4, pasos 4 y 5 publicados en DEMO (D-031): migrador, primera migración y base real en el navegador.
-- Fase 4, paso 6 en la rama `feature/fase-4-escritorio` (D-032): app de escritorio con Tauri y SQLite en Rust; instalador de prueba de Windows compilado en GitHub (D-033, D-034). Mac en pausa.
+- Fase 4, paso 6 publicado (D-032 a D-036): app de escritorio para Windows, verificada por Robert. Mac en pausa.
+- Fase 4, paso 7 en la rama `feature/fase-4-usuarios` (D-037): usuarios, inicio de sesión, permisos por rol y registro de actividad.
 
 ## Siguiente paso
 
-1. **Robert:** fusionar `feature/fase-4-escritorio` (instalador de Windows verificado, D-036).
+1. **Robert:** probar la entrada en la demo y en Windows, y fusionar `feature/fase-4-usuarios`.
 2. **Robert:** conseguir de Stall una exportación de muestra para estudiar su formato (D-035).
-3. Paso 7 de la Fase 4: usuarios, permisos, inicio de sesión y registro de actividad.
+3. Paso 8 de la Fase 4: copias de seguridad y restauración.
 
 ## Preguntas abiertas
 

@@ -28,7 +28,8 @@ a:hover { color: var(--ink); }
 .gz-nav__brand { padding: var(--space-1) var(--space-2) var(--space-4); }
 .gz-nav__brand img { display: block; height: 28px; width: auto; }
 .gz-nav__group { list-style: none; margin: 0; padding: 0 0 var(--space-2); display: flex; flex-direction: column; gap: 2px; border-bottom: 1px solid var(--line); }
-.gz-nav__foot { margin-top: auto; border-bottom: 0; border-top: 1px solid var(--line); padding: var(--space-2) 0 0; }
+.gz-nav__foot { margin-top: auto; display: flex; flex-direction: column; gap: var(--space-2); border-top: 1px solid var(--line); padding-top: var(--space-2); }
+.gz-nav__foot .gz-nav__group { border-bottom: 1px solid var(--line); }
 .gz-nav__item {
   display: flex; align-items: center; gap: var(--space-3); padding: 7px var(--space-3); border-radius: var(--radius-md);
   font: 500 14px/20px var(--font-sans); color: var(--ink); text-decoration: none;
@@ -66,3 +67,49 @@ a:hover { color: var(--ink); }
   .gz-main { padding: var(--space-4); }
   .gz-diag__row { grid-template-columns: 1fr; gap: var(--space-1); }
 }
+
+/* Botones */
+.gz-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: 36px; padding: 0 var(--space-4); border-radius: var(--radius-md); border: 1px solid transparent;
+  font: 600 14px/20px var(--font-sans); cursor: pointer; white-space: nowrap; transition: background-color .12s;
+}
+.gz-btn:disabled { cursor: not-allowed; opacity: .45; }
+.gz-btn--sm { min-height: 32px; padding: 0 var(--space-3); font-size: 13px; }
+.gz-btn--primary { background: var(--action); color: var(--on-action); }
+.gz-btn--primary:hover:not(:disabled) { background: var(--ink-muted); }
+.gz-btn--secondary { background: var(--surface); color: var(--ink); border-color: var(--line-strong); }
+.gz-btn--secondary:hover:not(:disabled) { background: var(--surface-sunken); }
+.gz-btn--ghost { background: transparent; color: var(--ink); }
+.gz-btn--ghost:hover:not(:disabled) { background: var(--surface); }
+.gz-btn--danger { background: var(--surface); color: var(--danger); border-color: var(--danger); }
+
+/* Campos */
+.gz-field { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+.gz-field__label { font: 500 13px/18px var(--font-sans); color: var(--ink); }
+.gz-field__req, .gz-field__error { color: var(--danger); }
+.gz-field__help, .gz-field__error { margin: 0; font: 400 12px/16px var(--font-sans); }
+.gz-field__help { color: var(--ink-muted); }
+.gz-input {
+  display: flex; align-items: center; min-height: 36px; padding: 0 var(--space-3);
+  background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--radius-md);
+}
+.gz-input:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+.gz-field--error .gz-input { border-color: var(--danger); }
+.gz-input__el { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; padding: var(--space-2) 0; font: 400 14px/20px var(--font-sans); color: var(--ink); }
+
+/* Acceso: entrada y primer administrador */
+.gz-access { min-height: 100%; display: flex; align-items: center; justify-content: center; padding: var(--space-6) max(16px, var(--space-6)); }
+.gz-access__card {
+  width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: var(--space-4);
+  padding: var(--space-6); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg);
+}
+.gz-access__logo { align-self: flex-start; height: 32px; width: auto; margin-bottom: var(--space-2); }
+.gz-access__demo { padding-top: var(--space-3); border-top: 1px solid var(--line); }
+.gz-notice { padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--state-waiting-bg); color: var(--state-waiting-fg); }
+
+/* Usuario en el menú */
+.gz-nav__user { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3) var(--space-2) 0; }
+.gz-nav__user-name { display: flex; align-items: center; gap: var(--space-3); padding: 0 var(--space-1); }
+.gz-nav__user-name > span { display: flex; flex-direction: column; min-width: 0; }
+.gz-nav__user .gz-btn { align-self: flex-start; }
