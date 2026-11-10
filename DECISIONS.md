@@ -192,3 +192,11 @@ Robert aprueba la navegación, el sistema visual, el logotipo, los componentes y
 - **Adaptador del navegador con cola:** una sola conexión, operaciones en serie, transacciones anidadas con SAVEPOINT.
 - **Pruebas con el mismo motor que la demo** (SQLite WASM en Node), no con un sustituto.
 - **Datos de referencia con identificadores fijos** (tipos de IVA y métodos de pago), iguales en todas las instalaciones.
+
+### D-032 · App de escritorio de prueba
+2026-11-10 · Vigente
+- **Lógica compartida:** la cola de operaciones y transacciones (`createSerialExecutor`) y el diagnóstico viven en `core` y los usan igual el navegador y el Mac. Cada adaptador solo sabe ejecutar SQL.
+- **Rust mínimo:** el crate `gonzalvo-db` (rusqlite con SQLite incluido) ejecuta SQL con parámetros JSON. Tiene sus propias pruebas, que se ejecutan en cada comprobación.
+- **Compilaciones de prueba en entorno LOCAL** (`local.db`, franja «LOCAL · Pruebas · Datos ficticios»). Solo una versión con etiqueta se compilará como TALLER (`taller.db`), cuando haya actualizador (paso 10). Así los datos de prueba nunca acaban en la base del taller.
+- **Instalador:** app universal con firma ad hoc (`signingIdentity: "-"`), compilada en GitHub Actions. macOS pide autorizarla una vez en Ajustes del Sistema (D-012).
+- **Nombre interno:** `com.lawrencewaves.gonzalvo`. Cambiarlo más adelante movería la carpeta de datos, así que se mantiene.

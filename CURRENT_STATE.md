@@ -10,12 +10,13 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 - Fases 1, 2 y 3 cerradas (D-029).
 - Diseño de referencia: `UX.md`, `design/tokens.json`, `design/marca/`, sistema visual «Gonzalvo» y lienzo «Gonzalvo · Pantallas» (artifacts privados de Robert).
 - Fase 4, pasos 1 a 3 publicados en DEMO (D-030): monorepo, SQLite en el navegador y GitHub Pages.
-- Fase 4, pasos 4 y 5 en la rama `feature/fase-4-datos` (D-031): puertos, migrador, primera migración y base real conectada al Worker.
+- Fase 4, pasos 4 y 5 publicados en DEMO (D-031): migrador, primera migración y base real en el navegador.
+- Fase 4, paso 6 en la rama `feature/fase-4-escritorio` (D-032): app de Mac con Tauri y SQLite en Rust; instalador de prueba compilado en GitHub.
 
 ## Siguiente paso
 
-1. Aprobar y fusionar `feature/fase-4-datos`.
-2. Paso 6 de la Fase 4: contenedor Tauri (Rust + SQLite) e instalador de prueba para el Mac.
+1. **Robert:** instalar la app de prueba en el Mac y abrir Diagnóstico.
+2. Paso 7 de la Fase 4: usuarios, permisos, inicio de sesión y registro de actividad.
 
 ## Preguntas abiertas
 
