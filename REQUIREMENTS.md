@@ -174,6 +174,20 @@ Lo técnico (formatos, algoritmo de huella, QR, servicios de la AEAT) se toma **
 | RF-DEM-06 | Exportar el estado de la demo a un archivo e importarlo, para que el cliente pueda enviar lo que ha probado. |
 | RF-DEM-07 | Marca visible del entorno (DEMO o PREVIEW con el nombre de la rama) en todas las pantallas. |
 
+## 16 bis. Importación desde Stall
+
+El taller ya trabaja con Stall y su historial tiene que pasar a Gonzalvo (D-035).
+
+| ID | Requisito |
+|---|---|
+| RF-IMP-01 | Importar desde los archivos que exporta Stall: clientes, vehículos, catálogo y, si el formato lo permite, órdenes, presupuestos, facturas y cobros históricos. |
+| RF-IMP-02 | Vista previa antes de importar: cuántos registros de cada tipo, qué se ha emparejado y qué tiene problemas (NIF inválido, matrícula repetida, vehículo sin cliente). Nada se guarda hasta confirmar. |
+| RF-IMP-03 | Importación en una sola transacción: o entra todo o no entra nada, con copia de seguridad previa. |
+| RF-IMP-04 | Se puede repetir sin duplicar: cada registro guarda su identificador de origen en Stall. |
+| RF-IMP-05 | Las facturas importadas quedan como **históricas**: solo lectura, con su número y datos originales, fuera de la cadena de registros fiscales de Gonzalvo (las emitió Stall). |
+| RF-IMP-06 | Informe final descargable con lo importado, lo omitido y por qué. |
+| RF-IMP-07 | Solo en el programa instalado (TALLER). Los datos reales del taller nunca pasan por la demo, el repositorio ni las pruebas automáticas. |
+
 ## 17. No funcionales
 
 | ID | Requisito |

@@ -15,14 +15,16 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 
 ## Siguiente paso
 
-1. **Robert:** instalar la app de prueba de Windows (descarga en Releases → «prueba-windows») y abrir Diagnóstico.
-2. Paso 7 de la Fase 4: usuarios, permisos, inicio de sesión y registro de actividad.
+1. **Robert:** fusionar `feature/fase-4-escritorio` (instalador de Windows verificado, D-036).
+2. **Robert:** conseguir de Stall una exportación de muestra para estudiar su formato (D-035).
+3. Paso 7 de la Fase 4: usuarios, permisos, inicio de sesión y registro de actividad.
 
 ## Preguntas abiertas
 
 | Tema | Dónde está | Bloquea |
 |---|---|---|
 | Probar la demo en Safari (solo si el titular lo usa) | D-031 | Enseñar la demo al taller |
+| Formato de la exportación de Stall | D-035 | Tablas de la Fase 5 |
 | Método de conexión con Gmail | D-023 | Fase 5 |
 | Obligaciones como productor del software | D-016 | Fase 8 |
 | Confirmar aplazamiento VeriFactu (publicación en BOE) | D-015 | Fase 8 |
