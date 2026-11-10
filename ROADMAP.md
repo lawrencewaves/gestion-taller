@@ -42,9 +42,10 @@ Orden de trabajo, un paso cada vez:
 9. Cobros
 10. Documentos PDF y envío por email
 11. Exportación CSV
-12. Inicio
+12. Importación desde Stall (RF-IMP)
+13. Inicio
 
-Inicio va el último porque resume datos de todos los demás.
+Inicio va el último porque resume datos de todos los demás. La importación va antes de la validación con el taller (Fase 6), para que el taller pruebe con su propio historial. El formato de los archivos de Stall se estudia ya, porque condiciona las tablas de cada módulo.
 
 ## Después del MVP (sin fecha)
 

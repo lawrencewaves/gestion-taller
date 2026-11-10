@@ -215,3 +215,16 @@ Robert pide la versión de Windows. Se compila junto a la de Mac, con el mismo c
 Robert pide seguir solo con Windows por ahora. Se compila y prueba únicamente el instalador de Windows. El código sigue sin nada específico de un sistema y la configuración de macOS se conserva (comentario en `escritorio.yml`), así que reactivarla es añadir una entrada.
 - **Descarga directa de pruebas:** cada compilación publica `Gonzalvo-prueba-windows.zip` en la publicación fija `prueba-windows` (prerelease) del repositorio, descargable sin iniciar sesión. Las versiones del taller tendrán sus propias publicaciones `vX.Y.Z` (paso 10).
 - **Pendiente:** la contraseña de las copias irá en el Administrador de credenciales de Windows (paso 8).
+
+### D-035 · Importar la base de datos de Stall
+2026-11-10 · Vigente
+El titular ya tiene su historial en Stall y debe poder llevárselo entero a Gonzalvo (REQUIREMENTS §16 bis).
+- **Fuente:** lo que Stall permita sacar. Según su web, ofrece copias de seguridad descargables y exportación a Excel; el formato real se comprueba con un archivo de muestra antes de diseñar las tablas de los módulos.
+- **Las tablas se diseñan ya pensando en la importación:** cada registro importado guarda `source_system` y `source_id` para poder repetir la importación sin duplicar.
+- **Facturas de Stall = históricas:** se conservan tal cual, en solo lectura y fuera de la cadena fiscal de Gonzalvo. Gonzalvo empieza su propia numeración y su propio registro fiscal (D-014).
+- **Privacidad (RGPD):** la importación se hace en el programa instalado del taller. Para desarrollarla basta con la estructura de los archivos (columnas) y filas de ejemplo inventadas; ningún dato real entra en el repositorio, la demo ni las pruebas.
+- **Orden:** el importador se construye después de los módulos de datos y antes de la validación con el taller (ROADMAP, Fase 5).
+
+### D-036 · Instalador de Windows verificado
+2026-11-10 · Vigente
+Robert instala la versión de prueba en Windows: arranca, el Diagnóstico da todo correcto y el contador de aperturas sube al cerrar y abrir. El paso 6 de la Fase 4 queda validado en Windows.
