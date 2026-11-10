@@ -53,7 +53,7 @@ async function start(): Promise<Services> {
   await recordOpen(db);
   // En el escritorio no hay usuarios de prueba: la primera vez se crea el administrador.
   const auth = createAuthService({ db, hasher: createTauriPasswordHasher(invoke), clock, ids });
-  const system = createSystemService({ db, storage: 'native', dbName: fileName, schemaVersion, session: auth.current });
+  const system = createSystemService({ db, environment, storage: 'native', dbName: fileName, schemaVersion, session: auth.current });
   const backups = createBackupService({
     db, port: createTauriBackupPort(invoke), clock, ids, session: auth.current, environment, schemaVersion,
     reopen: async () => {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { DiagnosticsReport } from '@gonzalvo/contracts';
+import { type DiagnosticsReport, FISCAL_MODE_LABELS } from '@gonzalvo/contracts';
 import { useServices } from '../services-context';
 
 type State = { status: 'loading' } | { status: 'ready'; report: DiagnosticsReport } | { status: 'error'; message: string };
@@ -57,6 +57,7 @@ export function Diagnostico() {
               <Row label="Veces abierta" value={`${r.opens}. Recarga la página: si el número sube, los datos se guardan.`} />
               <Row label="Transacciones" ok={r.transactionsOk} value="Una operación a medias se deshace entera" />
               <Row label="Relaciones entre datos" ok={r.foreignKeysOk} value="No se pueden guardar datos huérfanos" />
+              <Row label="Facturación fiscal" value={`${FISCAL_MODE_LABELS[r.fiscal.mode]}. ${r.fiscal.reason}`} />
               <Row label="Base de datos" value={`Versión ${r.schemaVersion} · ${r.dbName}`} />
               <Row label="Motor" value={`SQLite ${r.sqliteVersion}`} />
               <Row label="Navegador" value={navigator.userAgent} />

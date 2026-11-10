@@ -77,7 +77,7 @@ Modelo de datos, convenciones y migraciones. El DDL definitivo vive en `packages
 | `fiscal_events` | Registro de eventos, si la modalidad lo exige. **Solo inserción** |
 | `fiscal_submissions` | Registro, estado, intentos, siguiente intento, último error, respuesta de la AEAT |
 
-Los campos exactos de `fiscal_records` y `fiscal_events` se fijan solo con la especificación oficial vigente (ARCHITECTURE §9).
+Los campos exactos de `fiscal_records` y `fiscal_events` se fijan solo con la especificación oficial vigente (ARCHITECTURE §9). Las tres tablas se crean en la misma migración que `invoices` (D-040), para que sus claves foráneas existan desde el principio.
 
 ### Operación
 | Tabla | Contenido clave |

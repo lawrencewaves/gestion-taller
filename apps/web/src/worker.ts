@@ -31,7 +31,7 @@ const services: Promise<Services> = (async () => {
     demo: { usernames: DEMO_USERS.map((u) => u.username), password: DEMO_PASSWORD },
   });
   const system = createSystemService({
-    db, storage, dbName, schemaVersion, session: auth.current, ...(storageError ? { storageError } : {}),
+    db, environment: appInfo.environment, storage, dbName, schemaVersion, session: auth.current, ...(storageError ? { storageError } : {}),
   });
   // Las copias solo existen en el programa instalado (RF-DEM-05).
   return { system, auth, backups: createUnavailableBackupService() };

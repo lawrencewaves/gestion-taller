@@ -256,3 +256,19 @@ Robert instala la versión de prueba en Windows: arranca, el Diagnóstico da tod
 - **En otro ordenador:** instalar, crear un administrador, elegir la carpeta de Drive, escribir la clave (solo se acepta si abre la copia más reciente, para evitar erratas) y restaurar.
 - **Solo el administrador** (`config.manage`). En la demo la pantalla explica que las copias solo existen en el programa instalado (RF-DEM-05).
 - **Dependencias nuevas (Rust):** `chacha20poly1305` 0.10.1 y `sha2` 0.10.9 (RustCrypto, misma base que el `argon2` 0.5.3 ya usado), `keyring` 3.6.3 (solo los almacenes nativos de Windows y macOS) y `tauri-plugin-dialog` 2.8.4 (oficial; se usa solo desde Rust y la ventana no recibe permisos de diálogo).
+
+### D-039 · Calendario VeriFactu verificado (10/11/2026)
+2026-11-10 · Vigente · Actualiza D-015
+- **Norma vigente:** Real Decreto-ley 15/2025 (BOE de 3/12/2025, convalidado), que modifica la disposición final cuarta del Real Decreto 1007/2023. Para el taller (autónomo, «resto de obligados»), los sistemas de facturación deben estar adaptados **antes del 1 de julio de 2027**. Sociedades: antes del 1 de enero de 2027.
+- **Anunciado, sin publicar:** el 5/10/2026 Hacienda comunicó la previsión de ampliar el plazo a octubre de 2028. A fecha de hoy no hay norma en el BOE; la sede de la AEAT solo enlaza la comunicación y la nota informativa. Se planifica con la fecha vigente y se revisa al empezar la Fase 8.
+- **Especificaciones técnicas:** Orden HAC/1177/2024 (BOE de 28/10/2024) y la sección «Información técnica» de la sede de la AEAT. Se consultarán en su versión vigente al empezar la Fase 8; no se copian aquí para no fijar una versión que puede cambiar.
+- **Consecuencia:** el taller sigue facturando con Stall hasta que Gonzalvo supere la Fase 8 (D-014).
+
+### D-040 · Esqueleto fiscal desactivado (paso 9 de la Fase 4)
+2026-11-10 · Vigente · Concreta D-014
+- **Qué existe ya**, sin nada que dependa de la especificación técnica:
+  - `fiscalPolicy(entorno, modalidad)`: fuera de TALLER se puede emitir, siempre simulado (DEMO) y sin hablar nunca con la AEAT (RF-FIS-10). En TALLER no se emite mientras la modalidad esté desactivada o `FISCAL_MODULE_READY` sea falso (hasta la Fase 8). `assertCanIssue` la aplicará el caso de uso de emitir factura.
+  - Puerto `FiscalGateway`, pasarela nula y `guardFiscalGateway`: cualquier pasarela se monta a través de esa barrera, que la sustituye por la nula si no se permite hablar con la AEAT.
+  - El Diagnóstico muestra la modalidad y lo que permite.
+- **Tablas fiscales** (`fiscal_records`, `fiscal_events`, `fiscal_submissions`) con sus triggers de solo inserción: se crean en la misma migración que `invoices` (Fase 5, Facturación). Crearlas ahora obligaría a reconstruirlas para añadir la clave foránea a `invoices`, que SQLite no permite añadir después.
+- **Sin CSP en la web:** en GitHub Pages solo puede ponerse como `<meta>`, que no se aplica al Web Worker donde corre la lógica. La protección real es estructural: la pasarela de la AEAT necesitará el certificado del taller y vivirá solo en Rust; la web no la incluye. El escritorio ya limita la red de la ventana a IPC (`connect-src ipc:`).

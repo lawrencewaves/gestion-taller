@@ -160,7 +160,8 @@ invoices.issue ──► transacción única:
 - **Cola:** estados `pendiente → enviando → aceptado | aceptado con errores | rechazado`, con reintentos con espera creciente. Sin conexión, los registros esperan en la cola. Nada figura como remitido sin respuesta de aceptación.
 - **Versionado:** cada registro guarda la versión de la especificación con la que se generó.
 - **Pendiente de verificar en la documentación oficial (Fase 8):** algoritmo y campos de la huella, formato y contenido del QR, servicio web y protocolo de la AEAT, certificado electrónico, firma de registros en NO VERI\*FACTU, reglas de subsanación y conservación, y el comportamiento exigido ante incidencias de conexión. **No se implementa nada de esto sin fuente oficial.**
-- **Certificado del taller:** lo usa Rust desde el Llavero de macOS. Nunca pasa por TypeScript.
+- **Esqueleto (D-040):** `core/services/fiscal.ts` contiene `fiscalPolicy` (quién emite y quién puede hablar con la AEAT), el puerto `FiscalGateway`, la pasarela nula y `guardFiscalGateway`, por la que se monta cualquier pasarela. `FISCAL_MODULE_READY` es falso hasta la Fase 8: en TALLER no se emite.
+- **Certificado del taller:** lo usa Rust desde el almacén del sistema (Windows; Llavero en macOS). Nunca pasa por TypeScript. Por eso la pasarela real solo puede existir en el programa instalado: la web no puede hablar con la AEAT ni por error.
 
 ## 10. Entornos
 

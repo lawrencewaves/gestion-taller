@@ -13,13 +13,15 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 - Fase 4, pasos 4 y 5 publicados en DEMO (D-031): migrador, primera migración y base real en el navegador.
 - Fase 4, paso 6 publicado (D-032 a D-036): app de escritorio para Windows, verificada por Robert. Mac en pausa.
 - Fase 4, paso 7 publicado (D-037): usuarios, inicio de sesión, permisos por rol y registro de actividad, verificado por Robert en la demo y en Windows.
-- Fase 4, paso 8 en la rama `feature/fase-4-copias` (D-038): copias cifradas a la carpeta de Google Drive, diaria, manual y a USB, retención, aviso de 48 horas, hoja de recuperación y restauración.
+- Fase 4, paso 8 publicado (D-038): copias cifradas a la carpeta de Google Drive, diaria, manual y a USB, retención, aviso de 48 horas, hoja de recuperación y restauración.
+- Calendario VeriFactu verificado (D-039): vigente el 1 de julio de 2027; aplazamiento a octubre de 2028 anunciado, sin publicar.
+- Fase 4, paso 9 en la rama `feature/fase-4-fiscal` (D-040): esqueleto fiscal desactivado.
 
 ## Siguiente paso
 
-1. **Robert:** probar las copias en Windows (carpeta de Google Drive, clave, copia, restaurar) y fusionar `feature/fase-4-copias`.
+1. **Robert:** revisar y fusionar `feature/fase-4-fiscal`.
 2. **Robert:** conseguir de Stall una exportación de muestra para estudiar su formato (D-035).
-3. Paso 9 de la Fase 4: esqueleto fiscal desactivado.
+3. Paso 10 de la Fase 4: actualizador y primera versión TALLER con etiqueta.
 
 ## Preguntas abiertas
 
@@ -30,7 +32,7 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 | Formato de la exportación de Stall | D-035 | Tablas de la Fase 5 |
 | Método de conexión con Gmail | D-023 | Fase 5 |
 | Obligaciones como productor del software | D-016 | Fase 8 |
-| Confirmar aplazamiento VeriFactu (publicación en BOE) | D-015 | Fase 8 |
+| Aplazamiento VeriFactu a octubre de 2028: pendiente de publicarse en el BOE | D-039 | Fecha límite de la Fase 8 |
 
 ## Riesgos vigilados
 

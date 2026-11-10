@@ -1,9 +1,11 @@
-import type { DiagnosticsReport, Session, SystemService } from '@gonzalvo/contracts';
+import type { DiagnosticsReport, Environment, Session, SystemService } from '@gonzalvo/contracts';
 import type { SqlExecutor } from '../ports';
 import { requirePermission } from './auth';
+import { fiscalPolicy, readFiscalMode } from './fiscal';
 
 export interface SystemServiceDeps {
   db: SqlExecutor;
+  environment: Environment;
   /** Dónde guarda este entorno el archivo de la base. */
   storage: DiagnosticsReport['storage'];
   dbName: string;
@@ -53,6 +55,7 @@ export function createSystemService(deps: SystemServiceDeps): SystemService {
         opens,
         transactionsOk,
         foreignKeysOk,
+        fiscal: fiscalPolicy(deps.environment, await readFiscalMode(db)),
         ...(deps.storageError ? { error: deps.storageError } : {}),
       };
     },

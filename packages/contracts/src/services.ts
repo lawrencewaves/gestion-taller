@@ -1,5 +1,6 @@
 import type { AuthService } from './auth';
 import type { BackupService } from './backup';
+import type { FiscalPolicy } from './fiscal';
 
 /**
  * Lo único que la interfaz conoce del resto del sistema (ARCHITECTURE §5).
@@ -33,6 +34,8 @@ export interface DiagnosticsReport {
   opens: number;
   transactionsOk: boolean;
   foreignKeysOk: boolean;
+  /** Modalidad fiscal y qué permite en este entorno (D-039). */
+  fiscal: FiscalPolicy;
   error?: string;
 }
 
