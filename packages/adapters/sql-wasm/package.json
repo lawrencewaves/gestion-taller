@@ -1,0 +1,11 @@
+{
+  "name": "@gonzalvo/adapter-sql-wasm",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc -p tsconfig.json" },
+  "dependencies": {
+    "@gonzalvo/core": "workspace:*",
+    "@sqlite.org/sqlite-wasm": "3.54.1-build1"
+  }
+}

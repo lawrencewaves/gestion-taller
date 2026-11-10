@@ -16,7 +16,7 @@ function Row({ label, value, ok }: { label: string; value: string; ok?: boolean 
   );
 }
 
-/** Prueba técnica de la Fase 4, paso 2 (D-024): SQLite en el navegador con almacenamiento persistente. */
+/** Estado de la base de datos en este entorno: almacenamiento, versión del esquema e integridad. */
 export function Diagnostico() {
   const services = useServices();
   const [state, setState] = useState<State>({ status: 'loading' });
@@ -57,7 +57,8 @@ export function Diagnostico() {
               <Row label="Veces abierta" value={`${r.opens}. Recarga la página: si el número sube, los datos se guardan.`} />
               <Row label="Transacciones" ok={r.transactionsOk} value="Una operación a medias se deshace entera" />
               <Row label="Relaciones entre datos" ok={r.foreignKeysOk} value="No se pueden guardar datos huérfanos" />
-              <Row label="Motor" value={`SQLite ${r.sqliteVersion} · ${r.dbName}`} />
+              <Row label="Base de datos" value={`Versión ${r.schemaVersion} · ${r.dbName}`} />
+              <Row label="Motor" value={`SQLite ${r.sqliteVersion}`} />
               <Row label="Navegador" value={navigator.userAgent} />
             </dl>
             {r.error && <p className="caption gz-muted">Detalle técnico: {r.error}</p>}

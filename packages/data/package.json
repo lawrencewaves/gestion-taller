@@ -1,0 +1,13 @@
+{
+  "name": "@gonzalvo/data",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc -p tsconfig.json" },
+  "dependencies": {
+    "@gonzalvo/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@gonzalvo/adapter-sql-wasm": "workspace:*"
+  }
+}

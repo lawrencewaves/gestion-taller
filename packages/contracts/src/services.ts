@@ -24,6 +24,8 @@ export interface DiagnosticsReport {
   /** Dónde se guardan los datos: almacenamiento persistente del navegador o solo memoria. */
   storage: 'opfs' | 'memory' | 'native';
   dbName: string;
+  /** Número de la última migración aplicada. */
+  schemaVersion: number;
   /** Veces que se ha abierto esta base de datos, incluida la actual. */
   opens: number;
   transactionsOk: boolean;

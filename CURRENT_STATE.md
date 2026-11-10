@@ -2,25 +2,26 @@
 
 Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 
-**Fecha:** 2026-11-09
+**Fecha:** 2026-11-10
 **Fase:** 4 · Núcleo (en curso)
 
 ## Hecho
 
 - Fases 1, 2 y 3 cerradas (D-029).
 - Diseño de referencia: `UX.md`, `design/tokens.json`, `design/marca/`, sistema visual «Gonzalvo» y lienzo «Gonzalvo · Pantallas» (artifacts privados de Robert).
-- Fase 4, pasos 1 a 3 en la rama `feature/fase-4-base` (D-030): monorepo, prueba de SQLite en el navegador (correcta en Chromium) y publicación en GitHub Pages.
+- Fase 4, pasos 1 a 3 publicados en DEMO (D-030): monorepo, SQLite en el navegador y GitHub Pages.
+- Fase 4, pasos 4 y 5 en la rama `feature/fase-4-datos` (D-031): puertos, migrador, primera migración y base real conectada al Worker.
 
 ## Siguiente paso
 
-1. **Robert:** activar GitHub Pages (Settings → Pages → Deploy from a branch → `gh-pages` / root) y abrir la pantalla de diagnóstico del PREVIEW en Safari.
-2. Si el diagnóstico es correcto: paso 4 de la Fase 4 (`core`, `contracts` y `data` con la primera migración).
+1. Aprobar y fusionar `feature/fase-4-datos`.
+2. Paso 6 de la Fase 4: contenedor Tauri (Rust + SQLite) e instalador de prueba para el Mac.
 
 ## Preguntas abiertas
 
 | Tema | Dónde está | Bloquea |
 |---|---|---|
-| Funcionamiento de OPFS sin cabeceras especiales en Safari | D-024 | Fase 4, paso 4 |
+| Probar la demo en Safari (solo si el titular lo usa) | D-031 | Enseñar la demo al taller |
 | Método de conexión con Gmail | D-023 | Fase 5 |
 | Obligaciones como productor del software | D-016 | Fase 8 |
 | Confirmar aplazamiento VeriFactu (publicación en BOE) | D-015 | Fase 8 |

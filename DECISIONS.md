@@ -182,3 +182,13 @@ Robert aprueba la navegación, el sistema visual, el logotipo, los componentes y
 - **Rutas con almohadilla** (`#/clientes`): funcionan en GitHub Pages y en Tauri sin servidor.
 - **Publicación propia en `gh-pages`** con un guion en el workflow, sin acciones de terceros: la DEMO sustituye la raíz y cada PREVIEW su carpeta.
 - **Prueba técnica de D-024:** correcta en Chromium (persistencia, transacciones, claves foráneas). Falta confirmarla en Safari en el Mac.
+
+### D-031 · Base de datos: migrador, apertura y adaptador del navegador
+2026-11-10 · Vigente
+- **Prueba técnica de D-024 confirmada** por Robert en Chrome en su Mac: la demo guarda los datos. Safari queda sin probar; solo afecta a quien abra la demo con Safari.
+- **Migraciones por módulo**, cada una en su transacción, con suma SHA-256: el programa se detiene si una migración aplicada cambia o si la base es más nueva que el programa.
+- **Protección de entorno:** la base guarda su entorno al crearse y se niega a abrirse con otro (DEMO frente a TALLER).
+- **Tablas `STRICT`** y restricciones `CHECK`: la base rechaza datos mal tipados aunque el código falle.
+- **Adaptador del navegador con cola:** una sola conexión, operaciones en serie, transacciones anidadas con SAVEPOINT.
+- **Pruebas con el mismo motor que la demo** (SQLite WASM en Node), no con un sustituto.
+- **Datos de referencia con identificadores fijos** (tipos de IVA y métodos de pago), iguales en todas las instalaciones.

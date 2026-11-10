@@ -5,6 +5,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). V
 ## [Sin publicar]
 
 ### Añadido
+- Base de datos real: migrador con verificación, primera migración (configuración, series, IVA, métodos de pago) y protección de entorno.
 - Monorepo con pnpm: `core` (importes, IVA y matrículas), `contracts` (servicios y formatos), adaptador `worker-rpc`, `ui` y `web`.
 - Interfaz base con el sistema visual: menú lateral, franja de entorno, Inicio y pantalla de Diagnóstico.
 - SQLite en el navegador (Web Worker + OPFS) con prueba de persistencia, transacciones y claves foráneas.
