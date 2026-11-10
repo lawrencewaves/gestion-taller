@@ -1,0 +1,10 @@
+[package]
+name = "gonzalvo-db"
+version = "0.1.0"
+edition = "2021"
+description = "Conexión SQLite del escritorio de Gonzalvo (D-008)"
+publish = false
+
+[dependencies]
+rusqlite = { version = "=0.40.2", features = ["bundled"] }
+serde_json = "1"

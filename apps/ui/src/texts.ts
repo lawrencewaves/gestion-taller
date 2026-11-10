@@ -17,7 +17,7 @@ export const texts = {
   env: {
     DEMO: 'DEMO · Datos ficticios',
     PREVIEW: (branch: string) => `PREVIEW · ${branch} · Datos ficticios`,
-    LOCAL: 'LOCAL · Desarrollo',
+    LOCAL: 'LOCAL · Pruebas · Datos ficticios',
   },
   pending: {
     title: (name: string) => `${name} llegará en la Fase 5`,
