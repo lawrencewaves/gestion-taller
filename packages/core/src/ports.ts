@@ -45,4 +45,30 @@ export interface PasswordHasher {
   verify(password: string, hash: string): Promise<boolean>;
 }
 
+/**
+ * Operaciones de bajo nivel de las copias (ARCHITECTURE §8). Solo el escritorio las tiene (Rust).
+ * Qué copiar, cuándo y qué conservar lo decide `createBackupService`.
+ */
+export interface BackupPort {
+  /** Selector de carpetas del sistema. `null` si se cancela. */
+  pickFolder(): Promise<string | null>;
+  hasKey(): Promise<boolean>;
+  /** Genera y guarda una clave nueva. Falla si ya hay una. */
+  createKey(): Promise<string>;
+  revealKey(): Promise<string>;
+  /** Falla si la clave no abre esa copia. */
+  checkKey(folder: string, fileName: string, key: string): Promise<void>;
+  setKey(key: string): Promise<void>;
+  /** Copia coherente, comprobada, cifrada y colocada de golpe en `folder/fileName`. */
+  create(folder: string, fileName: string): Promise<{ fileName: string; sizeBytes: number; sha256: string }>;
+  /** Copias de la carpeta cuyo nombre empieza por `prefix`. */
+  list(folder: string, prefix: string): Promise<{ name: string; sizeBytes: number }[]>;
+  remove(folder: string, fileName: string): Promise<void>;
+  /** Descifra y comprueba la copia aparte, sin tocar los datos actuales. */
+  prepareRestore(folder: string, fileName: string): Promise<{ schemaVersion: number; environment: string | null }>;
+  cancelRestore(): Promise<void>;
+  /** Copia local del estado actual (con `label` en el nombre), y la copia preparada pasa a ser la base. */
+  applyRestore(label: string): Promise<string>;
+}
+
 export const systemClock: Clock = { now: () => new Date().toISOString() };

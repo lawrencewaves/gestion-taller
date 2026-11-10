@@ -8,6 +8,7 @@ import './styles/app.css';
 import { EnvBanner } from './components/EnvBanner';
 import { canSee, NavMenu, type RouteId } from './components/NavMenu';
 import { Login, Setup } from './screens/Acceso';
+import { BackupWarning, Copias } from './screens/Copias';
 import { Diagnostico } from './screens/Diagnostico';
 import { Inicio } from './screens/Inicio';
 import { Pendiente } from './screens/Pendiente';
@@ -62,6 +63,7 @@ function Screen({ route, session }: { route: RouteId; session: Session }) {
   if (!canSee(session, route)) return <Pendiente name={texts.access.forbiddenTitle} body={texts.access.forbiddenBody} />;
   if (route === 'inicio') return <Inicio />;
   if (route === 'diagnostico') return <Diagnostico />;
+  if (route === 'copias') return <Copias />;
   return <Pendiente name={texts.nav[route]} />;
 }
 
@@ -122,6 +124,7 @@ export function App({ services, info }: AppProps) {
         <div className="gz-shell">
           <NavMenu active={route} session={auth.session} onLogout={() => void logout()} />
           <main className="gz-main">
+            {auth.session.permissions.includes('config.manage') && <BackupWarning route={route} />}
             <Screen route={route} session={auth.session} />
           </main>
         </div>

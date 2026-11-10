@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatDate, formatEUR, formatKm, formatPlate } from './format';
+import { formatBytes, formatDate, formatEUR, formatKm, formatPlate } from './format';
 
 describe('formatos del taller', () => {
   it('importes con punto de miles, coma decimal y símbolo detrás', () => {
@@ -12,6 +12,12 @@ describe('formatos del taller', () => {
   it('kilómetros con punto de miles, también por debajo de 10.000', () => {
     expect(formatKm(128400)).toBe('128.400 km');
     expect(formatKm(4500)).toBe('4.500 km');
+  });
+
+  it('tamaños de archivo en KB y MB', () => {
+    expect(formatBytes(300)).toBe('1 KB');
+    expect(formatBytes(870_400)).toBe('850 KB');
+    expect(formatBytes(13_002_342)).toBe('12,4 MB');
   });
 
   it('fechas dd/mm/aaaa y hora de 24 horas', () => {

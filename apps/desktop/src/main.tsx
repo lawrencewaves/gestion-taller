@@ -5,10 +5,14 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { invoke } from '@tauri-apps/api/core';
-import { createTauriExecutor, createTauriPasswordHasher, openTauriDatabase } from '@gonzalvo/adapter-tauri';
+import {
+  createTauriBackupPort, createTauriExecutor, createTauriPasswordHasher, openTauriDatabase, takeLocalSnapshot,
+} from '@gonzalvo/adapter-tauri';
 import type { AppInfo, Capabilities, Environment, Services } from '@gonzalvo/contracts';
-import { createAuthService, createSystemService, createUuidV7Generator, recordOpen, systemClock } from '@gonzalvo/core';
-import { openDatabase } from '@gonzalvo/data';
+import {
+  createAuthService, createBackupService, createSystemService, createUuidV7Generator, fileStamp, recordOpen, systemClock,
+} from '@gonzalvo/core';
+import { migrations, openDatabase } from '@gonzalvo/data';
 import { App } from '@gonzalvo/ui';
 
 /**
@@ -26,17 +30,41 @@ const rootEl = document.getElementById('root');
 if (!rootEl) throw new Error('Falta el elemento #root en index.html');
 const root = createRoot(rootEl);
 
+/** Cada cuánto se mira si toca la copia diaria mientras el programa está abierto. */
+const BACKUP_CHECK_MS = 60 * 60 * 1000;
+
 async function start(): Promise<Services> {
   await openTauriDatabase(invoke, fileName);
   const db = createTauriExecutor(invoke);
-  // La copia previa a una migración (RNF-08) llega con las copias de seguridad, en el paso 8.
   const clock = systemClock;
-  const { schemaVersion } = await openDatabase(db, { environment, clock });
+  const ids = createUuidV7Generator();
+  const migrate = () =>
+    openDatabase(db, {
+      environment,
+      clock,
+      // Antes de cambiar el esquema de una base con datos, copia local del estado actual (RNF-08).
+      beforeMigrate: async (pending) => {
+        if (pending.length === migrations.length) return; // Base nueva: no hay nada que guardar.
+        const target = pending[pending.length - 1]?.version ?? 0;
+        await takeLocalSnapshot(invoke, `${fileStamp(clock.now())}-antes-de-migrar-v${target}`);
+      },
+    });
+  const { schemaVersion } = await migrate();
   await recordOpen(db);
   // En el escritorio no hay usuarios de prueba: la primera vez se crea el administrador.
-  const auth = createAuthService({ db, hasher: createTauriPasswordHasher(invoke), clock, ids: createUuidV7Generator() });
+  const auth = createAuthService({ db, hasher: createTauriPasswordHasher(invoke), clock, ids });
   const system = createSystemService({ db, storage: 'native', dbName: fileName, schemaVersion, session: auth.current });
-  return { system, auth };
+  const backups = createBackupService({
+    db, port: createTauriBackupPort(invoke), clock, ids, session: auth.current, environment, schemaVersion,
+    reopen: async () => {
+      await openTauriDatabase(invoke, fileName);
+      await migrate();
+    },
+  });
+  // Copia diaria (RF-BAK-01): al arrancar y cada hora mientras el programa está abierto.
+  void backups.runIfDue();
+  window.setInterval(() => void backups.runIfDue(), BACKUP_CHECK_MS);
+  return { system, auth, backups };
 }
 
 start().then(

@@ -18,9 +18,14 @@ tauri = { version = "=2.12.5", features = [] }
 serde_json = "1"
 gonzalvo-db = { path = "db" }
 gonzalvo-password = { path = "password" }
+gonzalvo-backup = { path = "backup" }
+# Selector de carpeta nativo, usado solo desde Rust: la ventana no recibe permisos de diálogo.
+tauri-plugin-dialog = "=2.8.4"
+# Clave de las copias en el Administrador de credenciales de Windows (y en el Llavero de macOS).
+keyring = { version = "=3.6.3", features = ["windows-native", "apple-native"] }
 
 [workspace]
-members = ["db", "password"]
+members = ["db", "password", "backup"]
 
 [profile.release]
 codegen-units = 1

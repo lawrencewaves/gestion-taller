@@ -82,7 +82,7 @@ Los campos exactos de `fiscal_records` y `fiscal_events` se fijan solo con la es
 ### Operación
 | Tabla | Contenido clave |
 |---|---|
-| `backups` | Fecha, tipo, destino, tamaño, suma de verificación, verificada, error |
+| `backups` | Fecha, tipo (`auto`, `manual`, `export`), destino, archivo, tamaño, SHA-256 del archivo cifrado, verificada, error. Solo inserciones (migración 0003). La clave no está en la base (D-038) |
 | `schema_migrations` | Versión, nombre, suma de verificación, fecha de aplicación |
 
 ## 4. Integridad garantizada por la base de datos

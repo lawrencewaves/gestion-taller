@@ -1,4 +1,5 @@
 import type { AuthService } from './auth';
+import type { BackupService } from './backup';
 
 /**
  * Lo único que la interfaz conoce del resto del sistema (ARCHITECTURE §5).
@@ -42,4 +43,5 @@ export interface SystemService {
 export interface Services {
   system: SystemService;
   auth: AuthService;
+  backups: BackupService;
 }
