@@ -1,8 +1,10 @@
-# Compila el instalador de macOS (universal: Intel y Apple Silicon) en un Mac de GitHub.
+# Compila los instaladores de escritorio en ordenadores de GitHub:
+#   macOS   → .dmg universal (Intel y Apple Silicon)
+#   Windows → instalador .exe (Windows 10 y 11, 64 bits)
 # Compilación de prueba: entorno LOCAL, datos en local.db. Se descarga desde la pestaña
 # Actions → la ejecución → «Artifacts». Las versiones para el taller (TALLER, etiqueta
 # vX.Y.Z) llegan con el actualizador, en el paso 10 de la Fase 4.
-name: Instalador de escritorio
+name: Instaladores de escritorio
 
 on:
   workflow_dispatch:
@@ -23,9 +25,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  macos:
-    runs-on: macos-latest
+  instalador:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            sistema: macos
+            rust_targets: aarch64-apple-darwin x86_64-apple-darwin
+            build_args: --target universal-apple-darwin --bundles app,dmg
+            bundle_dir: apps/desktop/src-tauri/target/universal-apple-darwin/release/bundle
+          - os: windows-latest
+            sistema: windows
+            rust_targets: x86_64-pc-windows-msvc
+            build_args: --bundles nsis
+            bundle_dir: apps/desktop/src-tauri/target/release/bundle
+    name: ${{ matrix.sistema }}
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v5
@@ -34,8 +54,8 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - name: Preparar Rust para Intel y Apple Silicon
-        run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
+      - name: Preparar Rust
+        run: rustup target add ${{ matrix.rust_targets }}
 
       - uses: actions/cache@v5
         with:
@@ -43,8 +63,8 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             apps/desktop/src-tauri/target
-          key: cargo-macos-${{ hashFiles('apps/desktop/src-tauri/Cargo.lock') }}
-          restore-keys: cargo-macos-
+          key: cargo-${{ matrix.sistema }}-${{ hashFiles('apps/desktop/src-tauri/Cargo.lock') }}
+          restore-keys: cargo-${{ matrix.sistema }}-
 
       - run: pnpm install --frozen-lockfile
 
@@ -57,21 +77,26 @@ jobs:
         env:
           VITE_ENV: LOCAL
           VITE_VERSION: ${{ github.sha }}
-        run: pnpm tauri build --target universal-apple-darwin
+        run: pnpm tauri build ${{ matrix.build_args }}
 
       - name: Preparar la descarga
+        env:
+          BUNDLE: ${{ matrix.bundle_dir }}
         run: |
           set -euo pipefail
           out="$RUNNER_TEMP/gonzalvo"
           mkdir -p "$out"
-          bundle=apps/desktop/src-tauri/target/universal-apple-darwin/release/bundle
-          cp "$bundle"/dmg/*.dmg "$out/"
-          ditto -c -k --keepParent "$bundle/macos/Gonzalvo.app" "$out/Gonzalvo.app.zip"
+          if [ "${{ matrix.sistema }}" = "macos" ]; then
+            cp "$BUNDLE"/dmg/*.dmg "$out/"
+            ditto -c -k --keepParent "$BUNDLE/macos/Gonzalvo.app" "$out/Gonzalvo.app.zip"
+          else
+            cp "$BUNDLE"/nsis/*.exe "$out/"
+          fi
           ls -la "$out"
-          echo "### Instalador de prueba listo: descárgalo en «Artifacts», al final de esta página." >> "$GITHUB_STEP_SUMMARY"
+          echo "### Instalador de prueba para ${{ matrix.sistema }}: descárgalo en «Artifacts», al final de esta página." >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v6
         with:
-          name: Gonzalvo-prueba-macos-${{ github.sha }}
+          name: Gonzalvo-prueba-${{ matrix.sistema }}-${{ github.sha }}
           path: ${{ runner.temp }}/gonzalvo/
           retention-days: 30

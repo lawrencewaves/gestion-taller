@@ -26,14 +26,29 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["app", "dmg"],
+    "targets": "all",
     "category": "Business",
     "copyright": "© 2026 Robert Lawrence Arasa Ribas",
     "shortDescription": "Gestión del taller mecánico",
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
     "macOS": {
       "signingIdentity": "-",
       "minimumSystemVersion": "11.0"
+    },
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "languages": [
+          "Spanish"
+        ],
+        "displayLanguageSelector": false
+      }
     }
   }
 }

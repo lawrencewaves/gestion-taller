@@ -200,3 +200,12 @@ Robert aprueba la navegación, el sistema visual, el logotipo, los componentes y
 - **Compilaciones de prueba en entorno LOCAL** (`local.db`, franja «LOCAL · Pruebas · Datos ficticios»). Solo una versión con etiqueta se compilará como TALLER (`taller.db`), cuando haya actualizador (paso 10). Así los datos de prueba nunca acaban en la base del taller.
 - **Instalador:** app universal con firma ad hoc (`signingIdentity: "-"`), compilada en GitHub Actions. macOS pide autorizarla una vez en Ajustes del Sistema (D-012).
 - **Nombre interno:** `com.lawrencewaves.gonzalvo`. Cambiarlo más adelante movería la carpeta de datos, así que se mantiene.
+
+### D-033 · Instalador también para Windows
+2026-11-10 · Vigente · Amplía D-003
+Robert pide la versión de Windows. Se compila junto a la de Mac, con el mismo código.
+- **Instalador:** `.exe` (NSIS) en español, instalación para el usuario actual sin permisos de administrador. Windows 10 y 11 de 64 bits; usa WebView2, que ya viene con Windows.
+- **Sin firma de código** (certificado de pago): Windows SmartScreen avisará la primera vez; se abre con «Más información → Ejecutar de todas formas».
+- **Datos:** `%APPDATA%\com.lawrencewaves.gonzalvo\` (`local.db` en pruebas, `taller.db` en el taller).
+- **Saltos de línea LF en todo el repositorio** (`.gitattributes`): las migraciones son idénticas en ambos sistemas.
+- **Pendiente según el ordenador del taller:** la contraseña de las copias usará el Llavero en Mac y el Administrador de credenciales en Windows (paso 8).

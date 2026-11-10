@@ -1,0 +1,5 @@
+# Saltos de línea LF en todos los sistemas: las migraciones y sus sumas de verificación no cambian en Windows.
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.icns binary

@@ -97,8 +97,8 @@ Al añadir un método nuevo no se escribe código específico para la web.
 - Rust expone solo comandos de bajo nivel: SQL, transacciones, hash de contraseñas, copias, ficheros, email y, más adelante, la comunicación fiscal con certificado.
 - **Una conexión de escritura** SQLite en modo WAL, `synchronous = FULL` y claves foráneas activadas, en el crate `src-tauri/db` (`gonzalvo-db`). Comandos: `db_open`, `sql_all`, `sql_run`, `sql_exec`.
 - **Transacciones:** las abre y cierra TypeScript (`BEGIN`/`COMMIT` por `sql_exec`) a través de `createSerialExecutor`, la misma cola que en el navegador. Como solo hay una conexión y la cola serializa, una transacción nunca se mezcla con otra operación.
-- **Ubicación de datos:** `~/Library/Application Support/com.lawrencewaves.gonzalvo/`. `local.db` en las compilaciones de prueba (LOCAL) y `taller.db` en las versiones publicadas (TALLER). La base recuerda su entorno y no se abre con el otro (D-031).
-- **Instalador:** `.github/workflows/escritorio.yml` compila en un Mac de GitHub una app universal (Intel y Apple Silicon) con firma ad hoc, sin cuenta de Apple (D-012). Se descarga como artefacto de la ejecución.
+- **Ubicación de datos:** `~/Library/Application Support/com.lawrencewaves.gonzalvo/` en Mac y `%APPDATA%\com.lawrencewaves.gonzalvo\` en Windows. `local.db` en las compilaciones de prueba (LOCAL) y `taller.db` en las versiones publicadas (TALLER). La base recuerda su entorno y no se abre con el otro (D-031).
+- **Instalador:** `.github/workflows/escritorio.yml` compila en ordenadores de GitHub una app universal de Mac (Intel y Apple Silicon, firma ad hoc, D-012) y un instalador `.exe` de Windows sin firma (D-033). Se descarga como artefacto de la ejecución.
 - **Arranque:**
   1. Comprobar integridad.
   2. Hacer una copia si hay migraciones pendientes.

@@ -15,7 +15,7 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 
 ## Siguiente paso
 
-1. **Robert:** instalar la app de prueba en el Mac y abrir Diagnóstico.
+1. **Robert:** instalar la app de prueba (Mac o Windows) y abrir Diagnóstico.
 2. Paso 7 de la Fase 4: usuarios, permisos, inicio de sesión y registro de actividad.
 
 ## Preguntas abiertas
