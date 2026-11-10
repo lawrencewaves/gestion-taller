@@ -240,3 +240,19 @@ Robert instala la versión de prueba en Windows: arranca, el Diagnóstico da tod
 - **Registro de actividad:** entradas, salidas, fallos, bloqueos y alta de usuarios. La base de datos impide modificarlo o borrarlo, y los usuarios no se borran: se desactivan.
 - **Adaptadores por plataforma:** `adapter-browser` (SQLite WASM y PBKDF2) y `adapter-tauri` (SQLite y Argon2id en Rust) sustituyen a `adapter-sql-wasm` y `adapter-sql-tauri`.
 - **La gestión de usuarios** (crear, desactivar, cambiar rol y contraseña) se hará en el módulo Configuración (Fase 5).
+
+### D-038 · Copias de seguridad cifradas y restauración
+2026-11-10 · Vigente · Concreta D-013 y sustituye en ARCHITECTURE §8 la «contraseña de copias» por una clave generada
+- **Clave de recuperación generada por Gonzalvo**, no elegida: 25 letras y números (125 bits) en 5 grupos, sin letras que se confundan. No se teclea nunca en el día a día: se guarda en el Administrador de credenciales de Windows (Llavero en macOS), una por base (`copias-taller`, `copias-local`), y se muestra una vez para apuntarla o imprimir la **hoja de recuperación**. Se puede volver a ver desde Copias.
+- **Formato `.gonzalvo` v1:** Argon2id (los mismos parámetros que las contraseñas, guardados en cada copia) y XChaCha20-Poly1305 en modo STREAM por bloques de 64 KiB, con la cabecera autenticada. Detecta clave equivocada, cambios y archivos cortados. Detalle en `apps/desktop/src-tauri/backup/src/lib.rs`.
+- **Cómo se hace:** Backup API de SQLite (incluye lo que está en el WAL; se niega si hay una transacción abierta) → `integrity_check` y `foreign_key_check` → cifrado en `.gonzalvo-temporal/` dentro del destino → forzado a disco → se vuelve a leer y descifrar entera → se renombra a su nombre definitivo. Google Drive nunca ve una copia a medias ni en claro. Se anota en la tabla `backups` (migración 0003, sin modificaciones ni borrados).
+- **Nombre:** `gonzalvo-<entorno>-<fecha UTC>.gonzalvo`. Las copias de pruebas y las del taller pueden compartir carpeta sin mezclarse.
+- **Carpeta:** la elige el titular con el selector de Windows. Es la carpeta compartida que sincroniza Google Drive para escritorio, sin API ni credenciales de Google (D-013).
+- **Cuándo:** al arrancar y cada hora se mira si ya hay copia correcta hoy; si no, se hace (diaria). Además, manual y copia a USB o disco externo (a otra carpeta, no entra en la retención ni en el aviso). **Pendiente:** la copia tras emitir factura o registrar cobro llegará con esos módulos (Fase 5); la copia al cerrar el programa, más adelante si hace falta.
+- **Retención:** la última de cada día de los últimos 30 días y la última de cada mes de los últimos 12 meses; la más reciente nunca se borra. Se hará configurable en Configuración (Fase 5).
+- **Aviso:** sin copia correcta en 48 horas, franja en todas las pantallas para quien puede arreglarlo (`config.manage`).
+- **Restaurar:** se descifra y comprueba aparte; `core` rechaza copias de otro entorno o de una versión más nueva; se guarda una copia local del estado actual (`copias-previas/`, las 5 últimas); se cierra la base, se descarta su WAL, se sustituye el archivo, se reabre y migra, se anota en el registro de la base restaurada y hay que volver a entrar.
+- **Antes de migrar** una base con datos, copia local en `copias-previas/` (RNF-08).
+- **En otro ordenador:** instalar, crear un administrador, elegir la carpeta de Drive, escribir la clave (solo se acepta si abre la copia más reciente, para evitar erratas) y restaurar.
+- **Solo el administrador** (`config.manage`). En la demo la pantalla explica que las copias solo existen en el programa instalado (RF-DEM-05).
+- **Dependencias nuevas (Rust):** `chacha20poly1305` 0.10.1 y `sha2` 0.10.9 (RustCrypto, misma base que el `argon2` 0.5.3 ya usado), `keyring` 3.6.3 (solo los almacenes nativos de Windows y macOS) y `tauri-plugin-dialog` 2.8.4 (oficial; se usa solo desde Rust y la ventana no recibe permisos de diálogo).

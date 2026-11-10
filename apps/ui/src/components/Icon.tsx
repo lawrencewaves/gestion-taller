@@ -1,11 +1,11 @@
 import {
-  Calendar, Car, FileText, Gauge, House, LogOut, type LucideIcon, Package, Receipt, Settings, User, Users, Wallet, Wrench,
+  Calendar, Car, DatabaseBackup, FileText, Gauge, House, LogOut, type LucideIcon, Package, Receipt, Settings, User, Users, Wallet, Wrench,
 } from 'lucide-react';
 
 /** Iconos de Lucide a trazo de 1,5px (D-028). Solo los que usa la interfaz. */
 const icons = {
   house: House, calendar: Calendar, wrench: Wrench, 'file-text': FileText, receipt: Receipt, wallet: Wallet,
-  users: Users, car: Car, package: Package, settings: Settings, gauge: Gauge, user: User, 'log-out': LogOut,
+  users: Users, car: Car, package: Package, settings: Settings, 'database-backup': DatabaseBackup, gauge: Gauge, user: User, 'log-out': LogOut,
 } satisfies Record<string, LucideIcon>;
 
 export type IconName = keyof typeof icons;

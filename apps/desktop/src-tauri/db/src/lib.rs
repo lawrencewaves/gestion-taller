@@ -5,7 +5,7 @@
 //! en el navegador: Rust solo ejecuta SQL con parámetros y devuelve filas en JSON.
 
 use rusqlite::types::{Value, ValueRef};
-use rusqlite::{Connection, OpenFlags, Statement};
+use rusqlite::{Connection, OpenFlags, Statement, MAIN_DB};
 use serde_json::{Map, Number, Value as Json};
 use std::path::Path;
 use std::sync::Mutex;
@@ -85,6 +85,55 @@ impl Database {
     pub fn exec(&self, sql: &str) -> Result<(), String> {
         self.with(|conn| conn.execute_batch(sql).map_err(err))
     }
+
+    /// Copia coherente de la base en `dest` con la Backup API de SQLite (D-013), incluido
+    /// lo que aún esté en el WAL. El resultado es un único archivo autónomo.
+    /// Se niega si hay una transacción abierta: la copia nunca recoge un cambio a medias.
+    pub fn snapshot_to(&self, dest: &Path) -> Result<(), String> {
+        self.with(|conn| {
+            if !conn.is_autocommit() {
+                return Err("Hay una operación en curso. La copia se hará en cuanto termine.".into());
+            }
+            if dest.exists() {
+                std::fs::remove_file(dest).map_err(err)?;
+            }
+            conn.backup(MAIN_DB, dest, None).map_err(err)
+        })?;
+        let copy = Connection::open(dest).map_err(err)?;
+        copy.execute_batch("PRAGMA journal_mode = DELETE;").map_err(err)?;
+        Ok(())
+    }
+}
+
+/// Lo que se sabe de un archivo de base de datos sin abrirlo como base de trabajo.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FileInfo {
+    /// Última migración aplicada.
+    pub schema_version: i64,
+    /// Entorno para el que se creó (DATABASE §2).
+    pub environment: Option<String>,
+}
+
+/// Comprueba la integridad de un archivo (RF-BAK-04) y que es una base de Gonzalvo.
+/// Lo abre en solo lectura: no lo modifica.
+pub fn inspect_file(path: &Path) -> Result<FileInfo, String> {
+    let conn = Connection::open_with_flags(path, OpenFlags::SQLITE_OPEN_READ_ONLY | OpenFlags::SQLITE_OPEN_NO_MUTEX)
+        .map_err(|e| format!("No se puede abrir la copia: {e}"))?;
+    let damaged = |detail: String| format!("La copia está dañada: {detail}");
+    let check: String = conn.query_row("PRAGMA integrity_check", [], |r| r.get(0)).map_err(|e| damaged(e.to_string()))?;
+    if check != "ok" {
+        return Err(damaged(check));
+    }
+    let orphans: i64 = conn
+        .query_row("SELECT count(*) FROM pragma_foreign_key_check", [], |r| r.get(0))
+        .map_err(|e| damaged(e.to_string()))?;
+    if orphans > 0 {
+        return Err(damaged(format!("{orphans} datos sin su registro relacionado")));
+    }
+    let not_ours = |_| "El archivo no es una base de datos de Gonzalvo.".to_string();
+    let schema_version = conn.query_row("SELECT coalesce(max(version), 0) FROM schema_migrations", [], |r| r.get(0)).map_err(not_ours)?;
+    let environment = conn.query_row("SELECT environment FROM settings WHERE id = 1", [], |r| r.get(0)).map_err(not_ours)?;
+    Ok(FileInfo { schema_version, environment })
 }
 
 fn to_sql(v: &Json) -> Result<Value, String> {
@@ -192,6 +241,44 @@ mod tests {
         db.exec("ROLLBACK").unwrap();
         let rows = db.all("SELECT count(*) AS n FROM t", None).unwrap();
         assert_eq!(rows[0]["n"], json!(0));
+    }
+
+    #[test]
+    fn copia_coherente_e_inspeccion() {
+        let dir = std::env::temp_dir().join(format!("gonzalvo-db-snap-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        let db = Database::open(&dir.join("taller.db")).unwrap();
+        db.exec(
+            "CREATE TABLE schema_migrations (version INTEGER PRIMARY KEY) STRICT; INSERT INTO schema_migrations VALUES (1), (2);
+             CREATE TABLE settings (id INTEGER PRIMARY KEY, environment TEXT) STRICT; INSERT INTO settings VALUES (1, 'TALLER');",
+        )
+        .unwrap();
+        let copy = dir.join("copia.db");
+
+        db.exec("BEGIN IMMEDIATE").unwrap();
+        assert!(db.snapshot_to(&copy).unwrap_err().contains("operación en curso"));
+        db.exec("ROLLBACK").unwrap();
+
+        db.snapshot_to(&copy).unwrap();
+        let info = inspect_file(&copy).unwrap();
+        assert_eq!(info, FileInfo { schema_version: 2, environment: Some("TALLER".into()) });
+        // Un único archivo, sin WAL al lado.
+        let mode: String = Connection::open(&copy).unwrap().query_row("PRAGMA journal_mode", [], |r| r.get(0)).unwrap();
+        assert_eq!(mode, "delete");
+
+        // Repetir la copia sustituye la anterior.
+        db.run("INSERT INTO schema_migrations VALUES (3)", None).unwrap();
+        db.snapshot_to(&copy).unwrap();
+        assert_eq!(inspect_file(&copy).unwrap().schema_version, 3);
+
+        std::fs::write(dir.join("otra.db"), b"no es SQLite").unwrap();
+        assert!(inspect_file(&dir.join("otra.db")).is_err());
+        let empty = dir.join("vacia.db");
+        Connection::open(&empty).unwrap().execute_batch("CREATE TABLE x (a INTEGER)").unwrap();
+        assert!(inspect_file(&empty).unwrap_err().contains("no es una base de datos de Gonzalvo"));
+
+        drop(db);
+        std::fs::remove_dir_all(dir).unwrap();
     }
 
     #[test]

@@ -6,3 +6,4 @@ export * from './serial-executor';
 export * from './services/system';
 export * from './services/activity';
 export * from './services/auth';
+export * from './services/backup';

@@ -4,6 +4,7 @@
 import type { Migration } from '../migrator';
 import m0001 from './0001_inicial.sql?raw';
 import m0002 from './0002_usuarios.sql?raw';
+import m0003 from './0003_copias.sql?raw';
 
 /**
  * Lista ordenada de migraciones (DATABASE §5). Solo se añaden al final;
@@ -12,4 +13,5 @@ import m0002 from './0002_usuarios.sql?raw';
 export const migrations: readonly Migration[] = [
   { version: 1, name: '0001_inicial', sql: m0001 },
   { version: 2, name: '0002_usuarios', sql: m0002 },
+  { version: 3, name: '0003_copias', sql: m0003 },
 ];

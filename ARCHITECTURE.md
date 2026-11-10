@@ -77,7 +77,7 @@ Gestor de paquetes: pnpm con workspaces.
 | `PasswordHasher` (Argon2id) | Rust | Argon2id en WASM o PBKDF2 nativo del navegador (se decide en la Fase 4) |
 | `Clock`, `IdGenerator` (UUIDv7) | Comunes | Comunes |
 | `FileStore` (adjuntos, PDF) | Carpeta de datos de la aplicación | Almacenamiento del navegador, con límite de tamaño |
-| `BackupService` | Rust | No disponible |
+| `BackupPort` (cifrado, archivos, clave, selector de carpeta) | Rust (`gonzalvo-backup`) | No existe: `createUnavailableBackupService` |
 | `FiscalGateway` | `fiscal-null` hasta la validación; después `fiscal-aeat` | Siempre `fiscal-null` |
 | `Mailer` | Gmail del taller desde Rust, con la credencial en el Llavero (D-023) | Simulado: no envía, muestra el email que se habría enviado |
 | `Capabilities` | Indica qué funciones existen en este entorno | Ídem |
@@ -94,16 +94,16 @@ Al añadir un método nuevo no se escribe código específico para la web.
 
 ## 6. Escritorio (Tauri 2)
 
-- Rust expone solo comandos de bajo nivel: SQL, transacciones, hash de contraseñas, copias, ficheros, email y, más adelante, la comunicación fiscal con certificado.
+- Rust expone solo comandos de bajo nivel: SQL, transacciones, hash de contraseñas, copias, ficheros, email y, más adelante, la comunicación fiscal con certificado. Crates: `gonzalvo-db`, `gonzalvo-password` y `gonzalvo-backup`.
 - **Una conexión de escritura** SQLite en modo WAL, `synchronous = FULL` y claves foráneas activadas, en el crate `src-tauri/db` (`gonzalvo-db`). Comandos: `db_open`, `sql_all`, `sql_run`, `sql_exec`.
 - **Transacciones:** las abre y cierra TypeScript (`BEGIN`/`COMMIT` por `sql_exec`) a través de `createSerialExecutor`, la misma cola que en el navegador. Como solo hay una conexión y la cola serializa, una transacción nunca se mezcla con otra operación.
 - **Ubicación de datos:** `~/Library/Application Support/com.lawrencewaves.gonzalvo/` en Mac y `%APPDATA%\com.lawrencewaves.gonzalvo\` en Windows. `local.db` en las compilaciones de prueba (LOCAL) y `taller.db` en las versiones publicadas (TALLER). La base recuerda su entorno y no se abre con el otro (D-031).
 - **Instalador:** `.github/workflows/escritorio.yml` compila en ordenadores de GitHub una app universal de Mac (Intel y Apple Silicon, firma ad hoc, D-012) y un instalador `.exe` de Windows sin firma (D-033). Se descarga como artefacto de la ejecución.
 - **Arranque:**
-  1. Comprobar integridad.
-  2. Hacer una copia si hay migraciones pendientes.
-  3. Aplicar las migraciones.
-  4. Abrir la aplicación.
+  1. Abrir la base.
+  2. Si hay migraciones pendientes y la base tiene datos, copia local previa.
+  3. Aplicar las migraciones y comprobar el entorno.
+  4. Abrir la aplicación y hacer la copia diaria si toca.
 - **Sesión:** en memoria. Cierre automático por inactividad.
 
 ## 7. Navegador (demo)
@@ -118,20 +118,23 @@ Al añadir un método nuevo no se escribe código específico para la web.
 ## 8. Copias de seguridad (solo escritorio)
 
 ```
-SQLite ──Backup API──► temporal ──integrity_check──► cifrado ──► temporal cifrado
-        ──movimiento atómico──► carpeta de Google Drive sincronizada
-                               └► registro en tabla backups
+SQLite ──Backup API──► temporal/copia.db ──integrity_check──► cifrado en <destino>/.gonzalvo-temporal/
+        ──a disco y relectura──► renombrado atómico a <destino>/gonzalvo-<entorno>-<fecha>.gonzalvo
+                              └► registro en tabla backups ──► retención
 ```
 
-- **Cifrado:** clave derivada de la contraseña de copias (Argon2id) y cifrado autenticado. La contraseña se guarda en el Llavero de macOS. Se entrega al titular una hoja impresa de recuperación, porque sin contraseña la copia es inútil.
+- **Reparto:** Rust (`gonzalvo-backup` y comandos `backup_*`) cifra, mueve y guarda la clave; `core` (`createBackupService`) decide cuándo copiar, qué conservar, cuándo avisar y si una copia se puede restaurar (D-038).
+- **Cifrado:** formato `.gonzalvo` v1, Argon2id + XChaCha20-Poly1305 por bloques. La clave la genera Gonzalvo, se guarda en el Administrador de credenciales de Windows (Llavero en macOS) y se entrega una hoja de recuperación impresa, porque sin clave la copia es inútil.
 - **Movimiento atómico** dentro del mismo volumen: Google Drive nunca ve un archivo a medias.
-- **Disparadores:** diaria, tras operaciones importantes (agrupadas en una ventana de minutos), manual y al cerrar la aplicación si hay cambios.
+- **Disparadores:** diaria (al arrancar y cada hora se comprueba), manual y copia a USB. Tras operaciones importantes, con los módulos de facturación y cobros (Fase 5).
 - **Restauración:**
-  1. Descifrar y verificar la copia.
-  2. Copiar el estado actual.
-  3. Cerrar la conexión.
-  4. Sustituir el archivo.
-  5. Reabrir y migrar.
+  1. Descifrar y verificar la copia aparte.
+  2. Comprobar entorno y versión (`core`).
+  3. Copia local del estado actual (`copias-previas/`).
+  4. Cerrar la conexión y descartar el WAL.
+  5. Sustituir el archivo.
+  6. Reabrir y migrar; volver a entrar.
+- **Antes de migrar** una base con datos, copia local en `copias-previas/`.
 - **Retención:** según RF-BAK-07, aplicada después de cada copia correcta.
 
 ## 9. Subsistema fiscal

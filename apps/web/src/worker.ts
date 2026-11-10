@@ -6,7 +6,9 @@
 import { serve } from '@gonzalvo/adapter-worker-rpc';
 import { createPbkdf2Hasher, openBrowserDatabase } from '@gonzalvo/adapter-browser';
 import type { AuthService, NewAdmin, Services } from '@gonzalvo/contracts';
-import { createAuthService, createSystemService, createUuidV7Generator, recordOpen, systemClock } from '@gonzalvo/core';
+import {
+  createAuthService, createSystemService, createUnavailableBackupService, createUuidV7Generator, recordOpen, systemClock,
+} from '@gonzalvo/core';
 import { openDatabase } from '@gonzalvo/data';
 import { DEMO_PASSWORD, DEMO_USERS, seedDemoUsers } from '@gonzalvo/seed';
 import { appInfo, databaseName } from './env';
@@ -31,7 +33,8 @@ const services: Promise<Services> = (async () => {
   const system = createSystemService({
     db, storage, dbName, schemaVersion, session: auth.current, ...(storageError ? { storageError } : {}),
   });
-  return { system, auth };
+  // Las copias solo existen en el programa instalado (RF-DEM-05).
+  return { system, auth, backups: createUnavailableBackupService() };
 })();
 
 const auth = async (): Promise<AuthService> => (await services).auth;
@@ -45,4 +48,5 @@ serve(self, {
     logout: async () => (await auth()).logout(),
     session: async () => (await auth()).session(),
   },
+  backups: { status: async () => (await services).backups.status() },
 });

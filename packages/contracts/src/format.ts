@@ -16,6 +16,14 @@ export function formatKm(km: number): string {
   return `${int.format(km)} km`;
 }
 
+const dec1 = new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
+/** Tamaño de archivo: «850 KB», «12,4 MB». */
+export function formatBytes(bytes: number): string {
+  if (bytes < 1024 * 1024) return `${int.format(Math.max(1, Math.round(bytes / 1024)))} KB`;
+  return `${dec1.format(bytes / (1024 * 1024))} MB`;
+}
+
 const pad = (n: number) => String(n).padStart(2, '0');
 
 /** Fecha local → «08/11/2026», o «08/11/2026 · 09:30» con hora. */

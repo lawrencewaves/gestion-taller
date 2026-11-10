@@ -22,6 +22,7 @@ export const ROUTE_PERMISSION: Partial<Record<RouteId, Permission>> = {
   vehiculos: 'vehiculos.view',
   catalogo: 'catalogo.view',
   configuracion: 'config.manage',
+  copias: 'config.manage',
   diagnostico: 'system.diagnostics',
 };
 
@@ -36,7 +37,11 @@ const groups: Item[][] = [
   [{ id: 'presupuestos', icon: 'file-text' }, { id: 'facturas', icon: 'receipt' }, { id: 'cobros', icon: 'wallet' }],
   [{ id: 'clientes', icon: 'users' }, { id: 'vehiculos', icon: 'car' }, { id: 'catalogo', icon: 'package' }],
 ];
-const footer: Item[] = [{ id: 'configuracion', icon: 'settings' }, { id: 'diagnostico', icon: 'gauge' }];
+const footer: Item[] = [
+  { id: 'configuracion', icon: 'settings' },
+  { id: 'copias', icon: 'database-backup' },
+  { id: 'diagnostico', icon: 'gauge' },
+];
 
 function NavLink({ item, active }: { item: Item; active: boolean }) {
   return (
