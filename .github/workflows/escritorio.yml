@@ -115,6 +115,8 @@ jobs:
         working-directory: apps/desktop
         run: |
           set -euo pipefail
+          # La caché conserva instaladores de compilaciones anteriores: se empieza sin ninguno.
+          rm -rf src-tauri/target/release/bundle/nsis
           config=$(jq -nc --arg v "$APP_VERSION" --argjson signed "$SIGNED" '{version: $v} + (if $signed == 1 then {bundle: {createUpdaterArtifacts: true}} else {} end)')
           pnpm tauri build --bundles nsis --config "$config"
 
@@ -125,7 +127,8 @@ jobs:
           set -euo pipefail
           out="$RUNNER_TEMP/gonzalvo"
           mkdir -p "$out"
-          exe=$(ls "$BUNDLE"/nsis/*-setup.exe)
+          exe="$BUNDLE/nsis/Gonzalvo_${APP_VERSION}_x64-setup.exe"
+          test -f "$exe"
           if [ "$GITHUB_REF_TYPE" = "tag" ]; then
             name="Gonzalvo-$APP_VERSION-windows-setup.exe"
             base_url="https://github.com/${GITHUB_REPOSITORY}/releases/download/$GITHUB_REF_NAME"
