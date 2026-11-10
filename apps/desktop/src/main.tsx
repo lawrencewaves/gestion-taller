@@ -5,9 +5,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { invoke } from '@tauri-apps/api/core';
-import { createTauriExecutor, openTauriDatabase } from '@gonzalvo/adapter-sql-tauri';
+import { createTauriExecutor, createTauriPasswordHasher, openTauriDatabase } from '@gonzalvo/adapter-tauri';
 import type { AppInfo, Capabilities, Environment, Services } from '@gonzalvo/contracts';
-import { createSystemService, recordOpen, systemClock } from '@gonzalvo/core';
+import { createAuthService, createSystemService, createUuidV7Generator, recordOpen, systemClock } from '@gonzalvo/core';
 import { openDatabase } from '@gonzalvo/data';
 import { App } from '@gonzalvo/ui';
 
@@ -30,9 +30,13 @@ async function start(): Promise<Services> {
   await openTauriDatabase(invoke, fileName);
   const db = createTauriExecutor(invoke);
   // La copia previa a una migración (RNF-08) llega con las copias de seguridad, en el paso 8.
-  const { schemaVersion } = await openDatabase(db, { environment, clock: systemClock });
+  const clock = systemClock;
+  const { schemaVersion } = await openDatabase(db, { environment, clock });
   await recordOpen(db);
-  return { system: createSystemService({ db, storage: 'native', dbName: fileName, schemaVersion }) };
+  // En el escritorio no hay usuarios de prueba: la primera vez se crea el administrador.
+  const auth = createAuthService({ db, hasher: createTauriPasswordHasher(invoke), clock, ids: createUuidV7Generator() });
+  const system = createSystemService({ db, storage: 'native', dbName: fileName, schemaVersion, session: auth.current });
+  return { system, auth };
 }
 
 start().then(

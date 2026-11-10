@@ -228,3 +228,15 @@ El titular ya tiene su historial en Stall y debe poder llevárselo entero a Gonz
 ### D-036 · Instalador de Windows verificado
 2026-11-10 · Vigente
 Robert instala la versión de prueba en Windows: arranca, el Diagnóstico da todo correcto y el contador de aperturas sube al cerrar y abrir. El paso 6 de la Fase 4 queda validado en Windows.
+
+### D-037 · Usuarios, inicio de sesión y permisos
+2026-11-10 · Vigente
+- **Sesión local en memoria:** vive en el programa (escritorio) o en el Worker de cada pestaña (demo). Cerrar el programa la cierra. Cierre automático tras 30 minutos sin actividad; se hará configurable en el módulo Configuración.
+- **Primer arranque del programa instalado:** pide crear el usuario administrador. No hay usuarios ni contraseñas por defecto.
+- **Demo:** tres usuarios de prueba (admin, recepcion, mecanico) con contraseña pública «gonzalvo», visible en la pantalla de entrada (RF-DEM-01: no es una protección real).
+- **Contraseñas:** al menos 8 caracteres y distinta del usuario; longitud antes que símbolos, según las guías actuales. Escritorio: Argon2id en Rust (19 MiB, 2 pasadas, crate `gonzalvo-password`); demo: PBKDF2-SHA256 del navegador con 600.000 iteraciones, sin dependencias. Cada valor guardado incluye su algoritmo y parámetros.
+- **Bloqueo:** 5 intentos fallidos bloquean el usuario 15 minutos. El mensaje no revela si el usuario existe.
+- **Permisos:** lista cerrada en `contracts`; los iniciales por rol se cargan con la migración 0002 según UX §3. Los servicios los comprueban con `requirePermission`; la interfaz solo oculta lo que no se puede usar.
+- **Registro de actividad:** entradas, salidas, fallos, bloqueos y alta de usuarios. La base de datos impide modificarlo o borrarlo, y los usuarios no se borran: se desactivan.
+- **Adaptadores por plataforma:** `adapter-browser` (SQLite WASM y PBKDF2) y `adapter-tauri` (SQLite y Argon2id en Rust) sustituyen a `adapter-sql-wasm` y `adapter-sql-tauri`.
+- **La gestión de usuarios** (crear, desactivar, cambiar rol y contraseña) se hará en el módulo Configuración (Fase 5).

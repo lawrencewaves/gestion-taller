@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { Clock, SqlExecutor } from '@gonzalvo/core';
-import { openMemoryDatabase } from '@gonzalvo/adapter-sql-wasm';
+import { PERMISSIONS } from '@gonzalvo/contracts';
+import { openMemoryDatabase } from '@gonzalvo/adapter-browser';
 import { migrations } from './migrations';
 import { checksum, migrate, type Migration, MigrationError } from './migrator';
 import { EnvironmentMismatchError, openDatabase } from './open';
 
 const clock: Clock = { now: () => '2026-11-09T22:00:00.000Z' };
+const LATEST = migrations.length;
 let db: SqlExecutor;
 
 beforeEach(async () => {
@@ -14,7 +16,7 @@ beforeEach(async () => {
 
 describe('migraciones', () => {
   it('crea el esquema inicial con los datos de referencia', async () => {
-    expect(await migrate(db, migrations, { clock })).toBe(1);
+    expect(await migrate(db, migrations, { clock })).toBe(LATEST);
     expect(await db.all('SELECT name, rate_bp FROM tax_rates ORDER BY sort_order')).toEqual([
       { name: 'IVA general 21 %', rate_bp: 2100 },
       { name: 'IVA reducido 10 %', rate_bp: 1000 },
@@ -32,13 +34,13 @@ describe('migraciones', () => {
     let called = false;
     await migrate(db, migrations, { clock, beforeMigrate: async () => void (called = true) });
     expect(called).toBe(false);
-    expect(await db.get('SELECT count(*) AS n FROM schema_migrations')).toEqual({ n: 1 });
+    expect(await db.get('SELECT count(*) AS n FROM schema_migrations')).toEqual({ n: LATEST });
   });
 
   it('avisa antes de aplicar migraciones pendientes (copia previa en escritorio)', async () => {
     const seen: number[] = [];
     await migrate(db, migrations, { clock, beforeMigrate: async (pending) => void seen.push(...pending.map((m) => m.version)) });
-    expect(seen).toEqual([1]);
+    expect(seen).toEqual(migrations.map((m) => m.version));
   });
 
   it('se detiene si una migración aplicada ha cambiado', async () => {
@@ -48,16 +50,16 @@ describe('migraciones', () => {
   });
 
   it('se detiene si la base es más nueva que el programa', async () => {
-    const extra: Migration[] = [...migrations, { version: 2, name: '0002_prueba', sql: 'CREATE TABLE x (id INTEGER) STRICT;' }];
+    const extra: Migration[] = [...migrations, { version: LATEST + 1, name: 'prueba', sql: 'CREATE TABLE x (id INTEGER) STRICT;' }];
     await migrate(db, extra, { clock });
     await expect(migrate(db, migrations, { clock })).rejects.toThrow('Actualiza Gonzalvo');
   });
 
   it('deshace entera una migración que falla a mitad', async () => {
-    const broken: Migration[] = [...migrations, { version: 2, name: '0002_rota', sql: 'CREATE TABLE y (id INTEGER) STRICT; INSERT INTO no_existe VALUES (1);' }];
+    const broken: Migration[] = [...migrations, { version: LATEST + 1, name: 'rota', sql: 'CREATE TABLE y (id INTEGER) STRICT; INSERT INTO no_existe VALUES (1);' }];
     await expect(migrate(db, broken, { clock })).rejects.toThrow();
     expect(await db.get("SELECT count(*) AS n FROM sqlite_schema WHERE name = 'y'")).toEqual({ n: 0 });
-    expect(await db.get('SELECT max(version) AS v FROM schema_migrations')).toEqual({ v: 1 });
+    expect(await db.get('SELECT max(version) AS v FROM schema_migrations')).toEqual({ v: LATEST });
   });
 
   it('exige numeración correlativa', async () => {
@@ -88,11 +90,29 @@ describe('restricciones del esquema', () => {
   });
 });
 
+describe('usuarios y permisos (0002)', () => {
+  it('solo concede permisos de la lista cerrada', async () => {
+    await migrate(db, migrations, { clock });
+    const rows = await db.all<{ permission: string }>('SELECT DISTINCT permission FROM role_permissions');
+    const known = new Set<string>(PERMISSIONS);
+    expect(rows.filter((r) => !known.has(r.permission))).toEqual([]);
+    expect(await db.get("SELECT count(*) AS n FROM role_permissions WHERE role = 'admin'")).toEqual({ n: PERMISSIONS.length });
+  });
+
+  it('no admite dos usuarios con el mismo nombre aunque cambien las mayúsculas', async () => {
+    await migrate(db, migrations, { clock });
+    const insert = (id: string, username: string) =>
+      db.run("INSERT INTO users (id, username, display_name, password_hash, role, created_at, updated_at) VALUES (?, ?, 'X', 'h', 'admin', 'x', 'x')", [id, username]);
+    await insert('1', 'Robert');
+    await expect(insert('2', 'robert')).rejects.toThrow();
+  });
+});
+
 describe('apertura y entorno', () => {
   it('registra el entorno la primera vez y lo exige después', async () => {
-    expect(await openDatabase(db, { environment: 'DEMO', clock })).toEqual({ schemaVersion: 1 });
+    expect(await openDatabase(db, { environment: 'DEMO', clock })).toEqual({ schemaVersion: LATEST });
     expect(await db.get('SELECT environment FROM settings')).toEqual({ environment: 'DEMO' });
     await expect(openDatabase(db, { environment: 'TALLER', clock })).rejects.toThrow(EnvironmentMismatchError);
-    await expect(openDatabase(db, { environment: 'DEMO', clock })).resolves.toEqual({ schemaVersion: 1 });
+    await expect(openDatabase(db, { environment: 'DEMO', clock })).resolves.toEqual({ schemaVersion: LATEST });
   });
 });

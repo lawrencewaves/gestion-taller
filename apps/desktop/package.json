@@ -9,7 +9,7 @@
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.node.json"
   },
   "dependencies": {
-    "@gonzalvo/adapter-sql-tauri": "workspace:*",
+    "@gonzalvo/adapter-tauri": "workspace:*",
     "@gonzalvo/contracts": "workspace:*",
     "@gonzalvo/core": "workspace:*",
     "@gonzalvo/data": "workspace:*",

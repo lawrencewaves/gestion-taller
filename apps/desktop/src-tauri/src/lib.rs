@@ -50,6 +50,18 @@ fn sql_run(state: State<'_, AppDb>, sql: String, params: Option<Json>) -> Result
     state.with(|db| db.run(&sql, params.as_ref()).map(|changes| json!({ "changes": changes })))
 }
 
+/// Argon2id: la contraseña nunca se cifra en JavaScript (RNF-03).
+/// Asíncronos: el cálculo tarda unas décimas y no debe congelar la ventana.
+#[tauri::command]
+async fn password_hash(password: String) -> Result<String, String> {
+    gonzalvo_password::hash(&password)
+}
+
+#[tauri::command]
+async fn password_verify(password: String, hash: String) -> bool {
+    gonzalvo_password::verify(&password, &hash)
+}
+
 #[tauri::command]
 fn sql_exec(state: State<'_, AppDb>, sql: String) -> Result<(), String> {
     state.with(|db| db.exec(&sql))
@@ -58,7 +70,7 @@ fn sql_exec(state: State<'_, AppDb>, sql: String) -> Result<(), String> {
 pub fn run() {
     tauri::Builder::default()
         .manage(AppDb::default())
-        .invoke_handler(tauri::generate_handler![db_open, sql_all, sql_run, sql_exec])
+        .invoke_handler(tauri::generate_handler![db_open, sql_all, sql_run, sql_exec, password_hash, password_verify])
         .run(tauri::generate_context!())
         .expect("No se ha podido arrancar Gonzalvo");
 }

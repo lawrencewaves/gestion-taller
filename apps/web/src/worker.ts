@@ -1,25 +1,48 @@
 /**
  * Web Worker de la demo: aquí se ejecutan la lógica y SQLite (D-024).
- * Al arrancar abre la base del navegador, aplica las migraciones y comprueba el entorno.
+ * Al arrancar abre la base del navegador, aplica las migraciones, comprueba el entorno
+ * y crea los usuarios de prueba. Cada pestaña tiene su propio Worker y su propia sesión.
  */
 import { serve } from '@gonzalvo/adapter-worker-rpc';
-import { openBrowserDatabase } from '@gonzalvo/adapter-sql-wasm';
-import type { SystemService } from '@gonzalvo/contracts';
-import { createSystemService, recordOpen, systemClock } from '@gonzalvo/core';
+import { createPbkdf2Hasher, openBrowserDatabase } from '@gonzalvo/adapter-browser';
+import type { AuthService, NewAdmin, Services } from '@gonzalvo/contracts';
+import { createAuthService, createSystemService, createUuidV7Generator, recordOpen, systemClock } from '@gonzalvo/core';
 import { openDatabase } from '@gonzalvo/data';
+import { DEMO_PASSWORD, DEMO_USERS, seedDemoUsers } from '@gonzalvo/seed';
 import { appInfo, databaseName } from './env';
 
 declare const self: DedicatedWorkerGlobalScope;
 
 const dbName = databaseName(appInfo);
 
-const system: Promise<SystemService> = (async () => {
+const services: Promise<Services> = (async () => {
   const { executor: db, storage, storageError } = await openBrowserDatabase(dbName);
-  const { schemaVersion } = await openDatabase(db, { environment: appInfo.environment, clock: systemClock });
+  const clock = systemClock;
+  const ids = createUuidV7Generator();
+  const hasher = createPbkdf2Hasher();
+  const { schemaVersion } = await openDatabase(db, { environment: appInfo.environment, clock });
   await recordOpen(db);
-  return createSystemService({ db, storage, dbName, schemaVersion, ...(storageError ? { storageError } : {}) });
+  await seedDemoUsers(db, { hasher, ids, clock });
+
+  const auth = createAuthService({
+    db, hasher, clock, ids,
+    demo: { usernames: DEMO_USERS.map((u) => u.username), password: DEMO_PASSWORD },
+  });
+  const system = createSystemService({
+    db, storage, dbName, schemaVersion, session: auth.current, ...(storageError ? { storageError } : {}),
+  });
+  return { system, auth };
 })();
 
+const auth = async (): Promise<AuthService> => (await services).auth;
+
 serve(self, {
-  system: { diagnostics: async () => (await system).diagnostics() },
+  system: { diagnostics: async () => (await services).system.diagnostics() },
+  auth: {
+    status: async () => (await auth()).status(),
+    setupAdmin: async (input: NewAdmin) => (await auth()).setupAdmin(input),
+    login: async (username: string, password: string) => (await auth()).login(username, password),
+    logout: async () => (await auth()).logout(),
+    session: async () => (await auth()).session(),
+  },
 });
