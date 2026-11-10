@@ -1,0 +1,56 @@
+/**
+ * Composición del escritorio (ARCHITECTURE §1, §6): la lógica se ejecuta aquí,
+ * en la propia aplicación, y SQLite en Rust por IPC.
+ */
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { invoke } from '@tauri-apps/api/core';
+import { createTauriExecutor, openTauriDatabase } from '@gonzalvo/adapter-sql-tauri';
+import type { AppInfo, Capabilities, Environment, Services } from '@gonzalvo/contracts';
+import { createSystemService, recordOpen, systemClock } from '@gonzalvo/core';
+import { openDatabase } from '@gonzalvo/data';
+import { App } from '@gonzalvo/ui';
+
+/**
+ * Las compilaciones de prueba son LOCAL (datos ficticios, local.db).
+ * Solo una versión publicada con etiqueta vX.Y.Z se compila como TALLER (taller.db).
+ * La base recuerda su entorno: una nunca abre la otra (D-031).
+ */
+const environment: Environment = import.meta.env.VITE_ENV === 'TALLER' ? 'TALLER' : 'LOCAL';
+const info: AppInfo = { environment, version: (import.meta.env.VITE_VERSION as string | undefined) ?? 'dev' };
+const fileName = environment === 'TALLER' ? 'taller.db' : 'local.db';
+
+const capabilities: Capabilities = { backups: true, directPrint: true, demoReset: environment !== 'TALLER' };
+
+const rootEl = document.getElementById('root');
+if (!rootEl) throw new Error('Falta el elemento #root en index.html');
+const root = createRoot(rootEl);
+
+async function start(): Promise<Services> {
+  await openTauriDatabase(invoke, fileName);
+  const db = createTauriExecutor(invoke);
+  // La copia previa a una migración (RNF-08) llega con las copias de seguridad, en el paso 8.
+  const { schemaVersion } = await openDatabase(db, { environment, clock: systemClock });
+  await recordOpen(db);
+  return { system: createSystemService({ db, storage: 'native', dbName: fileName, schemaVersion }) };
+}
+
+start().then(
+  (services) =>
+    root.render(
+      <StrictMode>
+        <App services={services} info={info} capabilities={capabilities} />
+      </StrictMode>,
+    ),
+  (error: unknown) => {
+    // Sin base de datos no se arranca: se explica por qué en lugar de mostrar una ventana vacía.
+    const message = error instanceof Error ? error.message : String(error);
+    root.render(
+      <main style={{ padding: 32, fontFamily: 'system-ui, sans-serif', maxWidth: 640 }}>
+        <h1 style={{ fontSize: 22 }}>Gonzalvo no ha podido abrir sus datos</h1>
+        <p>{message}</p>
+        <p>Cierra el programa y vuelve a abrirlo. Si el problema sigue, no borres nada y avisa a Robert.</p>
+      </main>,
+    );
+  },
+);

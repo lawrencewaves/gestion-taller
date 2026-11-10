@@ -1,0 +1,28 @@
+[package]
+name = "gonzalvo"
+version = "0.1.0"
+description = "Gonzalvo: gestión del taller mecánico"
+authors = ["Robert Lawrence Arasa Ribas"]
+edition = "2021"
+publish = false
+
+[lib]
+name = "gonzalvo_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "=2.7.4", features = [] }
+
+[dependencies]
+tauri = { version = "=2.12.5", features = [] }
+serde_json = "1"
+gonzalvo-db = { path = "db" }
+
+[workspace]
+members = ["db"]
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

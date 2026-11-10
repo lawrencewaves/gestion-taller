@@ -192,3 +192,26 @@ Robert aprueba la navegación, el sistema visual, el logotipo, los componentes y
 - **Adaptador del navegador con cola:** una sola conexión, operaciones en serie, transacciones anidadas con SAVEPOINT.
 - **Pruebas con el mismo motor que la demo** (SQLite WASM en Node), no con un sustituto.
 - **Datos de referencia con identificadores fijos** (tipos de IVA y métodos de pago), iguales en todas las instalaciones.
+
+### D-032 · App de escritorio de prueba
+2026-11-10 · Vigente
+- **Lógica compartida:** la cola de operaciones y transacciones (`createSerialExecutor`) y el diagnóstico viven en `core` y los usan igual el navegador y el Mac. Cada adaptador solo sabe ejecutar SQL.
+- **Rust mínimo:** el crate `gonzalvo-db` (rusqlite con SQLite incluido) ejecuta SQL con parámetros JSON. Tiene sus propias pruebas, que se ejecutan en cada comprobación.
+- **Compilaciones de prueba en entorno LOCAL** (`local.db`, franja «LOCAL · Pruebas · Datos ficticios»). Solo una versión con etiqueta se compilará como TALLER (`taller.db`), cuando haya actualizador (paso 10). Así los datos de prueba nunca acaban en la base del taller.
+- **Instalador:** app universal con firma ad hoc (`signingIdentity: "-"`), compilada en GitHub Actions. macOS pide autorizarla una vez en Ajustes del Sistema (D-012).
+- **Nombre interno:** `com.lawrencewaves.gonzalvo`. Cambiarlo más adelante movería la carpeta de datos, así que se mantiene.
+
+### D-033 · Instalador también para Windows
+2026-11-10 · Vigente · Amplía D-003
+Robert pide la versión de Windows. Se compila junto a la de Mac, con el mismo código.
+- **Instalador:** `.exe` (NSIS) en español, instalación para el usuario actual sin permisos de administrador. Windows 10 y 11 de 64 bits; usa WebView2, que ya viene con Windows.
+- **Sin firma de código** (certificado de pago): Windows SmartScreen avisará la primera vez; se abre con «Más información → Ejecutar de todas formas».
+- **Datos:** `%APPDATA%\com.lawrencewaves.gonzalvo\` (`local.db` en pruebas, `taller.db` en el taller).
+- **Saltos de línea LF en todo el repositorio** (`.gitattributes`): las migraciones son idénticas en ambos sistemas.
+- **Pendiente según el ordenador del taller:** la contraseña de las copias usará el Llavero en Mac y el Administrador de credenciales en Windows (paso 8).
+
+### D-034 · Windows primero; Mac en pausa
+2026-11-10 · Vigente · Sustituye a D-003 en el orden de plataformas
+Robert pide seguir solo con Windows por ahora. Se compila y prueba únicamente el instalador de Windows. El código sigue sin nada específico de un sistema y la configuración de macOS se conserva (comentario en `escritorio.yml`), así que reactivarla es añadir una entrada.
+- **Descarga directa de pruebas:** cada compilación publica `Gonzalvo-prueba-windows.zip` en la publicación fija `prueba-windows` (prerelease) del repositorio, descargable sin iniciar sesión. Las versiones del taller tendrán sus propias publicaciones `vX.Y.Z` (paso 10).
+- **Pendiente:** la contraseña de las copias irá en el Administrador de credenciales de Windows (paso 8).

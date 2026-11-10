@@ -22,3 +22,7 @@ backups/
 
 # Sistema
 .DS_Store
+
+# Escritorio (Tauri)
+apps/desktop/src-tauri/target/
+apps/desktop/src-tauri/gen/

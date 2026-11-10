@@ -51,7 +51,7 @@ Reglas que se comprueban automáticamente en CI (lint de dependencias):
 ```
 apps/
   ui/          React + Vite. Una única interfaz para todos los entornos
-  desktop/     Tauri 2: src-tauri (Rust) + composición local
+  desktop/     Tauri 2: src-tauri (app Rust y crate db) + composición local
   web/         Composición del navegador: Web Worker + adaptadores web
 packages/
   contracts/   Interfaz Services, DTO, esquemas de validación (zod) y formatos de pantalla y PDF
@@ -95,8 +95,10 @@ Al añadir un método nuevo no se escribe código específico para la web.
 ## 6. Escritorio (Tauri 2)
 
 - Rust expone solo comandos de bajo nivel: SQL, transacciones, hash de contraseñas, copias, ficheros, email y, más adelante, la comunicación fiscal con certificado.
-- **Una conexión de escritura** SQLite en modo WAL, con claves foráneas activadas. Las transacciones interactivas se abren y cierran por identificador desde TypeScript.
-- **Ubicación de datos:** carpeta de datos de la aplicación del usuario de macOS.
+- **Una conexión de escritura** SQLite en modo WAL, `synchronous = FULL` y claves foráneas activadas, en el crate `src-tauri/db` (`gonzalvo-db`). Comandos: `db_open`, `sql_all`, `sql_run`, `sql_exec`.
+- **Transacciones:** las abre y cierra TypeScript (`BEGIN`/`COMMIT` por `sql_exec`) a través de `createSerialExecutor`, la misma cola que en el navegador. Como solo hay una conexión y la cola serializa, una transacción nunca se mezcla con otra operación.
+- **Ubicación de datos:** `~/Library/Application Support/com.lawrencewaves.gonzalvo/` en Mac y `%APPDATA%\com.lawrencewaves.gonzalvo\` en Windows. `local.db` en las compilaciones de prueba (LOCAL) y `taller.db` en las versiones publicadas (TALLER). La base recuerda su entorno y no se abre con el otro (D-031).
+- **Instalador:** `.github/workflows/escritorio.yml` compila en ordenadores de GitHub una app universal de Mac (Intel y Apple Silicon, firma ad hoc, D-012) y un instalador `.exe` de Windows sin firma (D-033). Se descarga como artefacto de la ejecución.
 - **Arranque:**
   1. Comprobar integridad.
   2. Hacer una copia si hay migraciones pendientes.

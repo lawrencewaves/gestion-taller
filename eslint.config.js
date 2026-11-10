@@ -12,7 +12,7 @@ const forbid = (patterns, message) => ({
 });
 
 export default tseslint.config(
-  { ignores: ['**/dist/**', '**/node_modules/**', 'design/**'] },
+  { ignores: ['**/dist/**', '**/node_modules/**', 'design/**', 'apps/desktop/src-tauri/**'] },
   js.configs.recommended,
   ...tseslint.configs.strict,
   {
