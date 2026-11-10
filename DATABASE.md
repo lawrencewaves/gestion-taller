@@ -4,8 +4,9 @@ Modelo de datos, convenciones y migraciones. El DDL definitivo vive en `packages
 
 ## 1. Motor y dialecto
 
+- **Versión mínima: SQLite 3.37** (tablas `STRICT`).
 - **SQLite** en los dos contenedores: rusqlite en escritorio y SQLite WASM en la demo (D-024). Mismo motor, mismo esquema y mismas migraciones.
-- **Prohibido** usar funciones de una versión de SQLite más nueva que la menor de las dos compilaciones. Esa versión mínima queda fijada en la Fase 4.
+- **Prohibido** usar funciones de una versión de SQLite más nueva que la menor de las dos compilaciones.
 - Pragmas de escritorio: `journal_mode=WAL`, `foreign_keys=ON`, `busy_timeout`.
 
 ## 2. Convenciones
@@ -94,6 +95,9 @@ No depende solo del código:
 - **`CHECK`** sobre estados y tipos válidos.
 
 ## 5. Migraciones
+
+- **Una migración por módulo.** `0001_inicial` crea la configuración y los datos de referencia; las tablas de cada módulo llegan con su migración en la Fase 5.
+- **Apertura** (`openDatabase` en `packages/data`): migrar y comprobar el entorno. La base recuerda su entorno y no se abre con un programa de otro.
 
 - **Formato:** archivos SQL numerados (`0001_inicial.sql`, …). Son el único lugar donde cambia el esquema.
 - **Solo hacia delante:** una migración publicada no se edita; se corrige con otra nueva.

@@ -40,6 +40,14 @@ export default tseslint.config(
     ),
   },
   {
+    files: ['packages/data/**/*.ts'],
+    ignores: ['**/*.test.ts'],
+    rules: forbid(
+      [...platform, 'react', 'react-dom', '@gonzalvo/ui', '@gonzalvo/web', '@gonzalvo/adapter-*'],
+      'data solo habla SQL a través del puerto SqlExecutor (ARCHITECTURE §2).',
+    ),
+  },
+  {
     files: ['packages/contracts/**/*.ts'],
     rules: forbid(
       [...platform, 'react', 'react-dom', '@gonzalvo/*'],

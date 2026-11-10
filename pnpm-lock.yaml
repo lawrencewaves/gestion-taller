@@ -212,18 +212,24 @@ importers:
 
   apps/web:
     dependencies:
+      '@gonzalvo/adapter-sql-wasm':
+        specifier: workspace:*
+        version: link:../../packages/adapters/sql-wasm
       '@gonzalvo/adapter-worker-rpc':
         specifier: workspace:*
         version: link:../../packages/adapters/worker-rpc
       '@gonzalvo/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
+      '@gonzalvo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@gonzalvo/data':
+        specifier: workspace:*
+        version: link:../../packages/data
       '@gonzalvo/ui':
         specifier: workspace:*
         version: link:../ui
-      '@sqlite.org/sqlite-wasm':
-        specifier: 3.54.1-build1
-        version: 3.54.1-build1
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -247,11 +253,30 @@ importers:
         specifier: 6.4.5
         version: 6.4.5(@types/node@22.20.5)
 
+  packages/adapters/sql-wasm:
+    dependencies:
+      '@gonzalvo/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@sqlite.org/sqlite-wasm':
+        specifier: 3.54.1-build1
+        version: 3.54.1-build1
+
   packages/adapters/worker-rpc: {}
 
   packages/contracts: {}
 
   packages/core: {}
+
+  packages/data:
+    dependencies:
+      '@gonzalvo/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@gonzalvo/adapter-sql-wasm':
+        specifier: workspace:*
+        version: link:../adapters/sql-wasm
 
 packages:
 
