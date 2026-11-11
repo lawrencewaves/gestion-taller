@@ -37,4 +37,11 @@ describe('worker-rpc', () => {
     const services = connect<TestServices>(port1);
     await expect(services.math.add(1, 1)).rejects.toThrow('Método desconocido: math.add');
   });
+
+  it('devuelve siempre el mismo objeto por servicio y método (dependencias estables en React)', () => {
+    const { port1 } = pair();
+    const services = connect<TestServices>(port1);
+    expect(services.math).toBe(services.math);
+    expect(services.math.add).toBe(services.math.add);
+  });
 });

@@ -1,3 +1,4 @@
+export * from './domain/identity';
 export * from './domain/money';
 export * from './domain/vehicle';
 export * from './ids';
@@ -9,3 +10,4 @@ export * from './services/auth';
 export * from './services/backup';
 export * from './services/fiscal';
 export * from './services/update';
+export * from './services/workshop';

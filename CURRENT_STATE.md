@@ -3,7 +3,7 @@
 Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 
 **Fecha:** 2026-11-11
-**Fase:** 5 · Módulos (pendiente de empezar)
+**Fase:** 5 · Módulos (en curso)
 
 ## Hecho
 
@@ -17,12 +17,14 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 - Calendario VeriFactu verificado (D-039): vigente el 1 de julio de 2027; aplazamiento a octubre de 2028 anunciado, sin publicar.
 - Fase 4, paso 9 publicado (D-040): esqueleto fiscal desactivado.
 - Fase 4, paso 10 publicado (D-041): actualizador con canal de prueba y canal del taller, verificado por Robert en Windows (de la 13 a la 16).
+- Fase 5, Configuración, primera entrega en la rama `feature/configuracion-taller` (D-044): datos del taller con validación, logotipo y vista previa del encabezado.
 - Defender marcó el programa sin firmar como `Bearfoos.A!ml`; VirusTotal limpio. Firma con Certum Open Source cuando el taller acepte el sistema (D-042).
 
 ## Siguiente paso
 
-1. Fase 5, primer módulo: Configuración (datos del taller, series, IVA, métodos de pago, usuarios y retención de copias).
-2. **Robert:** conseguir de Stall una exportación de muestra para estudiar su formato (D-035). Bloquea Clientes, Vehículos y Catálogo.
+1. **Robert:** revisar la pestaña Taller en la PREVIEW y fusionar `feature/configuracion-taller`.
+2. Configuración, segunda entrega: Usuarios (crear, editar, desactivar, contraseñas, permisos por rol e inactividad).
+3. **Robert:** conseguir de Stall una exportación de muestra para estudiar su formato (D-035). Bloquea Clientes, Vehículos y Catálogo.
 
 ## Preguntas abiertas
 

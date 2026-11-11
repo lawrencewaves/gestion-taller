@@ -2,6 +2,7 @@ import type { AuthService } from './auth';
 import type { BackupService } from './backup';
 import type { FiscalPolicy } from './fiscal';
 import type { UpdateService } from './update';
+import type { WorkshopService } from './workshop';
 
 /**
  * Lo único que la interfaz conoce del resto del sistema (ARCHITECTURE §5).
@@ -49,4 +50,5 @@ export interface Services {
   auth: AuthService;
   backups: BackupService;
   updates: UpdateService;
+  workshop: WorkshopService;
 }
