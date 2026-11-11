@@ -186,6 +186,7 @@ export const texts = {
     resetButton: 'Poner contraseña',
     resetDone: 'Contraseña nueva puesta. Dísela en persona.',
     permissionsTitle: 'Permisos por rol',
+    permissionsHint: 'Solo hace falta si añades más usuarios.',
     permissionsIntro: 'Qué puede hacer cada rol. Se aplican la próxima vez que cada persona entre.',
     adminAll: 'El administrador tiene siempre todos los permisos, incluidos Configuración, usuarios y copias.',
     section: 'Sección',

@@ -261,38 +261,44 @@ function PermissionMatrix() {
   );
 
   return (
-    <section className="gz-card gz-stack">
-      <h2 className="section-title">{t.permissionsTitle}</h2>
-      <p className="caption gz-muted">{t.permissionsIntro}</p>
-      <div className="gz-table-wrap">
-        <table className="gz-table gz-table--matrix">
-          <thead>
-            <tr>
-              <th>{t.section}</th>
-              {editable.map((r) => <th key={r.role}>{ROLE_LABELS[r.role]}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-            {PERMISSION_GROUPS.map((g) => (
-              <tr key={g.label}>
-                <th scope="row">{g.label}</th>
-                {editable.map((r) => (
-                  <td key={r.role}>
-                    <span className="gz-perm">
-                      <label>{box(r, g.view, `${g.label} · ${t.view}`)} {t.view}</label>
-                      <label>{box(r, g.edit, `${g.label} · ${t.editPerm}`)} {t.editPerm}</label>
-                      {g.extra && <label>{box(r, g.extra.permission, `${g.label} · ${g.extra.label}`)} {g.extra.label}</label>}
-                    </span>
-                  </td>
-                ))}
+    // Plegada: con un único administrador no hace falta (D-046). Sigue disponible si se añaden usuarios.
+    <details className="gz-card gz-disclosure">
+      <summary>
+        <span className="section-title">{t.permissionsTitle}</span>
+        <span className="caption gz-muted">{t.permissionsHint}</span>
+      </summary>
+      <div className="gz-stack">
+        <p className="caption gz-muted">{t.permissionsIntro}</p>
+        <div className="gz-table-wrap">
+          <table className="gz-table gz-table--matrix">
+            <thead>
+              <tr>
+                <th>{t.section}</th>
+                {editable.map((r) => <th key={r.role}>{ROLE_LABELS[r.role]}</th>)}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {PERMISSION_GROUPS.map((g) => (
+                <tr key={g.label}>
+                  <th scope="row">{g.label}</th>
+                  {editable.map((r) => (
+                    <td key={r.role}>
+                      <span className="gz-perm">
+                        <label>{box(r, g.view, `${g.label} · ${t.view}`)} {t.view}</label>
+                        <label>{box(r, g.edit, `${g.label} · ${t.editPerm}`)} {t.editPerm}</label>
+                        {g.extra && <label>{box(r, g.extra.permission, `${g.label} · ${g.extra.label}`)} {g.extra.label}</label>}
+                      </span>
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="caption gz-muted">{t.adminAll}</p>
+        <Notice note={note} />
       </div>
-      <p className="caption gz-muted">{t.adminAll}</p>
-      <Notice note={note} />
-    </section>
+    </details>
   );
 }
 

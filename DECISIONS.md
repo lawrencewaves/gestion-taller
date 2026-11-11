@@ -319,3 +319,9 @@ Robert verifica en Windows la actualización automática: de `0.1.0-prueba.13`, 
 - **«Mi cuenta»**, junto a «Cerrar sesión», para todos los roles: ver usuario y rol, y cambiar la propia contraseña sabiendo la actual.
 - **Registro de actividad:** altas, cambios (qué campos), contraseñas puestas o cambiadas, permisos añadidos y quitados, y cambios del tiempo de inactividad.
 - **Demo:** el taller ficticio lleva el IBAN de ejemplo del estándar (`ES91 2100 0418 4502 0005 1332`), con control correcto y que no es una cuenta real.
+
+### D-046 · Un único usuario: el administrador
+2026-11-11 · Vigente · Matiza D-037 y D-045
+- De momento solo usa el programa el titular del taller: habrá **un único usuario, administrador**, que lo hace todo.
+- Los roles Recepción y Mecánico y sus permisos se quedan en el programa por si hacen falta más adelante, pero no se configuran. En la pestaña Usuarios, «Permisos por rol» aparece plegado.
+- Los módulos de la Fase 5 se diseñan para una sola persona con todos los permisos: sin variantes de pantalla por rol. Las comprobaciones de permisos en `core` se mantienen igualmente.

@@ -19,6 +19,7 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 - Fase 4, paso 10 publicado (D-041): actualizador con canal de prueba y canal del taller, verificado por Robert en Windows (de la 13 a la 16).
 - Fase 5, Configuración, primera entrega publicada (D-044): datos del taller con validación, logotipo y vista previa del encabezado.
 - Fase 5, Configuración, segunda entrega en la rama `feature/configuracion-usuarios` (D-045): usuarios, permisos por rol, inactividad configurable y «Mi cuenta».
+- Un único usuario, el administrador; roles disponibles pero sin configurar (D-046).
 - Defender marcó el programa sin firmar como `Bearfoos.A!ml`; VirusTotal limpio. Firma con Certum Open Source cuando el taller acepte el sistema (D-042).
 
 ## Siguiente paso

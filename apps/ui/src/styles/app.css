@@ -187,3 +187,9 @@ a:hover { color: var(--ink); }
 a.gz-btn { text-decoration: none; }
 .gz-narrow-only { display: none; }
 @media (max-width: 600px) { .gz-wide-only { display: none; } .gz-narrow-only { display: inline; } }
+.gz-disclosure > summary { display: flex; flex-direction: column; gap: var(--space-1); cursor: pointer; list-style: none; }
+.gz-disclosure > summary::-webkit-details-marker { display: none; }
+.gz-disclosure > summary .section-title::before { content: '▸ '; color: var(--ink-muted); }
+.gz-disclosure[open] > summary .section-title::before { content: '▾ '; }
+.gz-disclosure[open] > summary { margin-bottom: var(--space-3); }
+.gz-disclosure > summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; border-radius: var(--radius-md); }
