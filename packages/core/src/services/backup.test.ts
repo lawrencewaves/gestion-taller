@@ -241,3 +241,18 @@ describe('servicio de copias', () => {
     await expect(demo.backupNow()).rejects.toThrow('solo existen en el programa instalado');
   });
 });
+
+describe('retención configurable', () => {
+  it('dentro de sus límites, anotada y aplicada en la siguiente copia', async () => {
+    await configure();
+    await expect(backups.setRetention(0, 12)).rejects.toThrow('entre 1 y 366');
+    await expect(backups.setRetention(30, 121)).rejects.toThrow('entre 0 y 120');
+    expect(await backups.setRetention(3, 0)).toMatchObject({ keepDaily: 3, keepMonthly: 0 });
+    for (let i = 0; i < 6; i++) {
+      now += 86_400_000;
+      await backups.runIfDue();
+    }
+    expect(fake.state.files.size).toBe(3);
+    expect(await actions()).toContain('backup.retention');
+  });
+});

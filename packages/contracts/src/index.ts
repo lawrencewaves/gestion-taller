@@ -2,6 +2,7 @@ export * from './services';
 export * from './format';
 export * from './auth';
 export * from './backup';
+export * from './billing';
 export * from './fiscal';
 export * from './update';
 export * from './users';

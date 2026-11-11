@@ -5,9 +5,11 @@
  */
 import { serve } from '@gonzalvo/adapter-worker-rpc';
 import { createPbkdf2Hasher, openBrowserDatabase } from '@gonzalvo/adapter-browser';
-import type { AuthService, NewAdmin, NewUser, Permission, Role, Services, UserUpdate, WorkshopInput } from '@gonzalvo/contracts';
+import type {
+  AuthService, NewAdmin, NewUser, Permission, Role, SeriesInput, Services, UserUpdate, WorkshopInput,
+} from '@gonzalvo/contracts';
 import {
-  createAuthService, createSystemService, createUnavailableBackupService, createUnavailableUpdateService, createUuidV7Generator,
+  createAuthService, createBillingService, createSystemService, createUnavailableBackupService, createUnavailableUpdateService, createUuidV7Generator,
   createUsersService, createWorkshopService, recordOpen, systemClock,
 } from '@gonzalvo/core';
 import { openDatabase } from '@gonzalvo/data';
@@ -38,7 +40,8 @@ const services: Promise<Services> = (async () => {
   // Las copias solo existen en el programa instalado (RF-DEM-05).
   const workshop = createWorkshopService({ db, clock, ids, session: auth.current });
   const users = createUsersService({ db, hasher, clock, ids, session: auth.current });
-  return { system, auth, workshop, users, backups: createUnavailableBackupService(), updates: createUnavailableUpdateService() };
+  const billing = createBillingService({ db, clock, ids, session: auth.current });
+  return { system, auth, workshop, users, billing, backups: createUnavailableBackupService(), updates: createUnavailableUpdateService() };
 })();
 
 const auth = async (): Promise<AuthService> => (await services).auth;
@@ -68,5 +71,15 @@ serve(self, {
     setRolePermissions: async (role: Role, permissions: Permission[]) => (await services).users.setRolePermissions(role, permissions),
     idleMinutes: async () => (await services).users.idleMinutes(),
     setIdleMinutes: async (minutes: number) => (await services).users.setIdleMinutes(minutes),
+  },
+  billing: {
+    series: async () => (await services).billing.series(),
+    saveSeries: async (input: SeriesInput) => (await services).billing.saveSeries(input),
+    taxRates: async () => (await services).billing.taxRates(),
+    addTaxRate: async (input: { name: string; percent: string }) => (await services).billing.addTaxRate(input),
+    updateTaxRate: async (input: { id: string; active: boolean; isDefault: boolean; version: number }) => (await services).billing.updateTaxRate(input),
+    paymentMethods: async () => (await services).billing.paymentMethods(),
+    addPaymentMethod: async (input: { name: string }) => (await services).billing.addPaymentMethod(input),
+    updatePaymentMethod: async (input: { id: string; active: boolean; version: number }) => (await services).billing.updatePaymentMethod(input),
   },
 });

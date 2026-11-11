@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import type { BackupFile, BackupStatus } from '@gonzalvo/contracts';
+import { type FormEvent, useCallback, useEffect, useState } from 'react';
+import { BACKUP_RETENTION_RANGE, type BackupFile, type BackupStatus } from '@gonzalvo/contracts';
 import { formatBytes, formatDate } from '@gonzalvo/contracts';
 import { Button, TextField } from '../components/Field';
 import { useServices } from '../services-context';
@@ -183,6 +183,39 @@ function BackupList({ status }: { status: BackupStatus }) {
   );
 }
 
+/** Cuántas copias se conservan (RF-BAK-07, RF-CFG-05). */
+function RetentionForm({ status, onSaved }: { status: BackupStatus; onSaved: (s: BackupStatus) => void }) {
+  const { backups } = useServices();
+  const [daily, setDaily] = useState(String(status.keepDaily));
+  const [monthly, setMonthly] = useState(String(status.keepMonthly));
+  const [feedback, setFeedback] = useState<Feedback>(null);
+  const { daily: d, monthly: m } = BACKUP_RETENTION_RANGE;
+  const dirty = daily !== String(status.keepDaily) || monthly !== String(status.keepMonthly);
+
+  const save = async (e: FormEvent) => {
+    e.preventDefault();
+    setFeedback(null);
+    try {
+      onSaved(await backups.setRetention(Number(daily), Number(monthly)));
+      setFeedback({ kind: 'ok', text: t.retentionSaved });
+    } catch (err) {
+      setFeedback({ kind: 'error', text: errorText(err) });
+    }
+  };
+
+  return (
+    <form className="gz-card gz-stack" onSubmit={(e) => void save(e)} noValidate>
+      <h2 className="section-title">{t.retentionTitle}</h2>
+      <div className="gz-inline-field">
+        <TextField label={t.keepDaily} type="number" inputMode="numeric" min={d.min} max={d.max} value={daily} onChange={(e) => setDaily(e.target.value)} />
+        <TextField label={t.keepMonthly} type="number" inputMode="numeric" min={m.min} max={m.max} value={monthly} onChange={(e) => setMonthly(e.target.value)} />
+        <Button type="submit" disabled={!dirty}>{t.retentionSave}</Button>
+      </div>
+      <Message feedback={feedback} />
+    </form>
+  );
+}
+
 /** Copias de seguridad (REQUIREMENTS §14). Solo el administrador entra aquí (`config.manage`). */
 export function Copias() {
   const { backups } = useServices();
@@ -284,6 +317,7 @@ export function Copias() {
 
       <KeyCard status={status} onChange={refresh} />
       {status.folder && <BackupList status={status} />}
+      <RetentionForm status={status} onSaved={setStatus} />
     </>
   );
 }

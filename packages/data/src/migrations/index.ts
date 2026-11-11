@@ -7,6 +7,7 @@ import m0002 from './0002_usuarios.sql?raw';
 import m0003 from './0003_copias.sql?raw';
 import m0004 from './0004_logotipo.sql?raw';
 import m0005 from './0005_inactividad.sql?raw';
+import m0006 from './0006_series.sql?raw';
 
 /**
  * Lista ordenada de migraciones (DATABASE §5). Solo se añaden al final;
@@ -18,4 +19,5 @@ export const migrations: readonly Migration[] = [
   { version: 3, name: '0003_copias', sql: m0003 },
   { version: 4, name: '0004_logotipo', sql: m0004 },
   { version: 5, name: '0005_inactividad', sql: m0005 },
+  { version: 6, name: '0006_series', sql: m0006 },
 ];
