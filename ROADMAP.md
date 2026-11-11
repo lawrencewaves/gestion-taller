@@ -11,7 +11,7 @@ La web existe desde el primer commit de la Fase 4: cada avance se prueba en un e
 | 4. Núcleo | Ver detalle | Aplicación vacía funcionando en PREVIEW, DEMO y como instalador de prueba en Windows |
 | 5. MVP | Módulos uno a uno (orden abajo) | Cada módulo aprobado en DEMO antes del siguiente |
 | 6. Validación con el taller | Uso de prueba en paralelo a Stall, sin facturar | El taller valida los flujos diarios |
-| 7. Distribución | Instalador definitivo, copias y restauración probadas, documentación de usuario | Taller trabajando con la aplicación (facturación aún en Stall) |
+| 7. Distribución | Instalador definitivo firmado (D-042), copias y restauración probadas, documentación de usuario | Taller trabajando con la aplicación (facturación aún en Stall) |
 | 8. Fiscal | Verificación normativa, modalidad, pruebas con la AEAT en entorno de pruebas, asesor | Validación completa antes de la fecha de obligatoriedad vigente (hoy, 1 de julio de 2027, D-039) |
 
 ## Fase 4 · Núcleo

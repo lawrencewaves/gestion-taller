@@ -16,11 +16,12 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 - Fase 4, paso 8 publicado (D-038): copias cifradas a la carpeta de Google Drive, diaria, manual y a USB, retención, aviso de 48 horas, hoja de recuperación y restauración.
 - Calendario VeriFactu verificado (D-039): vigente el 1 de julio de 2027; aplazamiento a octubre de 2028 anunciado, sin publicar.
 - Fase 4, paso 9 publicado (D-040): esqueleto fiscal desactivado.
-- Fase 4, paso 10 en la rama `feature/fase-4-actualizador` (D-041): actualizador con canal de prueba y canal del taller.
+- Fase 4, paso 10 publicado (D-041): actualizador con canal de prueba y canal del taller. Compilaciones firmadas para actualizar y firma verificada.
+- Defender marcó el programa sin firmar como `Bearfoos.A!ml`; VirusTotal limpio. Firma con Certum Open Source cuando el taller acepte el sistema (D-042).
 
 ## Siguiente paso
 
-1. **Robert:** guardar los dos secretos de firma en GitHub, instalar a mano una vez la compilación de prueba y comprobar que la siguiente le llega como actualización. Fusionar `feature/fase-4-actualizador`.
+1. **Robert:** restaurar Gonzalvo de la cuarentena, excluir su carpeta en su ordenador de pruebas y comprobar que la compilación siguiente le llega como actualización.
 2. Cerrar la Fase 4 (criterio de salida en ROADMAP) y aprobar el paso a la Fase 5.
 3. **Robert:** conseguir de Stall una exportación de muestra para estudiar su formato (D-035).
 
@@ -39,5 +40,5 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 
 - Las copias son la única protección ante la pérdida del ordenador: comprobar periódicamente que llegan a Google Drive.
 - La clave de copias, si se pierde junto con el ordenador, inutiliza las copias: hoja de recuperación impresa y guardada fuera del taller.
-- Aviso de Windows SmartScreen en la primera apertura (sin firma de código).
+- Sin firma de código: aviso de SmartScreen y detecciones falsas de Defender. Bloquea la instalación en el taller hasta firmar (D-042).
 - Los datos de la demo viven en cada navegador: las pruebas del cliente solo llegan si las exporta.

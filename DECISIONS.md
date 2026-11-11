@@ -284,3 +284,11 @@ Robert instala la versión de prueba en Windows: arranca, el Diagnóstico da tod
 - **Clave de firma:** par minisign generado para el proyecto. La pública va en `tauri.conf.json`; la privada y su contraseña solo existen como secretos del repositorio (`TAURI_SIGNING_PRIVATE_KEY`, `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`) y en la copia que guarda Robert fuera del repositorio. Si se perdiera, los programas instalados no aceptarían versiones firmadas con otra clave: habría que reinstalar a mano una vez.
 - **Sin secretos** se compila igual, pero sin actualizaciones; una etiqueta `vX.Y.Z` sin secretos falla a propósito.
 - Las instalaciones anteriores a este paso no tienen actualizador: hay que instalar a mano una vez la versión nueva.
+
+### D-042 · Falso positivo de Defender y firma de código
+2026-11-11 · Vigente · Condiciona la Fase 7
+- **Hecho:** Microsoft Defender detectó `Trojan:Win32/Bearfoos.A!ml` en el programa instalado (`%LOCALAPPDATA%\Gonzalvo\gonzalvo.exe`, versión de prueba con actualizador) y lo puso en cuarentena. Los datos, en `%APPDATA%\com.lawrencewaves.gonzalvo`, no se tocaron. VirusTotal no detecta nada: es una detección por aprendizaje automático (`!ml`) de un programa sin firmar, habitual en programas nuevos.
+- **Pruebas mientras tanto:** en el ordenador de Robert, restaurar desde el historial de protección y excluir solo la carpeta del programa. Nunca se desactiva Defender ni se excluye nada en el ordenador del taller.
+- **Solución:** firmar el instalador y el programa con un certificado **Certum Open Source Code Signing** (49 €) a nombre de Robert, cuando el taller acepte el sistema. Requisito: publicar el código con una licencia de código abierto, que sustituirá a D-011; la licencia concreta se decidirá entonces.
+- **Hasta que esté firmado no se instala en el taller.** La firma pasa a ser requisito de la Fase 7. Habrá que comprobar entonces si la firma con SimplySign puede ir en GitHub Actions o se hace a mano en cada versión del taller.
+- Descartados: Azure Artifact Signing (no admite personas físicas de la UE), SignPath (exige reputación previa) y Certum Standard (209 €).
