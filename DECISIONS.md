@@ -292,3 +292,7 @@ Robert instala la versión de prueba en Windows: arranca, el Diagnóstico da tod
 - **Solución:** firmar el instalador y el programa con un certificado **Certum Open Source Code Signing** (49 €) a nombre de Robert, cuando el taller acepte el sistema. Requisito: publicar el código con una licencia de código abierto, que sustituirá a D-011; la licencia concreta se decidirá entonces.
 - **Hasta que esté firmado no se instala en el taller.** La firma pasa a ser requisito de la Fase 7. Habrá que comprobar entonces si la firma con SimplySign puede ir en GitHub Actions o se hace a mano en cada versión del taller.
 - Descartados: Azure Artifact Signing (no admite personas físicas de la UE), SignPath (exige reputación previa) y Certum Standard (209 €).
+
+### D-043 · Cierre de la Fase 4
+2026-11-11 · Vigente
+Robert verifica en Windows la actualización automática: de `0.1.0-prueba.13`, instalada a mano, a `0.1.0-prueba.16`, con un clic. Se cumple el criterio de salida: la aplicación funciona en PREVIEW, en DEMO y como instalador de prueba en Windows, con base de datos, usuarios, copias, esqueleto fiscal y actualizador. Pendiente heredado, que no bloquea la Fase 5: firma de código antes de instalar en el taller (D-042).

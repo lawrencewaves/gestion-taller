@@ -2,12 +2,12 @@
 
 Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 
-**Fecha:** 2026-11-10
-**Fase:** 4 · Núcleo (en curso)
+**Fecha:** 2026-11-11
+**Fase:** 5 · Módulos (pendiente de empezar)
 
 ## Hecho
 
-- Fases 1, 2 y 3 cerradas (D-029).
+- Fases 1, 2 y 3 cerradas (D-029). Fase 4 cerrada (D-043).
 - Diseño de referencia: `UX.md`, `design/tokens.json`, `design/marca/`, sistema visual «Gonzalvo» y lienzo «Gonzalvo · Pantallas» (artifacts privados de Robert).
 - Fase 4, pasos 1 a 3 publicados en DEMO (D-030): monorepo, SQLite en el navegador y GitHub Pages.
 - Fase 4, pasos 4 y 5 publicados en DEMO (D-031): migrador, primera migración y base real en el navegador.
@@ -16,14 +16,13 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 - Fase 4, paso 8 publicado (D-038): copias cifradas a la carpeta de Google Drive, diaria, manual y a USB, retención, aviso de 48 horas, hoja de recuperación y restauración.
 - Calendario VeriFactu verificado (D-039): vigente el 1 de julio de 2027; aplazamiento a octubre de 2028 anunciado, sin publicar.
 - Fase 4, paso 9 publicado (D-040): esqueleto fiscal desactivado.
-- Fase 4, paso 10 publicado (D-041): actualizador con canal de prueba y canal del taller. Compilaciones firmadas para actualizar y firma verificada.
+- Fase 4, paso 10 publicado (D-041): actualizador con canal de prueba y canal del taller, verificado por Robert en Windows (de la 13 a la 16).
 - Defender marcó el programa sin firmar como `Bearfoos.A!ml`; VirusTotal limpio. Firma con Certum Open Source cuando el taller acepte el sistema (D-042).
 
 ## Siguiente paso
 
-1. **Robert:** restaurar Gonzalvo de la cuarentena, excluir su carpeta en su ordenador de pruebas y comprobar que la compilación siguiente le llega como actualización.
-2. Cerrar la Fase 4 (criterio de salida en ROADMAP) y aprobar el paso a la Fase 5.
-3. **Robert:** conseguir de Stall una exportación de muestra para estudiar su formato (D-035).
+1. Fase 5, primer módulo: Configuración (datos del taller, series, IVA, métodos de pago, usuarios y retención de copias).
+2. **Robert:** conseguir de Stall una exportación de muestra para estudiar su formato (D-035). Bloquea Clientes, Vehículos y Catálogo.
 
 ## Preguntas abiertas
 
