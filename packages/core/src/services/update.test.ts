@@ -3,7 +3,7 @@ import type { Session } from '@gonzalvo/contracts';
 import type { UpdatePort } from '../ports';
 import { createUnavailableUpdateService, createUpdateService } from './update';
 
-const admin: Session = { userId: 'u1', username: 'robert', displayName: 'Robert', role: 'admin', permissions: ['config.manage'] };
+const admin: Session = { userId: 'u1', username: 'robert', displayName: 'Robert', role: 'admin', permissions: ['config.manage'], idleMinutes: 30 };
 const mecanico: Session = { ...admin, role: 'mecanico', permissions: ['ordenes.view'] };
 
 describe('actualizaciones', () => {

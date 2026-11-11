@@ -43,6 +43,8 @@ export const DEMO_WORKSHOP = {
   province: 'Barcelona',
   phone: '000 000 000',
   email: 'demo@example.com',
+  /** IBAN de ejemplo de la documentación del estándar: control correcto, no es una cuenta real. */
+  iban: 'ES91 2100 0418 4502 0005 1332',
 } as const;
 
 /** Rellena los datos del taller si aún están vacíos. No pisa lo que se haya editado en la demo. */
@@ -50,8 +52,8 @@ export async function seedDemoWorkshop(db: SqlExecutor, deps: { clock: Clock }):
   const w = DEMO_WORKSHOP;
   await db.run(
     `UPDATE settings SET legal_name = ?, trade_name = ?, tax_id = ?, address_line = ?, postal_code = ?, city = ?, province = ?,
-       phone = ?, email = ?, updated_at = ?, version = version + 1
+       phone = ?, email = ?, iban = ?, updated_at = ?, version = version + 1
      WHERE id = 1 AND legal_name = ''`,
-    [w.legalName, w.tradeName, w.taxId, w.addressLine, w.postalCode, w.city, w.province, w.phone, w.email, deps.clock.now()],
+    [w.legalName, w.tradeName, w.taxId, w.addressLine, w.postalCode, w.city, w.province, w.phone, w.email, w.iban, deps.clock.now()],
   );
 }

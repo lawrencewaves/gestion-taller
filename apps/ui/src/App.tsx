@@ -10,6 +10,7 @@ import { canSee, NavMenu, type RouteId } from './components/NavMenu';
 import { UpdateNotice } from './components/UpdateNotice';
 import { Login, Setup } from './screens/Acceso';
 import { Configuracion } from './screens/Configuracion';
+import { Cuenta } from './screens/Cuenta';
 import { BackupWarning, Copias } from './screens/Copias';
 import { Diagnostico } from './screens/Diagnostico';
 import { Inicio } from './screens/Inicio';
@@ -22,9 +23,6 @@ export interface AppProps {
   info: AppInfo;
   capabilities: Capabilities;
 }
-
-/** Minutos sin tocar el ratón ni el teclado antes de cerrar la sesión (RF-USR-05). Se hará configurable en Configuración. */
-export const IDLE_MINUTES = 30;
 
 const routes = new Set<string>(Object.keys(texts.nav).filter((k) => k !== 'menu'));
 
@@ -66,7 +64,8 @@ function Screen({ route, session, version }: { route: RouteId; session: Session;
   if (route === 'inicio') return <Inicio />;
   if (route === 'diagnostico') return <Diagnostico version={version} />;
   if (route === 'copias') return <Copias />;
-  if (route === 'configuracion') return <Configuracion />;
+  if (route === 'configuracion') return <Configuracion session={session} />;
+  if (route === 'cuenta') return <Cuenta session={session} />;
   return <Pendiente name={texts.nav[route]} />;
 }
 
@@ -104,7 +103,8 @@ export function App({ services, info }: AppProps) {
     [services, toLogin],
   );
   const onIdle = useCallback(() => void logout(texts.access.idle), [logout]);
-  useIdle(auth.step === 'in', IDLE_MINUTES, onIdle);
+  // Minutos sin tocar ratón ni teclado antes de cerrar la sesión: los del taller, leídos al entrar (RF-USR-05).
+  useIdle(auth.step === 'in', auth.step === 'in' ? auth.session.idleMinutes : 30, onIdle);
 
   const signedIn = (session: Session) => setAuth({ step: 'in', session });
 

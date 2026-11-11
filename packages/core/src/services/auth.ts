@@ -80,7 +80,11 @@ export function createAuthService(deps: AuthDeps): AuthService & { current(): Se
   async function buildSession(user: Pick<UserRow, 'id' | 'username' | 'display_name' | 'role'>): Promise<Session> {
     const rows = await db.all<{ permission: string }>('SELECT permission FROM role_permissions WHERE role = ? ORDER BY permission', [user.role]);
     const permissions = rows.map((r) => r.permission).filter((p): p is Permission => known.has(p));
-    return { userId: user.id, username: user.username, displayName: user.display_name, role: user.role, permissions };
+    const settings = await db.get<{ idle_minutes: number }>('SELECT idle_minutes FROM settings WHERE id = 1');
+    return {
+      userId: user.id, username: user.username, displayName: user.display_name, role: user.role, permissions,
+      idleMinutes: settings?.idle_minutes ?? 30,
+    };
   }
 
   return {

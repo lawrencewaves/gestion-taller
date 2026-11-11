@@ -32,6 +32,8 @@ export interface Session {
   displayName: string;
   role: Role;
   permissions: Permission[];
+  /** Minutos sin actividad tras los que se cierra la sesión (RF-USR-05). */
+  idleMinutes: number;
 }
 
 export interface AuthStatus {

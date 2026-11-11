@@ -5,10 +5,10 @@
  */
 import { serve } from '@gonzalvo/adapter-worker-rpc';
 import { createPbkdf2Hasher, openBrowserDatabase } from '@gonzalvo/adapter-browser';
-import type { AuthService, NewAdmin, Services, WorkshopInput } from '@gonzalvo/contracts';
+import type { AuthService, NewAdmin, NewUser, Permission, Role, Services, UserUpdate, WorkshopInput } from '@gonzalvo/contracts';
 import {
   createAuthService, createSystemService, createUnavailableBackupService, createUnavailableUpdateService, createUuidV7Generator,
-  createWorkshopService, recordOpen, systemClock,
+  createUsersService, createWorkshopService, recordOpen, systemClock,
 } from '@gonzalvo/core';
 import { openDatabase } from '@gonzalvo/data';
 import { DEMO_PASSWORD, DEMO_USERS, seedDemoUsers, seedDemoWorkshop } from '@gonzalvo/seed';
@@ -37,7 +37,8 @@ const services: Promise<Services> = (async () => {
   });
   // Las copias solo existen en el programa instalado (RF-DEM-05).
   const workshop = createWorkshopService({ db, clock, ids, session: auth.current });
-  return { system, auth, workshop, backups: createUnavailableBackupService(), updates: createUnavailableUpdateService() };
+  const users = createUsersService({ db, hasher, clock, ids, session: auth.current });
+  return { system, auth, workshop, users, backups: createUnavailableBackupService(), updates: createUnavailableUpdateService() };
 })();
 
 const auth = async (): Promise<AuthService> => (await services).auth;
@@ -56,5 +57,16 @@ serve(self, {
   workshop: {
     get: async () => (await services).workshop.get(),
     update: async (input: WorkshopInput) => (await services).workshop.update(input),
+  },
+  users: {
+    list: async () => (await services).users.list(),
+    create: async (input: NewUser) => (await services).users.create(input),
+    update: async (input: UserUpdate) => (await services).users.update(input),
+    resetPassword: async (id: string, password: string) => (await services).users.resetPassword(id, password),
+    changeOwnPassword: async (current: string, next: string) => (await services).users.changeOwnPassword(current, next),
+    rolePermissions: async () => (await services).users.rolePermissions(),
+    setRolePermissions: async (role: Role, permissions: Permission[]) => (await services).users.setRolePermissions(role, permissions),
+    idleMinutes: async () => (await services).users.idleMinutes(),
+    setIdleMinutes: async (minutes: number) => (await services).users.setIdleMinutes(minutes),
   },
 });

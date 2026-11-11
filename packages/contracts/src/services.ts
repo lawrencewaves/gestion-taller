@@ -2,6 +2,7 @@ import type { AuthService } from './auth';
 import type { BackupService } from './backup';
 import type { FiscalPolicy } from './fiscal';
 import type { UpdateService } from './update';
+import type { UsersService } from './users';
 import type { WorkshopService } from './workshop';
 
 /**
@@ -51,4 +52,5 @@ export interface Services {
   backups: BackupService;
   updates: UpdateService;
   workshop: WorkshopService;
+  users: UsersService;
 }
