@@ -1,8 +1,9 @@
 import { type ChangeEvent, type FormEvent, useEffect, useRef, useState } from 'react';
-import { LOGO_MAX_BYTES, type WorkshopField, type WorkshopInput, type WorkshopProfile } from '@gonzalvo/contracts';
+import { LOGO_MAX_BYTES, type Session, type WorkshopField, type WorkshopInput, type WorkshopProfile } from '@gonzalvo/contracts';
 import { Button, TextField } from '../components/Field';
 import { useServices } from '../services-context';
 import { texts } from '../texts';
+import { UsuariosTab } from './Usuarios';
 
 const t = texts.config;
 const w = t.workshop;
@@ -195,7 +196,7 @@ function WorkshopTab() {
 }
 
 /** Configuración (REQUIREMENTS §12). Solo el administrador (`config.manage`). */
-export function Configuracion() {
+export function Configuracion({ session }: { session: Session }) {
   const [tab, setTab] = useState<Tab>('taller');
   return (
     <>
@@ -224,6 +225,8 @@ export function Configuracion() {
       <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
         {tab === 'taller' ? (
           <WorkshopTab />
+        ) : tab === 'usuarios' && session.permissions.includes('users.manage') ? (
+          <UsuariosTab session={session} />
         ) : (
           <section className="gz-card">
             <p className="body gz-muted">{t.nextStep}</p>

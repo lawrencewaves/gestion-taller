@@ -309,3 +309,13 @@ Robert verifica en Windows la actualización automática: de `0.1.0-prueba.13`, 
 - **Consulta y edición:** cualquier usuario con sesión puede leer los datos del taller (los documentos los necesitan); solo `config.manage` los cambia.
 - **Demo:** taller ficticio con NIF `00000000T` (válido de formato, no asignado a nadie) y email `demo@example.com`.
 - **Corrección:** el cliente RPC de la demo devolvía un objeto nuevo en cada acceso a un servicio. Las pantallas que lo usan como dependencia (Copias y los avisos de copias y de actualizaciones) repetían peticiones sin parar en la demo. Ahora el objeto de cada servicio y método es siempre el mismo.
+
+### D-045 · Configuración, segunda entrega: usuarios y permisos
+2026-11-11 · Vigente
+- **Pestaña Usuarios** (RF-USR-03), con `users.manage`: lista con rol, estado (activo, desactivado o bloqueado) y última entrada; crear, editar nombre, rol y estado, y poner una contraseña nueva, que además desbloquea al usuario.
+- **Nunca queda el taller sin administrador:** siempre hay al menos uno activo, nadie se desactiva ni se quita el rol de administrador a sí mismo, y el administrador no se pone una contraseña nueva desde aquí (para eso está «Mi cuenta»).
+- **Permisos por rol:** el administrador tiene siempre todos y no se edita. Recepción y Mecánico se ajustan solo en los permisos de módulos (`PERMISSION_GROUPS`); Configuración, usuarios, registro de actividad y diagnóstico son solo del administrador. `core` mantiene la coherencia: quien edita también ve, y emitir facturas o devolver cobros exige poder editar. Los cambios se aplican en la siguiente entrada de cada persona.
+- **Cierre por inactividad configurable** (RF-USR-05): entre 5 y 480 minutos, 30 por defecto (migración 0005). Viaja en la sesión y se aplica desde la siguiente entrada. Cambiarlo no sube la versión de `settings`, para no chocar con quien edite los datos del taller a la vez.
+- **«Mi cuenta»**, junto a «Cerrar sesión», para todos los roles: ver usuario y rol, y cambiar la propia contraseña sabiendo la actual.
+- **Registro de actividad:** altas, cambios (qué campos), contraseñas puestas o cambiadas, permisos añadidos y quitados, y cambios del tiempo de inactividad.
+- **Demo:** el taller ficticio lleva el IBAN de ejemplo del estándar (`ES91 2100 0418 4502 0005 1332`), con control correcto y que no es una cuenta real.

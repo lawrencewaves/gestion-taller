@@ -80,10 +80,15 @@ export function NavMenu({ active, session, onLogout }: { active: string; session
               <span className="caption gz-muted">{ROLE_LABELS[session.role]}</span>
             </span>
           </span>
-          <button type="button" className="gz-btn gz-btn--ghost gz-btn--sm" onClick={onLogout}>
-            <Icon name="log-out" size={16} />
-            {texts.access.logout}
-          </button>
+          <div className="gz-nav__user-actions">
+            <a className="gz-btn gz-btn--ghost gz-btn--sm" href="#/cuenta" aria-current={active === 'cuenta' ? 'page' : undefined}>
+              {texts.nav.cuenta}
+            </a>
+            <button type="button" className="gz-btn gz-btn--ghost gz-btn--sm" onClick={onLogout}>
+              <Icon name="log-out" size={16} />
+              {texts.access.logout}
+            </button>
+          </div>
         </div>
       </div>
     </nav>

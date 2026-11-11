@@ -10,4 +10,5 @@ export * from './services/auth';
 export * from './services/backup';
 export * from './services/fiscal';
 export * from './services/update';
+export * from './services/users';
 export * from './services/workshop';

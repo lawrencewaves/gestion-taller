@@ -10,7 +10,7 @@ import {
 } from '@gonzalvo/adapter-tauri';
 import type { AppInfo, Capabilities, Environment, Services } from '@gonzalvo/contracts';
 import {
-  createAuthService, createBackupService, createSystemService, createUpdateService, createUuidV7Generator, createWorkshopService,
+  createAuthService, createBackupService, createSystemService, createUpdateService, createUsersService, createUuidV7Generator, createWorkshopService,
   fileStamp, recordOpen, systemClock,
 } from '@gonzalvo/core';
 import { migrations, openDatabase } from '@gonzalvo/data';
@@ -53,7 +53,8 @@ async function start(): Promise<Services> {
   const { schemaVersion } = await migrate();
   await recordOpen(db);
   // En el escritorio no hay usuarios de prueba: la primera vez se crea el administrador.
-  const auth = createAuthService({ db, hasher: createTauriPasswordHasher(invoke), clock, ids });
+  const hasher = createTauriPasswordHasher(invoke);
+  const auth = createAuthService({ db, hasher, clock, ids });
   const system = createSystemService({ db, environment, storage: 'native', dbName: fileName, schemaVersion, session: auth.current });
   const backups = createBackupService({
     db, port: createTauriBackupPort(invoke), clock, ids, session: auth.current, environment, schemaVersion,
@@ -67,7 +68,8 @@ async function start(): Promise<Services> {
   window.setInterval(() => void backups.runIfDue(), BACKUP_CHECK_MS);
   const updates = createUpdateService({ port: createTauriUpdatePort(invoke), session: auth.current });
   const workshop = createWorkshopService({ db, clock, ids, session: auth.current });
-  return { system, auth, backups, updates, workshop };
+  const users = createUsersService({ db, hasher, clock, ids, session: auth.current });
+  return { system, auth, backups, updates, workshop, users };
 }
 
 start().then(
