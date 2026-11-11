@@ -31,3 +31,27 @@ export async function seedDemoUsers(
     }
   });
 }
+
+/** Taller ficticio de la demo. El NIF 00000000T es válido de formato y no pertenece a nadie. */
+export const DEMO_WORKSHOP = {
+  legalName: 'Taller de Demostración',
+  tradeName: 'Gonzalvo · DEMO',
+  taxId: '00000000T',
+  addressLine: 'Calle Ficticia, 1',
+  postalCode: '08001',
+  city: 'Barcelona',
+  province: 'Barcelona',
+  phone: '000 000 000',
+  email: 'demo@example.com',
+} as const;
+
+/** Rellena los datos del taller si aún están vacíos. No pisa lo que se haya editado en la demo. */
+export async function seedDemoWorkshop(db: SqlExecutor, deps: { clock: Clock }): Promise<void> {
+  const w = DEMO_WORKSHOP;
+  await db.run(
+    `UPDATE settings SET legal_name = ?, trade_name = ?, tax_id = ?, address_line = ?, postal_code = ?, city = ?, province = ?,
+       phone = ?, email = ?, updated_at = ?, version = version + 1
+     WHERE id = 1 AND legal_name = ''`,
+    [w.legalName, w.tradeName, w.taxId, w.addressLine, w.postalCode, w.city, w.province, w.phone, w.email, deps.clock.now()],
+  );
+}

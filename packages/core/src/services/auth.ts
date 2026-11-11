@@ -34,11 +34,17 @@ export interface AuthDeps {
 
 const known = new Set<string>(PERMISSIONS);
 
+/** Hay alguien con la sesión abierta. Para lo que puede consultar cualquier rol. */
+export function requireSession(session: Session | null): Session {
+  if (!session) throw new AuthError('La sesión ha caducado. Vuelve a entrar.');
+  return session;
+}
+
 /** Comprueba que el usuario puede hacer algo. Los servicios la llaman antes de cada operación. */
 export function requirePermission(session: Session | null, permission: Permission): Session {
-  if (!session) throw new AuthError('La sesión ha caducado. Vuelve a entrar.');
-  if (!session.permissions.includes(permission)) throw new AuthError('Tu usuario no tiene permiso para hacer esto.');
-  return session;
+  const current = requireSession(session);
+  if (!current.permissions.includes(permission)) throw new AuthError('Tu usuario no tiene permiso para hacer esto.');
+  return current;
 }
 
 export function validateUsername(username: string): string {

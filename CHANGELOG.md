@@ -5,6 +5,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). V
 ## [Sin publicar]
 
 ### Añadido
+- Configuración: pestaña Taller con los datos que salen en los documentos (titular, NIF, dirección, contacto, IBAN y logotipo), validados y con vista previa del encabezado.
 - Actualizaciones firmadas: aviso al administrador e instalación con un clic. Canal de prueba y canal del taller (versiones `vX.Y.Z` publicadas como borrador hasta su aprobación). Versión instalada en el Diagnóstico.
 - Esqueleto fiscal desactivado: reglas de emisión por entorno, pasarela de envío nula con barrera y estado fiscal en el Diagnóstico.
 - Copias de seguridad cifradas a la carpeta de Google Drive: diaria automática, manual y a USB; retención de 30 días y 12 meses; aviso si no hay copia en 48 horas; clave en el Administrador de credenciales con hoja de recuperación; restauración con copia previa del estado actual; copia local antes de cada migración.
@@ -18,3 +19,6 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). V
 - Comprobación automática (lint, tipos, pruebas) y publicación en GitHub Pages: DEMO desde `main`, PREVIEW por rama.
 - Documentación inicial de arquitectura y requisitos (Fase 2).
 - Demo en GitHub Pages, ejecutada en el navegador (D-024).
+
+### Corregido
+- Demo: algunas pantallas repetían peticiones sin parar porque el cliente del Worker devolvía un objeto nuevo en cada acceso.

@@ -9,6 +9,7 @@ import { EnvBanner } from './components/EnvBanner';
 import { canSee, NavMenu, type RouteId } from './components/NavMenu';
 import { UpdateNotice } from './components/UpdateNotice';
 import { Login, Setup } from './screens/Acceso';
+import { Configuracion } from './screens/Configuracion';
 import { BackupWarning, Copias } from './screens/Copias';
 import { Diagnostico } from './screens/Diagnostico';
 import { Inicio } from './screens/Inicio';
@@ -65,6 +66,7 @@ function Screen({ route, session, version }: { route: RouteId; session: Session;
   if (route === 'inicio') return <Inicio />;
   if (route === 'diagnostico') return <Diagnostico version={version} />;
   if (route === 'copias') return <Copias />;
+  if (route === 'configuracion') return <Configuracion />;
   return <Pendiente name={texts.nav[route]} />;
 }
 

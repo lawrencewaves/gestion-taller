@@ -59,8 +59,30 @@ export function connect<T extends object>(port: RpcPort): T {
       port.postMessage({ id, method, args } satisfies RpcRequest);
     });
 
+  // Siempre el mismo objeto para cada servicio y método: la interfaz los usa como dependencias
+  // de React, y uno nuevo en cada acceso repetiría las peticiones en cada pintado.
+  const groups = new Map<PropertyKey, object>();
+  const group = (key: PropertyKey) => {
+    const methods = new Map<PropertyKey, (...args: unknown[]) => Promise<unknown>>();
+    return new Proxy({}, {
+      get: (_t, name) => {
+        let method = methods.get(name);
+        if (!method) {
+          method = (...args: unknown[]) => call(`${String(key)}.${String(name)}`, args);
+          methods.set(name, method);
+        }
+        return method;
+      },
+    });
+  };
   return new Proxy({} as T, {
-    get: (_target, group) =>
-      new Proxy({}, { get: (_t, name) => (...args: unknown[]) => call(`${String(group)}.${String(name)}`, args) }),
+    get: (_target, key) => {
+      let g = groups.get(key);
+      if (!g) {
+        g = group(key);
+        groups.set(key, g);
+      }
+      return g;
+    },
   });
 }

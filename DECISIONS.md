@@ -296,3 +296,16 @@ Robert instala la versión de prueba en Windows: arranca, el Diagnóstico da tod
 ### D-043 · Cierre de la Fase 4
 2026-11-11 · Vigente
 Robert verifica en Windows la actualización automática: de `0.1.0-prueba.13`, instalada a mano, a `0.1.0-prueba.16`, con un clic. Se cumple el criterio de salida: la aplicación funciona en PREVIEW, en DEMO y como instalador de prueba en Windows, con base de datos, usuarios, copias, esqueleto fiscal y actualizador. Pendiente heredado, que no bloquea la Fase 5: firma de código antes de instalar en el taller (D-042).
+
+### D-044 · Configuración, primera entrega: datos del taller
+2026-11-11 · Vigente
+- **Pantalla Configuración** con pestañas Taller, Usuarios, Facturación y Fiscal. Esta entrega hace la de **Taller** (RF-CFG-01). Las demás llegan en las siguientes.
+- **Validación en `core`** (`domain/identity.ts`): NIF de personas, NIE, NIF de entidades y especiales K/L/M con su control; IBAN con el módulo 97 (24 caracteres los españoles); código postal 01–52. Son obligatorios los datos que exige la factura: titular o razón social, NIF, dirección, código postal y población. Teléfono, email e IBAN, si se rellenan, deben ser correctos.
+- **Se normaliza al guardar:** NIF en mayúsculas y sin separadores, IBAN agrupado de cuatro en cuatro, email en minúsculas y espacios sobrantes fuera. La **provincia se deduce del código postal**: no se escribe.
+- **Logotipo** PNG o JPEG, reducido por la interfaz a 512 px como máximo y guardado en la base como `data:` URL de hasta 300 KB (migración 0004). Viaja con las copias de seguridad. SVG no se admite, porque puede llevar código.
+- **Patrón de formularios:** el servicio devuelve `SaveResult` (`ok` con el valor guardado, o errores por campo). Las reglas siguen en `core` y los errores cruzan el Worker de la demo, que solo transmite texto.
+- **Concurrencia optimista:** se guarda solo si la `version` no ha cambiado desde que se abrió el formulario; si otra persona guardó antes, se avisa y no se pisa nada.
+- **Registro de actividad:** qué campos cambiaron, sin repetir sus valores.
+- **Consulta y edición:** cualquier usuario con sesión puede leer los datos del taller (los documentos los necesitan); solo `config.manage` los cambia.
+- **Demo:** taller ficticio con NIF `00000000T` (válido de formato, no asignado a nadie) y email `demo@example.com`.
+- **Corrección:** el cliente RPC de la demo devolvía un objeto nuevo en cada acceso a un servicio. Las pantallas que lo usan como dependencia (Copias y los avisos de copias y de actualizaciones) repetían peticiones sin parar en la demo. Ahora el objeto de cada servicio y método es siempre el mismo.

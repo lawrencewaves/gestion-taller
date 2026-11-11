@@ -5,13 +5,13 @@
  */
 import { serve } from '@gonzalvo/adapter-worker-rpc';
 import { createPbkdf2Hasher, openBrowserDatabase } from '@gonzalvo/adapter-browser';
-import type { AuthService, NewAdmin, Services } from '@gonzalvo/contracts';
+import type { AuthService, NewAdmin, Services, WorkshopInput } from '@gonzalvo/contracts';
 import {
   createAuthService, createSystemService, createUnavailableBackupService, createUnavailableUpdateService, createUuidV7Generator,
-  recordOpen, systemClock,
+  createWorkshopService, recordOpen, systemClock,
 } from '@gonzalvo/core';
 import { openDatabase } from '@gonzalvo/data';
-import { DEMO_PASSWORD, DEMO_USERS, seedDemoUsers } from '@gonzalvo/seed';
+import { DEMO_PASSWORD, DEMO_USERS, seedDemoUsers, seedDemoWorkshop } from '@gonzalvo/seed';
 import { appInfo, databaseName } from './env';
 
 declare const self: DedicatedWorkerGlobalScope;
@@ -26,6 +26,7 @@ const services: Promise<Services> = (async () => {
   const { schemaVersion } = await openDatabase(db, { environment: appInfo.environment, clock });
   await recordOpen(db);
   await seedDemoUsers(db, { hasher, ids, clock });
+  await seedDemoWorkshop(db, { clock });
 
   const auth = createAuthService({
     db, hasher, clock, ids,
@@ -35,7 +36,8 @@ const services: Promise<Services> = (async () => {
     db, environment: appInfo.environment, storage, dbName, schemaVersion, session: auth.current, ...(storageError ? { storageError } : {}),
   });
   // Las copias solo existen en el programa instalado (RF-DEM-05).
-  return { system, auth, backups: createUnavailableBackupService(), updates: createUnavailableUpdateService() };
+  const workshop = createWorkshopService({ db, clock, ids, session: auth.current });
+  return { system, auth, workshop, backups: createUnavailableBackupService(), updates: createUnavailableUpdateService() };
 })();
 
 const auth = async (): Promise<AuthService> => (await services).auth;
@@ -51,4 +53,8 @@ serve(self, {
   },
   backups: { status: async () => (await services).backups.status() },
   updates: { check: async () => (await services).updates.check() },
+  workshop: {
+    get: async () => (await services).workshop.get(),
+    update: async (input: WorkshopInput) => (await services).workshop.update(input),
+  },
 });

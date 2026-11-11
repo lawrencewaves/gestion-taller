@@ -10,8 +10,8 @@ import {
 } from '@gonzalvo/adapter-tauri';
 import type { AppInfo, Capabilities, Environment, Services } from '@gonzalvo/contracts';
 import {
-  createAuthService, createBackupService, createSystemService, createUpdateService, createUuidV7Generator, fileStamp, recordOpen,
-  systemClock,
+  createAuthService, createBackupService, createSystemService, createUpdateService, createUuidV7Generator, createWorkshopService,
+  fileStamp, recordOpen, systemClock,
 } from '@gonzalvo/core';
 import { migrations, openDatabase } from '@gonzalvo/data';
 import { App } from '@gonzalvo/ui';
@@ -66,7 +66,8 @@ async function start(): Promise<Services> {
   void backups.runIfDue();
   window.setInterval(() => void backups.runIfDue(), BACKUP_CHECK_MS);
   const updates = createUpdateService({ port: createTauriUpdatePort(invoke), session: auth.current });
-  return { system, auth, backups, updates };
+  const workshop = createWorkshopService({ db, clock, ids, session: auth.current });
+  return { system, auth, backups, updates, workshop };
 }
 
 start().then(
