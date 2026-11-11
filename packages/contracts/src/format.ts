@@ -18,6 +18,11 @@ export function formatKm(km: number): string {
 
 const dec1 = new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
+const pct = new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 });
+
+/** Puntos básicos a porcentaje: 2100 → «21 %», 1050 → «10,5 %». */
+export const formatPercentBp = (bp: number) => `${pct.format(bp / 100)} %`;
+
 /** Tamaño de archivo: «850 KB», «12,4 MB». */
 export function formatBytes(bytes: number): string {
   if (bytes < 1024 * 1024) return `${int.format(Math.max(1, Math.round(bytes / 1024)))} KB`;

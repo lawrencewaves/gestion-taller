@@ -5,6 +5,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). V
 ## [Sin publicar]
 
 ### Añadido
+- Configuración: pestaña Facturación (series de numeración por año, tipos de impuesto y métodos de pago) y pestaña Fiscal de consulta. Retención de copias configurable.
 - Configuración: pestaña Usuarios (crear, editar, desactivar, poner contraseña nueva), permisos por rol para Recepción y Mecánico, y cierre por inactividad configurable. «Mi cuenta» para cambiar la propia contraseña.
 - Configuración: pestaña Taller con los datos que salen en los documentos (titular, NIF, dirección, contacto, IBAN y logotipo), validados y con vista previa del encabezado.
 - Actualizaciones firmadas: aviso al administrador e instalación con un clic. Canal de prueba y canal del taller (versiones `vX.Y.Z` publicadas como borrador hasta su aprobación). Versión instalada en el Diagnóstico.

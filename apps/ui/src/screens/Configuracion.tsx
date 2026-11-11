@@ -3,6 +3,7 @@ import { LOGO_MAX_BYTES, type Session, type WorkshopField, type WorkshopInput, t
 import { Button, TextField } from '../components/Field';
 import { useServices } from '../services-context';
 import { texts } from '../texts';
+import { FacturacionTab, FiscalTab } from './Facturacion';
 import { UsuariosTab } from './Usuarios';
 
 const t = texts.config;
@@ -227,6 +228,10 @@ export function Configuracion({ session }: { session: Session }) {
           <WorkshopTab />
         ) : tab === 'usuarios' && session.permissions.includes('users.manage') ? (
           <UsuariosTab session={session} />
+        ) : tab === 'facturacion' ? (
+          <FacturacionTab />
+        ) : tab === 'fiscal' ? (
+          <FiscalTab />
         ) : (
           <section className="gz-card">
             <p className="body gz-muted">{t.nextStep}</p>

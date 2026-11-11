@@ -325,3 +325,13 @@ Robert verifica en Windows la actualización automática: de `0.1.0-prueba.13`, 
 - De momento solo usa el programa el titular del taller: habrá **un único usuario, administrador**, que lo hace todo.
 - Los roles Recepción y Mecánico y sus permisos se quedan en el programa por si hacen falta más adelante, pero no se configuran. En la pestaña Usuarios, «Permisos por rol» aparece plegado.
 - Los módulos de la Fase 5 se diseñan para una sola persona con todos los permisos: sin variantes de pantalla por rol. Las comprobaciones de permisos en `core` se mantienen igualmente.
+
+### D-047 · Configuración, tercera entrega: facturación, retención y fiscal
+2026-11-11 · Vigente
+- **Series** (RF-CFG-02, RF-FAC-01): una por tipo de documento y año, con número `PREFIJO-AÑO-NNNN` (`F-2026-0001`). Prefijos de fábrica: OT, P, F, R y RC. El taller puede cambiar el prefijo y el primer número (para continuar la numeración que traiga de Stall) **mientras la serie no se haya usado ese año**; después queda bloqueada. Dos tipos no pueden compartir prefijo. La serie del año nuevo se crea sola con el primer documento y hereda el prefijo (migración 0006: `series.first_number`).
+- **`nextDocumentNumber`** en `core`: los módulos de órdenes, presupuestos y facturas la llamarán dentro de la misma transacción que guarda el documento. Si esa transacción falla, el número no se consume: no quedan huecos.
+- **Tipos de impuesto** (RF-CFG-03): añadir (nombre y porcentaje, «21» o «10,5»), activar o desactivar y elegir el tipo por defecto. Siempre hay exactamente uno por defecto, activo; un cambio que choque con otra persona se deshace entero. Los tipos no se borran: un documento ya emitido puede usarlos.
+- **Métodos de pago:** añadir y activar o desactivar; siempre queda al menos uno activo.
+- **Retención de copias** (RF-CFG-05): días con copia diaria (1–366) y meses con copia mensual (0–120), en la pantalla Copias. Se aplica en la siguiente copia.
+- **Pestaña Fiscal** (RF-CFG-04): solo consulta. Modalidad, qué permite en este entorno y plazo vigente (D-039). No se puede activar hasta la Fase 8.
+- Los ajustes que no son datos del taller (retención, inactividad) no suben la versión de `settings`, para no chocar con quien edite los datos del taller a la vez.

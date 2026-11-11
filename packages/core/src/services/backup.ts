@@ -1,5 +1,5 @@
 import type { BackupFile, BackupKind, BackupRecord, BackupService, BackupStatus, Environment, Session } from '@gonzalvo/contracts';
-import { BACKUP_OVERDUE_HOURS } from '@gonzalvo/contracts';
+import { BACKUP_OVERDUE_HOURS, BACKUP_RETENTION_RANGE } from '@gonzalvo/contracts';
 import type { BackupPort, Clock, IdGenerator, SqlExecutor } from '../ports';
 import { logActivity } from './activity';
 import { requirePermission } from './auth';
@@ -281,6 +281,23 @@ export function createBackupService(deps: BackupServiceDeps): BackupService & {
       });
     },
 
+    async setRetention(keepDaily, keepMonthly) {
+      const session = admin();
+      const { daily, monthly } = BACKUP_RETENTION_RANGE;
+      if (!Number.isInteger(keepDaily) || keepDaily < daily.min || keepDaily > daily.max) {
+        throw new BackupError(`Las copias diarias se guardan entre ${daily.min} y ${daily.max} días.`);
+      }
+      if (!Number.isInteger(keepMonthly) || keepMonthly < monthly.min || keepMonthly > monthly.max) {
+        throw new BackupError(`Las copias mensuales se guardan entre ${monthly.min} y ${monthly.max} meses.`);
+      }
+      await db.transaction(async (tx) => {
+        // Sin subir la versión de settings: no choca con quien edite los datos del taller a la vez.
+        await tx.run('UPDATE settings SET backup_keep_daily = ?, backup_keep_monthly = ?, updated_at = ? WHERE id = 1', [keepDaily, keepMonthly, clock.now()]);
+        await logActivity(tx, deps, { userId: session.userId, action: 'backup.retention', entityType: 'backup', changes: { keepDaily, keepMonthly } });
+      });
+      return status();
+    },
+
     async list(): Promise<BackupFile[]> {
       admin();
       const { folder } = await requireFolder();
@@ -348,6 +365,7 @@ export function createUnavailableBackupService(): BackupService {
     enterKey: unavailable,
     backupNow: unavailable,
     exportCopy: unavailable,
+    setRetention: unavailable,
     list: unavailable,
     restore: unavailable,
   };

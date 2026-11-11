@@ -10,7 +10,7 @@ import {
 } from '@gonzalvo/adapter-tauri';
 import type { AppInfo, Capabilities, Environment, Services } from '@gonzalvo/contracts';
 import {
-  createAuthService, createBackupService, createSystemService, createUpdateService, createUsersService, createUuidV7Generator, createWorkshopService,
+  createAuthService, createBackupService, createBillingService, createSystemService, createUpdateService, createUsersService, createUuidV7Generator, createWorkshopService,
   fileStamp, recordOpen, systemClock,
 } from '@gonzalvo/core';
 import { migrations, openDatabase } from '@gonzalvo/data';
@@ -69,7 +69,8 @@ async function start(): Promise<Services> {
   const updates = createUpdateService({ port: createTauriUpdatePort(invoke), session: auth.current });
   const workshop = createWorkshopService({ db, clock, ids, session: auth.current });
   const users = createUsersService({ db, hasher, clock, ids, session: auth.current });
-  return { system, auth, backups, updates, workshop, users };
+  const billing = createBillingService({ db, clock, ids, session: auth.current });
+  return { system, auth, backups, updates, workshop, users, billing };
 }
 
 start().then(

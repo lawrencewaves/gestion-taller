@@ -40,6 +40,9 @@ export interface BackupStatus {
 
 export const BACKUP_OVERDUE_HOURS = 48;
 
+/** Límites de la retención: días con copia diaria y meses con copia mensual. */
+export const BACKUP_RETENTION_RANGE = { daily: { min: 1, max: 366 }, monthly: { min: 0, max: 120 } } as const;
+
 export interface BackupService {
   status(): Promise<BackupStatus>;
   /** Abre el selector de carpetas. Si se cancela, no cambia nada. */
@@ -53,6 +56,8 @@ export interface BackupService {
   backupNow(): Promise<BackupRecord>;
   /** Copia a otra carpeta (USB o disco externo). `null` si se cancela el selector. */
   exportCopy(): Promise<BackupRecord | null>;
+  /** Cuántas copias diarias y mensuales se conservan (RF-CFG-05). */
+  setRetention(keepDaily: number, keepMonthly: number): Promise<BackupStatus>;
   list(): Promise<BackupFile[]>;
   /** Sustituye los datos actuales por los de la copia. Después hay que volver a arrancar la interfaz. */
   restore(fileName: string): Promise<void>;

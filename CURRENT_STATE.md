@@ -18,14 +18,15 @@ Dónde estamos. Se actualiza al final de cada sesión. Es lo primero que se lee.
 - Fase 4, paso 9 publicado (D-040): esqueleto fiscal desactivado.
 - Fase 4, paso 10 publicado (D-041): actualizador con canal de prueba y canal del taller, verificado por Robert en Windows (de la 13 a la 16).
 - Fase 5, Configuración, primera entrega publicada (D-044): datos del taller con validación, logotipo y vista previa del encabezado.
-- Fase 5, Configuración, segunda entrega en la rama `feature/configuracion-usuarios` (D-045): usuarios, permisos por rol, inactividad configurable y «Mi cuenta».
+- Fase 5, Configuración, segunda entrega publicada (D-045): usuarios, permisos por rol, inactividad configurable y «Mi cuenta».
+- Fase 5, Configuración, tercera entrega en la rama `feature/configuracion-facturacion` (D-047): series, impuestos, métodos de pago, retención de copias y pestaña Fiscal.
 - Un único usuario, el administrador; roles disponibles pero sin configurar (D-046).
 - Defender marcó el programa sin firmar como `Bearfoos.A!ml`; VirusTotal limpio. Firma con Certum Open Source cuando el taller acepte el sistema (D-042).
 
 ## Siguiente paso
 
-1. **Robert:** revisar la pestaña Usuarios y «Mi cuenta» en la PREVIEW y fusionar `feature/configuracion-usuarios`.
-2. Configuración, tercera entrega: Facturación (series, IVA, métodos de pago), retención de copias y pestaña Fiscal.
+1. **Robert:** revisar la pestaña Facturación y la retención de copias, y fusionar `feature/configuracion-facturacion`. Con eso queda Configuración, salvo la conexión con Gmail (D-023).
+2. Siguiente módulo de la Fase 5 que no dependa de Stall, o Clientes y Vehículos si ya está la exportación.
 3. **Robert:** conseguir de Stall una exportación de muestra para estudiar su formato (D-035). Bloquea Clientes, Vehículos y Catálogo.
 
 ## Preguntas abiertas

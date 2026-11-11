@@ -30,7 +30,7 @@ Modelo de datos, convenciones y migraciones. El DDL definitivo vive en `packages
 | Tabla | Contenido clave |
 |---|---|
 | `settings` | Fila única: datos del taller, entorno, modalidad fiscal y su estado, configuración de copias. Logotipo como `data:` URL PNG/JPEG de hasta 300 KB (migración 0004, D-044). Minutos de inactividad antes de cerrar la sesión (migración 0005, D-045) |
-| `series` | Serie por tipo de documento: prefijo, año, último número |
+| `series` | Serie por tipo de documento: prefijo, año, último número. `first_number` permite empezar en otro número mientras la serie no se haya usado (migración 0006, D-047) |
 | `tax_rates` | Nombre y porcentaje, activo |
 | `payment_methods` | Nombre, activo, orden |
 | `users` | Nombre, usuario, `password_hash`, rol, activo, intentos fallidos, bloqueado hasta |
